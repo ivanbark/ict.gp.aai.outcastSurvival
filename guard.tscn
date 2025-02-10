@@ -1,0 +1,59 @@
+[gd_scene load_steps=8 format=3 uid="uid://brmbbns17wh7r"]
+
+[ext_resource type="Script" path="res://Guard.cs" id="1_tpkhw"]
+[ext_resource type="Texture2D" uid="uid://bme50fd6evxef" path="res://art/guard/guard_down.png" id="2_q3pd4"]
+[ext_resource type="Texture2D" uid="uid://bwo7uc8ekolic" path="res://art/guard/guard_left.png" id="3_yew61"]
+[ext_resource type="Texture2D" uid="uid://cipqqifli1t8" path="res://art/guard/guard_right.png" id="4_2rqb3"]
+[ext_resource type="Texture2D" uid="uid://dj01duxs4xn8x" path="res://art/guard/guard_up.png" id="5_t22tx"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_x6wym"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_q3pd4")
+}],
+"loop": true,
+"name": &"down",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_yew61")
+}],
+"loop": true,
+"name": &"left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_2rqb3")
+}],
+"loop": true,
+"name": &"right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_t22tx")
+}],
+"loop": true,
+"name": &"up",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_52kos"]
+size = Vector2(117.002, 174)
+
+[node name="Guard" type="CharacterBody2D"]
+script = ExtResource("1_tpkhw")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.34375, 0.3125)
+sprite_frames = SubResource("SpriteFrames_x6wym")
+animation = &"down"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.499552, 9.99822)
+rotation = 0.000297832
+scale = Vector2(1, 1)
+shape = SubResource("RectangleShape2D_52kos")

@@ -5,31 +5,68 @@ public partial class MovingEntity : BaseGameEntity
 {
   private Vector2 _heading;
 
-
   [Export]
-  public int Speed { get; set; } = 400;
-
-  [Export]
-  public float RotationSpeed { get; set; } = 1.5f;
-
-  [Export]
-  public int MaxSpeed { get; set; } = 1000;
+  public int MaxSpeed { get; set; } = 400;
 
   [Export]
   public int MinSpeed { get; set; } = 0;
 
   [Export]
-  public float MaxForce { get; set; } = 25.0f;
-
-  // position is a property of CharacterBody2D
-
-  //heading is deterimed by the property rotation
+  public float MaxForce { get; set; } = 600;
 
   [Export]
-  public int Mass { get; set; } = 10;
+  public int Mass { get; set; } = 2;
 
-  // velocity is inherited by property velocity;
+  [Export] 
+  public float Acceleration = 0f;
 
+  protected Vector2 velocity = Vector2.Zero;
+
+  public override void _Ready()
+  {
+    Acceleration = MaxForce / Mass;
+  }
+
+  public override void _Process(double delta)
+  {
+    AnimatedSprite2D sprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+    if (Mathf.Abs(velocity.X) > Mathf.Abs(velocity.Y))
+    {
+      if (velocity.X > 0)
+      {
+        sprite.Animation = "right";
+      }
+      else if (velocity.X < 0)
+      {
+        sprite.Animation = "left";
+      }
+    }
+    else if (velocity.Y > 0)
+    {
+      sprite.Animation = "down";
+    }
+    else if (velocity.Y < 0)
+    {
+      sprite.Animation = "up";
+    }
+
+    Rotation = velocity.Angle();
+    sprite.GlobalRotation = 0;
+  }
+  
+  public override void _PhysicsProcess(double delta)
+  {
+    velocity = velocity.LimitLength(MaxSpeed);
+    Position += velocity * (float)delta; 
+    MoveAndSlide(); 
+  }
+  
+  public void ApplyAcceleration(Vector2 desiredVelocity, float delta)
+  {
+    Vector2 newVelocity = (desiredVelocity - velocity).Normalized() * Acceleration * delta;
+    velocity += newVelocity;
+  }
+  
   public Vector2 Heading {
     get { return _heading; }
     private set { _heading = value; }
@@ -38,11 +75,5 @@ public partial class MovingEntity : BaseGameEntity
   protected void UpdateHeading() {
     Heading = new Vector2(Velocity.X, Velocity.Y).Normalized();
   }
-
-  public void WrapArround() {
-    // Position = new Vector2(
-    //   Math.Clamp(Position.X, 0, World_ref.WorldSize.X),
-    //   Math.Clamp(Position.Y , 0, World_ref.WorldSize.Y)
-    // );
-  }
 }
+

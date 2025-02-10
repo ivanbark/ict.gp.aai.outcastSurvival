@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://bn2tnmk0vhyxq" path="res://player.tscn" id="1_21x2g"]
 [ext_resource type="Script" path="res://World.cs" id="1_go68u"]
+[ext_resource type="PackedScene" uid="uid://brmbbns17wh7r" path="res://guard.tscn" id="3_cfpxp"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_g6jkd"]
 font_size = 20
@@ -13,9 +14,12 @@ WorldSize = Vector2(1150, 650)
 [node name="Background" type="Sprite2D" parent="."]
 
 [node name="Player" parent="." node_paths=PackedStringArray("World_ref") instance=ExtResource("1_21x2g")]
-position = Vector2(308, 256)
+position = Vector2(387, 237)
 MaxSpeed = 30
 World_ref = NodePath("..")
+
+[node name="Guard" parent="." instance=ExtResource("3_cfpxp")]
+position = Vector2(131, 219)
 
 [node name="UI" type="CanvasLayer" parent="."]
 
