@@ -3,6 +3,9 @@ using System;
 
 public partial class MovingEntity : BaseGameEntity
 {
+  private Vector2 _heading;
+
+
   [Export]
   public int Speed { get; set; } = 400;
 
@@ -27,6 +30,14 @@ public partial class MovingEntity : BaseGameEntity
 
   // velocity is inherited by property velocity;
 
+  public Vector2 Heading {
+    get { return _heading; }
+    private set { _heading = value; }
+  }
+
+  protected void UpdateHeading() {
+    Heading = new Vector2(Velocity.X, Velocity.Y).Normalized();
+  }
 
   public void WrapArround() {
     // Position = new Vector2(
