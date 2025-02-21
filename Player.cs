@@ -13,7 +13,6 @@ public partial class Player : MovingEntity
 
   public override void _Process(double delta)
   {
-    
     // TODO: make use of physics from MovingEntity
     
     var animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
