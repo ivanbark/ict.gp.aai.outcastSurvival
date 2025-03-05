@@ -27,7 +27,7 @@ public partial class Guard : MovingEntity
         Vector2 desiredVelocity = SteeringBehaviour.Seek(Position, targetPosition, MaxSpeed);
         ApplyAcceleration(desiredVelocity, delta);
 
-        if (Position.DistanceTo(targetPosition) < 190f)
+        if (Position.DistanceTo(targetPosition) < 190f) // make thsi the width of itself / 2 and the width of the target / 2
         {
             GD.Print("STOP!");
             Velocity = Vector2.Zero;

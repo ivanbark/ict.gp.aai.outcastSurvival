@@ -44,13 +44,22 @@ public partial class Player : MovingEntity
       Rotation = (float)Math.PI;
       animatedSprite2D.GlobalRotation = 0;
     }
+    
     QueueRedraw();
   }
   
     public override void _Draw()
     {
-        base._Draw();
+      // Line to target
+      // DrawLine(Position, World_ref.Target, Colors.Blue, 1);
 
-        DrawLine(Position, Heading, Colors.Blue, 3);
+      base._Draw();
+
+      // if(visualize_debug_info) {
+
+      // // heading is incorrect
+      // DrawLine(Position, Heading, Colors.Red, 1);
+      // }
+
     }
 }

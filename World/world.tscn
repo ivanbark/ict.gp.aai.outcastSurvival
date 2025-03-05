@@ -1,0 +1,50 @@
+[gd_scene load_steps=5 format=3 uid="uid://b8yq3d7rmcpor"]
+
+[ext_resource type="PackedScene" uid="uid://bn2tnmk0vhyxq" path="res://Entities/Player/player.tscn" id="1_21x2g"]
+[ext_resource type="Script" path="res://World/World.cs" id="1_go68u"]
+[ext_resource type="PackedScene" uid="uid://v4hvi5cwrggm" path="res://Entities/Guard/guard.tscn" id="3_yf56a"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_g6jkd"]
+font_size = 20
+
+[node name="World" type="Node2D" node_paths=PackedStringArray("movingEntity_list")]
+script = ExtResource("1_go68u")
+movingEntity_list = []
+
+[node name="Background" type="Sprite2D" parent="."]
+
+[node name="Player" parent="." node_paths=PackedStringArray("World_ref") instance=ExtResource("1_21x2g")]
+position = Vector2(309, 257)
+MaxSpeed = 30
+visualize_debug_info = true
+World_ref = NodePath("..")
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="PlayPause" type="Label" parent="UI"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -20.0
+offset_right = 20.0
+offset_bottom = 23.0
+grow_horizontal = 2
+
+[node name="DebugInfo" type="Label" parent="UI"]
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 186.0
+offset_bottom = 126.0
+text = "Debug: 
+Step backward : F1
+Start/stop F2
+Step forward : F3
+"
+label_settings = SubResource("LabelSettings_g6jkd")
+
+[node name="Guard" parent="." node_paths=PackedStringArray("World_ref") instance=ExtResource("3_yf56a")]
+position = Vector2(1606, 243)
+MaxSpeed = 170
+MaxForce = 915
+visualize_debug_info = true
+World_ref = NodePath("..")
