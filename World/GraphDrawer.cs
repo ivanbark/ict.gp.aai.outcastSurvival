@@ -20,13 +20,12 @@ public partial class GraphDrawer : Node2D
     foreach(var keyval  in graph.graph_collection) 
     {
       Vector2I vec = keyval.Key;
-      Vertex vertex = keyval.Value;
-      GD.Print(((Vector2)vec * 16) + new Vector2(8,8));
-      DrawCircle(graph.MapToLocal(vec), 3, Colors.Red);
-      foreach (Edge edge in vertex.neighbors)
-      {
-        DrawLine(graph.MapToLocal(vertex.position), graph.MapToLocal(edge.to.position),Colors.Red,2);
-      }
+      if (keyval.Value.Visited)
+        DrawCircle(graph.MapToLocal(vec), 3, Colors.Red);
+    }
+    foreach (Edge edge in graph.edges)
+    {
+      DrawLine(graph.MapToLocal(edge.from.position), graph.MapToLocal(edge.to.position),Colors.Red,2);
     }
   }
 }
