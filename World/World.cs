@@ -10,7 +10,7 @@ public partial class World : Node2D
 
   
   [Export]
-  public bool Playing { get; set; } = true;
+  public bool Playing { get; set; } = false;
 
   [Export]
   public bool Step { get; set; } = false;
@@ -22,7 +22,7 @@ public partial class World : Node2D
   public override void _Process(double delta)
   {
     // Alleen input "Listeners hier", game logic in het onderste deel!
-
+    Engine.TimeScale = 0f;
     if (Input.IsActionJustPressed("pause_play_toggle")) {
       Playing = !Playing;
       

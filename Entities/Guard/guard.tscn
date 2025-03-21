@@ -1,6 +1,6 @@
 [gd_scene load_steps=8 format=3 uid="uid://v4hvi5cwrggm"]
 
-[ext_resource type="Script" path="res://Entities/Guard/Guard.cs" id="1_tpkhw"]
+[ext_resource type="Script" uid="uid://fsxbe643n17c" path="res://Entities/Guard/Guard.cs" id="1_tpkhw"]
 [ext_resource type="Texture2D" uid="uid://bme50fd6evxef" path="res://art/guard/guard_down.png" id="2_q3pd4"]
 [ext_resource type="Texture2D" uid="uid://bwo7uc8ekolic" path="res://art/guard/guard_left.png" id="3_yew61"]
 [ext_resource type="Texture2D" uid="uid://cipqqifli1t8" path="res://art/guard/guard_right.png" id="4_2rqb3"]
