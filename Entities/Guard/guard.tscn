@@ -1,6 +1,6 @@
 [gd_scene load_steps=16 format=3 uid="uid://brmbbns17wh7r"]
 
-[ext_resource type="Script" path="res://Entities/Guard/Guard.cs" id="1_tpkhw"]
+[ext_resource type="Script" uid="uid://fsxbe643n17c" path="res://Entities/Guard/Guard.cs" id="1_tpkhw"]
 [ext_resource type="Texture2D" uid="uid://bme50fd6evxef" path="res://art/guard/guard_down.png" id="2_q3pd4"]
 [ext_resource type="Texture2D" uid="uid://dj76c3imk2wks" path="res://art/guard/guard_attack_f1.png" id="2_vx2l4"]
 [ext_resource type="Texture2D" uid="uid://bkx6yxwj1hye3" path="res://art/guard/guard_attack_f2.png" id="3_wvwdm"]
@@ -9,10 +9,10 @@
 [ext_resource type="Texture2D" uid="uid://du6us5vbl61qk" path="res://art/guard/guard_attack_f3.png" id="4_yluq1"]
 [ext_resource type="Texture2D" uid="uid://dctm8gw876a7j" path="res://art/guard/guard_attack_f4.png" id="5_n0jab"]
 [ext_resource type="Texture2D" uid="uid://dj01duxs4xn8x" path="res://art/guard/guard_up.png" id="5_t22tx"]
-[ext_resource type="Script" path="res://StateMachine.cs" id="6_ormmd"]
-[ext_resource type="Script" path="res://States/ChaseState.cs" id="7_m6u2i"]
-[ext_resource type="Script" path="res://States/AttackState.cs" id="8_m132w"]
-[ext_resource type="Script" path="res://States/AlertState.cs" id="11_naac8"]
+[ext_resource type="Script" uid="uid://dyx7f8flwmrfs" path="res://StateMachine.cs" id="6_ormmd"]
+[ext_resource type="Script" uid="uid://bl8edmv55ualb" path="res://States/ChaseState.cs" id="7_m6u2i"]
+[ext_resource type="Script" uid="uid://cwihdw51g6hv2" path="res://States/AttackState.cs" id="8_m132w"]
+[ext_resource type="Script" uid="uid://dwobeqxhsbnyh" path="res://States/AlertState.cs" id="11_naac8"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_x6wym"]
 animations = [{

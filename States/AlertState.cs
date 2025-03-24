@@ -1,6 +1,9 @@
 ﻿using Godot;
 using System;
+using OutCastSurvival.Entities;
 
+namespace OutCastSurvival.State 
+{
 public partial class AlertState : State
 {
     private StateMachine _subStateMachine;
@@ -25,4 +28,5 @@ public partial class AlertState : State
     {
         GD.Print("Exiting AlertState");
     }
+}
 }

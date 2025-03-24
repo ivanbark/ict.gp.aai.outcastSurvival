@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://bptqonjvfnyiu"]
+
+[ext_resource type="Script" uid="uid://pciprjoq3dl8" path="res://Entities/Sheep/Sheep.cs" id="1_c257q"]
+[ext_resource type="Texture2D" uid="uid://c7scag6yuxppc" path="res://art/sheep/sheep.png" id="2_u58gf"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_omd8u"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_u58gf")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_c257q"]
+size = Vector2(40, 19)
+
+[node name="Sheep" type="CharacterBody2D"]
+script = ExtResource("1_c257q")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_omd8u")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_c257q")

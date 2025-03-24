@@ -1,6 +1,8 @@
 using Godot;
 using System;
 
+namespace OutCastSurvival.Entities 
+{
 public partial class Player : MovingEntity
 { 
   private Vector2 inputDirection = Vector2.Zero;
@@ -10,6 +12,7 @@ public partial class Player : MovingEntity
     base._Ready();
     
     AddToGroup("Entities");
+    AddToGroup("Player");
   }
 
   public override void _Process(double delta)
@@ -76,4 +79,5 @@ public partial class Player : MovingEntity
         
       GetTree().Paused = true;
     }
+}
 }

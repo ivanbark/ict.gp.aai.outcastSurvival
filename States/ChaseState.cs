@@ -1,6 +1,9 @@
 using Godot;
 using System;
+using OutCastSurvival.Entities;
 
+namespace OutCastSurvival.State 
+{
 public partial class ChaseState : State
 {
     private Guard _guard;
@@ -30,4 +33,5 @@ public partial class ChaseState : State
         }
     }
 
+}
 }

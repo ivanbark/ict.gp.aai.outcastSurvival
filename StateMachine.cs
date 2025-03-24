@@ -2,11 +2,16 @@
 using System;
 using System.Collections.Generic;
 
+using OutCastSurvival.State;
+using OutCastSurvival.Entities;
+
+namespace OutCastSurvival 
+{
 public partial class StateMachine : Node
 {
 	[Export] public NodePath initialState;
-	private Dictionary<string, State> _states;
-	private State _currentState;
+	private Dictionary<string, State.State> _states;
+	private State.State _currentState;
 	
 	public Guard Guard;
 	
@@ -14,10 +19,10 @@ public partial class StateMachine : Node
 	{
 		Guard = GetParent<Guard>();
 		
-		_states = new Dictionary<string, State>();
+		_states = new Dictionary<string, State.State>();
 		foreach (Node node in GetChildren())
 		{
-			if (node is State s)
+			if (node is State.State s)
 			{
 				_states.Add(node.Name, s);
 				s.fsm = this;
@@ -25,7 +30,7 @@ public partial class StateMachine : Node
 			}
 		}
 		
-		_currentState = GetNode<State>(initialState);
+		_currentState = GetNode<State.State>(initialState);
 		_currentState.Enter();
 	}
 
@@ -48,4 +53,5 @@ public partial class StateMachine : Node
 		_currentState = _states[key];
 		_currentState.Enter();
 	}
+}
 }

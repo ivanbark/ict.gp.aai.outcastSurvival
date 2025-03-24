@@ -1,6 +1,7 @@
 using Godot;
 using System;
-
+namespace OutCastSurvival.Entities 
+{
 public partial class MovingEntity : BaseGameEntity
 {
   private Vector2 _heading;
@@ -111,3 +112,4 @@ public partial class MovingEntity : BaseGameEntity
   }
 }
 
+}

@@ -1,7 +1,10 @@
 using Godot;
 using System;
 using System.Threading.Tasks;
+using OutCastSurvival.Entities;
 
+namespace OutCastSurvival 
+{
 public partial class World : Node2D
 {
 
@@ -68,6 +71,11 @@ public partial class World : Node2D
     QueueRedraw();
   }
 
+  public Player GetPlayer()
+  {
+    return (Player)GetNode<CharacterBody2D>("Player");
+  }
+
   private void UpdatePlayPauseLabel() {
     Label Play_Pause_label = GetNode<CanvasLayer>("UI").GetNode<Label>("PlayPause");
     if (Playing){
@@ -106,4 +114,5 @@ public partial class World : Node2D
       GD.Print("We can start to find a path");
     }
   } 
+}
 }

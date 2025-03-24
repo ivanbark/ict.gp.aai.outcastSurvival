@@ -1,6 +1,8 @@
 using Godot;
 using System;
 
+namespace OutCastSurvival.Entities 
+{
 public partial class Guard : MovingEntity
 {
     public Player Player;
@@ -44,4 +46,5 @@ public partial class Guard : MovingEntity
         _attackCooldown -= delta;
         GD.Print("stop attacking");
     }
+}
 }

@@ -1,6 +1,9 @@
 ﻿using Godot;
 using System;
+using OutCastSurvival;
 
+namespace OutCastSurvival.State 
+{
 public partial class State : Node
 {
     public StateMachine fsm;
@@ -9,4 +12,5 @@ public partial class State : Node
     public virtual void Exit() {}
     public virtual void Process(float delta) {}
     public virtual void HandleInput(InputEvent @event) {}
+}
 }

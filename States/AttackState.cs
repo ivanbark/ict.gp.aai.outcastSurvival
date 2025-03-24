@@ -1,6 +1,9 @@
 using Godot;
 using System;
+using OutCastSurvival.Entities;
 
+namespace OutCastSurvival.State 
+{
 public partial class AttackState : State
 {
 	private Guard _guard;
@@ -32,4 +35,5 @@ public partial class AttackState : State
 			fsm.TransitionTo("Chase");
 		}
 	}
+}
 }
