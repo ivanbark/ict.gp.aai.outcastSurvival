@@ -10,14 +10,23 @@ public class Vertex {
   public bool isDiagonal;
   public List<Edge> neighbors = [];
 
-private bool _visited = false;
+  private bool _enqueued = false;
+  private bool _visited = false;
   public bool Visited {
     get { return _visited; } 
     private set { _visited = value; } 
     }
+  public bool Enqueued {
+    get { return _enqueued; } 
+    private set { _enqueued = value; } 
+    }
 
   public void Visit() {
     Visited = true;
+  }
+  
+  public void Enqueue() {
+    Enqueued = true;
   }
   public Vertex(Vector2I position, bool diagonal)
   {

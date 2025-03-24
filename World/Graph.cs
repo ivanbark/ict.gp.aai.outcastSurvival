@@ -10,6 +10,9 @@ public partial class Graph : TileMapLayer
   [Export]
   private Vector2I GraphOrigin = new(50, 50);
 
+  [Export]
+  private bool USING_DIAGONALS = false;
+
   public HashSet<Edge> edges = [];
   public HashSet<Vertex> vertices = [];
 
@@ -18,14 +21,7 @@ public partial class Graph : TileMapLayer
   // Called when the node enters the scene tree for the first time.
   public override void _Ready()
   {
-    if (GetCellSourceId(GraphOrigin) == -1)
-      return;
-
-    Vertex start =new(GraphOrigin);
-    vertices.Add(start);
-    vertex_queue.Enqueue(start);
-
-    GenerateGraphBFS();
+     GenerateGraphBFS();
   }
 
   // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -34,93 +30,120 @@ public partial class Graph : TileMapLayer
     // QueueRedraw();
   }
 
+  public Vertex GetVertexForPosition(Vector2I position)
+  {
+    Vertex vert = ReadOnlyTryGetValue(new Vertex(position));
+    return vert;
+  }
+
+
   private void GenerateGraphBFS()
   {
-    // int i = 0;
-    // while ( i < 25 && vertex_queue.Count > 0)
-    while (vertex_queue.Count > 0)
+    //set all distances to Infinity
+    // done by setting vertex.Enqueued to false by default.
+
+    //set distance at start vertex to 0 and Enqueue the start vertex
+    if(!TryGetVertexFromHashSet(new (GraphOrigin), out Vertex start_vertex)) 
     {
-      // GD.Print(string.Join(", ", vertex_queue));
-      GD.Print("Processing:" + vertex_queue.Peek());
-      ProcessVertex(vertex_queue.Dequeue());
-      // GD.Print(string.Join(", ", vertex_queue));
-      GD.Print();
-      // i++;
+      return;// not a valid starting vertex
     }
+    start_vertex.Enqueue(); // set to equeued for duplication prevention
+    vertex_queue.Enqueue(start_vertex);
 
-  }
-
-  private void ProcessVertex(Vertex current)
-  {
-    // check if vertex is visited
-    if(current.Visited)
-      return;
-    
-    // set to visited and add to graph
-    current.Visit();
-
-    // get neighbors
-    Vertex[] neighbors = GetNeighboringCells(current.position, out bool[] neighbors_added);
-
-    for(int i = 0; i < neighbors.Length; i++ )
+    //While queue not empty
+    while(vertex_queue.Count != 0) 
     {
-      Vertex neighbor = neighbors[i];
-      
-      // TODO: optimize enqueueing so it does not enter vertexes that already have been visited
-      // check if the neighbor is already visited or in the queue
-      if (neighbors_added[i])
-        vertex_queue.Enqueue(neighbor); // register all neighbors
+      // Vertex = dequeue
+      Vertex current = vertex_queue.Dequeue();
+      current.Visit(); // another duplication prevention
 
-      // register edge to the neighbor in the hashset
-      edges.Add(new(current, neighbor, neighbor.isDiagonal? 22 : 16)); // using an aproximation for the diagonal
-    }
-  }
-
-
-  private Vertex[] GetNeighboringCells(Vector2I referenceCell, out bool[] neighbors_added)
-  {
-    List<Vertex> result = [];
-    Vertex[] neighbors = [
-        // straight paths
-        new(new (referenceCell.X, referenceCell.Y - 1)), // up
-        new(new (referenceCell.X, referenceCell.Y + 1)), // down
-        new(new (referenceCell.X - 1, referenceCell.Y)), // left
-        new(new (referenceCell.X + 1, referenceCell.Y)), // right
-        // diagonals the cost should be higher
-        // new(new (referenceCell.X - 1, referenceCell.Y - 1),true), // top left
-        // new(new (referenceCell.X + 1, referenceCell.Y - 1),true), // top right
-        // new(new (referenceCell.X - 1, referenceCell.Y + 1),true), // bottom left
-        // new(new (referenceCell.X + 1, referenceCell.Y + 1) true), // bottom right
-    ];
-    
-    neighbors_added = new bool[neighbors.Length];
-
-    for(int i = 0; i < neighbors.Length; i++)
-    {
-      Vertex neighbor = neighbors[i];
-      // check if valid vertex
-      if (GetCellSourceId(neighbor.position) != 0) {
-        continue; // not a valid neighbor
-      }
-
-      
-      if (!vertices.Add(neighbor))
+      //for each neighbor do:
+      Vertex[] neighbors = GetNeighboringCells(current);
+      foreach (Vertex neighbor in neighbors) 
       {
-        neighbors_added[i] = false;
-        // GD.Print("Vertex could not be added: " + neighbor);
-      } 
-      else 
-      {
-        neighbors_added[i] = true;
-        // GD.Print("Vertex could be added: " + neighbor);
+        // this neighbor is valid and in the vertices hashset
+        
+        // make a connection with this neighbor
+        edges.Add(new Edge(current, neighbor, neighbor.isDiagonal? 141: 100)); //141 form diagonal and 100 for a straight line
 
-        bool found = vertices.TryGetValue(neighbor, out Vertex actualValue);
-        if (found) 
-          result.Add(actualValue);
+        // enqueue this neighbor if not enqueued already
+        if(!neighbor.Enqueued)
+        {
+          neighbor.Enqueue();
+          vertex_queue.Enqueue(neighbor);
+        }
       }
     }
 
-    return [.. result];
+  }
+  private Vertex[] GetNeighboringCells(Vertex referenceCell)
+  {
+    List<Vertex> neighbors = [];
+
+    // straight paths
+    // down
+    if (TryGetVertexFromHashSet(new(new (referenceCell.position.X, referenceCell.position.Y + 1)), out Vertex down_vertex)) 
+      neighbors.Add(down_vertex);
+    // up
+    if (TryGetVertexFromHashSet(new(new (referenceCell.position.X, referenceCell.position.Y - 1)), out Vertex up_vertex)) 
+      neighbors.Add(up_vertex);
+    // left
+    if (TryGetVertexFromHashSet(new(new (referenceCell.position.X - 1, referenceCell.position.Y)), out Vertex left_vertex)) 
+      neighbors.Add(left_vertex);
+    // right
+    if (TryGetVertexFromHashSet(new(new (referenceCell.position.X + 1, referenceCell.position.Y)), out Vertex right_vertex)) 
+      neighbors.Add(right_vertex);
+
+    // diagonals the cost should be higher
+    if (USING_DIAGONALS) 
+    {
+      // top left
+      if (TryGetVertexFromHashSet(new(new (referenceCell.position.X - 1, referenceCell.position.Y - 1), true), out Vertex top_left_vertex)) 
+        neighbors.Add(top_left_vertex);
+      // top right
+      if (TryGetVertexFromHashSet(new(new (referenceCell.position.X + 1, referenceCell.position.Y - 1), true), out Vertex top_right_vertex)) 
+        neighbors.Add(top_right_vertex);
+      // bottom left
+      if (TryGetVertexFromHashSet(new(new (referenceCell.position.X - 1, referenceCell.position.Y + 1), true), out Vertex bottom_left_vertex)) 
+        neighbors.Add(bottom_left_vertex);
+      // bottom right
+      if (TryGetVertexFromHashSet(new(new (referenceCell.position.X + 1, referenceCell.position.Y + 1), true), out Vertex bottom_right_vertex)) 
+        neighbors.Add(bottom_right_vertex);
+    }
+    return [.. neighbors];
+  }
+
+  private bool TryGetVertexFromHashSet(Vertex current, out Vertex output) 
+  {
+    if (GetCellSourceId(current.position) != 0)
+    {
+      output = null;
+      return false;
+    }
+
+    if (vertices.TryGetValue(current, out Vertex actualVertex)) 
+    {
+      output = actualVertex;
+    } 
+    else 
+    {
+      vertices.Add(current);
+      output = current;
+    }
+    return true;
+  } 
+
+  private bool ReadOnlyTryGetValue(Vertex probe, out Vertex output) 
+  {
+    if (vertices.TryGetValue(probe, out Vertex actualVertex)) 
+    {
+      output = actualVertex;
+    } 
+    else 
+    {
+      output = probe;
+    }
+    return true;
   }
 
   public override void _Draw()

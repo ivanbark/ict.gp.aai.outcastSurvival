@@ -42,17 +42,18 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0n6si"]
-size = Vector2(9.74148, 17.8182)
+size = Vector2(2.62271, 4)
 
 [node name="Player" type="CharacterBody2D"]
 scale = Vector2(5.338, 5.5)
 script = ExtResource("1_s88pm")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-scale = Vector2(0.019989, 0.0200187)
+position = Vector2(-7.15256e-07, 9.53674e-07)
+scale = Vector2(0.00536892, 0.00440537)
 sprite_frames = SubResource("SpriteFrames_f70dq")
 animation = &"down"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -1.73395e-07)
+position = Vector2(-8.93288e-08, 4.33488e-08)
 shape = SubResource("RectangleShape2D_0n6si")

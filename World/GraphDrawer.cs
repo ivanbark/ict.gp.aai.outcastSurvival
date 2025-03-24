@@ -20,12 +20,12 @@ public partial class GraphDrawer : Node2D
     foreach(Vertex vertex  in graph.vertices) 
     {
       if (vertex.Visited)
-        DrawCircle(graph.MapToLocal(vertex.position), 3, Colors.Red);
+        DrawCircle(graph.MapToLocal(vertex.position), 2, Colors.Red);
     }
-    
+
     foreach (Edge edge in graph.edges)
     {
-      DrawLine(graph.MapToLocal(edge.from.position), graph.MapToLocal(edge.to.position),Colors.Red,2);
+      DrawLine(graph.MapToLocal(edge.from.position), graph.MapToLocal(edge.to.position),Colors.Red,1);
     }
   }
 }
