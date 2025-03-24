@@ -67,12 +67,6 @@ public partial class Player : MovingEntity
     protected override void Die()
     {
       GD.Print("Player has died. Game Over!");
-
-      var uiManager = World_ref.GetNode<Ui>("UI");
-      if (uiManager != null)
-      {
-        uiManager.DisplayGameOverMessage();
-      }
         
       GetTree().Paused = true;
     }

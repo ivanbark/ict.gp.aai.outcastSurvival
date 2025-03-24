@@ -1,6 +1,6 @@
-[gd_scene load_steps=16 format=3 uid="uid://brmbbns17wh7r"]
+[gd_scene load_steps=22 format=3 uid="uid://brmbbns17wh7r"]
 
-[ext_resource type="Script" path="res://Entities/Guard/Guard.cs" id="1_tpkhw"]
+[ext_resource type="Script" uid="uid://fsxbe643n17c" path="res://Entities/Guard/Guard.cs" id="1_tpkhw"]
 [ext_resource type="Texture2D" uid="uid://bme50fd6evxef" path="res://art/guard/guard_down.png" id="2_q3pd4"]
 [ext_resource type="Texture2D" uid="uid://dj76c3imk2wks" path="res://art/guard/guard_attack_f1.png" id="2_vx2l4"]
 [ext_resource type="Texture2D" uid="uid://bkx6yxwj1hye3" path="res://art/guard/guard_attack_f2.png" id="3_wvwdm"]
@@ -9,10 +9,16 @@
 [ext_resource type="Texture2D" uid="uid://du6us5vbl61qk" path="res://art/guard/guard_attack_f3.png" id="4_yluq1"]
 [ext_resource type="Texture2D" uid="uid://dctm8gw876a7j" path="res://art/guard/guard_attack_f4.png" id="5_n0jab"]
 [ext_resource type="Texture2D" uid="uid://dj01duxs4xn8x" path="res://art/guard/guard_up.png" id="5_t22tx"]
-[ext_resource type="Script" path="res://StateMachine.cs" id="6_ormmd"]
-[ext_resource type="Script" path="res://States/ChaseState.cs" id="7_m6u2i"]
-[ext_resource type="Script" path="res://States/AttackState.cs" id="8_m132w"]
-[ext_resource type="Script" path="res://States/AlertState.cs" id="11_naac8"]
+[ext_resource type="Script" uid="uid://c38huuikrcaye" path="res://StateMachine.cs" id="6_ormmd"]
+[ext_resource type="Script" uid="uid://bl8edmv55ualb" path="res://States/ChaseState.cs" id="7_m6u2i"]
+[ext_resource type="Script" uid="uid://cwihdw51g6hv2" path="res://States/AttackState.cs" id="8_m132w"]
+[ext_resource type="Script" uid="uid://dwobeqxhsbnyh" path="res://States/AlertState.cs" id="11_naac8"]
+[ext_resource type="Script" uid="uid://6ymcst0y3cuh" path="res://States/PatrolState.cs" id="11_ud11j"]
+[ext_resource type="Script" uid="uid://cix1jg27y7oao" path="res://States/IdleState.cs" id="12_stybp"]
+[ext_resource type="Script" uid="uid://yuo2tt66610f" path="res://States/PatrolPathState.cs" id="13_n2eox"]
+[ext_resource type="Script" uid="uid://7cjjlqn2u8be" path="res://States/SeekState.cs" id="16_fk5uj"]
+[ext_resource type="Script" uid="uid://yhsvl5lrkflo" path="res://States/SearchState.cs" id="17_1j300"]
+[ext_resource type="Script" uid="uid://c70wdsx8mt6v" path="res://States/PlayerDetectedState.cs" id="18_7du5f"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_x6wym"]
 animations = [{
@@ -87,17 +93,20 @@ shape = SubResource("RectangleShape2D_52kos")
 
 [node name="StateMachine" type="Node" parent="."]
 script = ExtResource("6_ormmd")
-initialState = NodePath("Patrol")
+initialState = NodePath("Alert")
 
 [node name="Patrol" type="Node" parent="StateMachine"]
+script = ExtResource("11_ud11j")
 
 [node name="SubStateMachine" type="Node" parent="StateMachine/Patrol"]
 script = ExtResource("6_ormmd")
 initialState = NodePath("Idle")
 
 [node name="Idle" type="Node" parent="StateMachine/Patrol/SubStateMachine"]
+script = ExtResource("12_stybp")
 
 [node name="PatrolPath" type="Node" parent="StateMachine/Patrol/SubStateMachine"]
+script = ExtResource("13_n2eox")
 
 [node name="Alert" type="Node" parent="StateMachine"]
 script = ExtResource("11_naac8")
@@ -107,16 +116,20 @@ script = ExtResource("6_ormmd")
 initialState = NodePath("PlayerDetected")
 
 [node name="PlayerLost" type="Node" parent="StateMachine/Alert/SubStateMachine"]
+script = ExtResource("13_n2eox")
 
 [node name="SubStateMachine" type="Node" parent="StateMachine/Alert/SubStateMachine/PlayerLost"]
 script = ExtResource("6_ormmd")
 initialState = NodePath("SeekLastKnownPosition")
 
 [node name="SeekLastKnownPosition" type="Node" parent="StateMachine/Alert/SubStateMachine/PlayerLost/SubStateMachine"]
+script = ExtResource("16_fk5uj")
 
 [node name="Search" type="Node" parent="StateMachine/Alert/SubStateMachine/PlayerLost/SubStateMachine"]
+script = ExtResource("17_1j300")
 
 [node name="PlayerDetected" type="Node" parent="StateMachine/Alert/SubStateMachine"]
+script = ExtResource("18_7du5f")
 
 [node name="SubStateMachine" type="Node" parent="StateMachine/Alert/SubStateMachine/PlayerDetected"]
 script = ExtResource("6_ormmd")

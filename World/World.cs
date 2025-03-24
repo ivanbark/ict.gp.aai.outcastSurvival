@@ -24,7 +24,7 @@ public partial class World : Node2D
   public override void _Process(double delta)
   {
     // Alleen input "Listeners hier", game logic in het onderste deel!
-    Engine.TimeScale = 0f;
+    // Engine.TimeScale = 0f;
     if (Input.IsActionJustPressed("pause_play_toggle")) {
       Playing = !Playing;
       

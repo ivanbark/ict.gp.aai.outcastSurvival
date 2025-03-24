@@ -1,7 +1,7 @@
 ﻿using Godot;
 using System;
 
-public partial class AlertState : State
+public partial class PatrolState : State
 {
     private StateMachine _subStateMachine;
 
@@ -12,7 +12,7 @@ public partial class AlertState : State
 
     public override void Enter()
     {
-        GD.Print("Entering AlertState");
+        GD.Print("Entering PatrolState");
         _subStateMachine.SetActive(true);
     }
 
@@ -24,7 +24,7 @@ public partial class AlertState : State
 
     public override void Exit()
     {
-        GD.Print("Exiting AlertState");
+        GD.Print("Exiting PatrolState");
         _subStateMachine.SetActive(false);
     }
 }

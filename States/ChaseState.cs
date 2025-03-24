@@ -5,29 +5,32 @@ public partial class ChaseState : State
 {
     private Guard _guard;
 
-    public override void Ready()
+    protected override void OnInitialize()
     {
         _guard = fsm.Guard;
     }
+
     public override void Enter()
     {
+        GD.Print("Entering ChaseState");
     }
 
     public override void Exit()
     {
+        GD.Print("Exiting ChaseState");
         _guard.Velocity = Vector2.Zero;
     }
-    
+
     public override void Process(float delta)
     {
-        if (_guard == null || _guard.Player == null) return;
+        GD.Print("Processing ChaseState");
+        if (_guard == null) return;
 
         _guard.ChasePlayer(delta);
 
-        if (_guard.Position.DistanceTo(_guard.Player.Position) < 140f)
+        if (_guard.Position.DistanceTo(_guard.Player.Position) < 150f)
         {
-            fsm.TransitionTo("Attack");
+            TransitionTo("Attack");
         }
     }
-
 }
