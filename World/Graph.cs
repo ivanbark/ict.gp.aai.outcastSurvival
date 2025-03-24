@@ -12,6 +12,9 @@ public partial class Graph : TileMapLayer
 
   [Export]
   private bool USING_DIAGONALS = false;
+  
+  [Export]
+  public int[] WalkableTileIds = [0];
 
   public HashSet<Edge> edges = [];
   public HashSet<Vertex> vertices = [];
@@ -122,7 +125,7 @@ public partial class Graph : TileMapLayer
 
   private bool TryGetVertexFromHashSet(Vertex current, out Vertex output) 
   {
-    if (GetCellSourceId(current.position) != 0)
+    if (!WalkableTileIds.Contains(GetCellSourceId(current.position)))
     {
       output = null;
       return false;
