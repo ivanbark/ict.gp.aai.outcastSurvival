@@ -175,9 +175,9 @@ Step forward : F3
 label_settings = SubResource("LabelSettings_g6jkd")
 
 [node name="Player" parent="." node_paths=PackedStringArray("World_ref") instance=ExtResource("7_yf0ba")]
-position = Vector2(273, 205)
+position = Vector2(1163, 592)
 World_ref = NodePath("..")
 
 [node name="Guard" parent="." node_paths=PackedStringArray("World_ref") instance=ExtResource("8_eidgh")]
-position = Vector2(940, 413)
+position = Vector2(1245, 532)
 World_ref = NodePath("..")

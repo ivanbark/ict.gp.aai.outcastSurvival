@@ -4,6 +4,9 @@ using System;
 public partial class Guard : MovingEntity
 {
     public Player Player;
+    
+    [Export]
+    public float AttackCooldown;
     private float _attackCooldown;
 
     public override void _Ready()
@@ -32,16 +35,13 @@ public partial class Guard : MovingEntity
         if (Player == null)
             return;
         
-        GD.Print("start attacking");
-        
-        if (Position.DistanceTo(Player.Position) < 150f && animatedSprite.Frame == 2 && _attackCooldown <= 0f)
+        if (Position.DistanceTo(Player.Position) <= AttackRange && _attackCooldown <= 0f)
         {
-            _attackCooldown = .75f;
-            Player.TakeDamage(25);
             GD.Print("Attacking");
+            _attackCooldown = AttackCooldown;
+            Player.TakeDamage(AttackDamage);
         }
         
         _attackCooldown -= delta;
-        GD.Print("stop attacking");
     }
 }

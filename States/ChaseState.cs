@@ -28,7 +28,7 @@ public partial class ChaseState : State
 
         _guard.ChasePlayer(delta);
 
-        if (_guard.Position.DistanceTo(_guard.Player.Position) < 150f)
+        if (_guard.Position.DistanceTo(_guard.Player.Position) <= _guard.AttackRange - 5)
         {
             TransitionTo("Attack");
         }

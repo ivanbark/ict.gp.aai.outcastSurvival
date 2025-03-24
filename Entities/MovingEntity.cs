@@ -12,23 +12,18 @@ public partial class MovingEntity : BaseGameEntity
 
   [Export] 
   public int AttackDamage = 25;
-
-  [Export] 
-  public int Stamina = 100;
+  [Export]
+  public int AttackRange = 20;
 
   [Export]
-  public int MaxSpeed { get; set; } = 900;
+  public int MaxSpeed { get; set; } = 150;
 
-  [Export] public int MaxForce { get; set; } = 1300;
-
-  [Export]
-  public int MinSpeed { get; set; } = 0;
+  [Export] public int MaxForce { get; set; } = 217;
 
   [Export]
   public float Mass { get; set; } = 1.5f;
 
-  [Export] 
-  public float Acceleration = 0f;
+  private float _acceleration = 0f;
 
   public override void _Ready()
   {
@@ -36,7 +31,7 @@ public partial class MovingEntity : BaseGameEntity
     
     animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
     
-    Acceleration = MaxForce / Mass;
+    _acceleration = MaxForce / Mass;
   }
 
   public override void _Process(double delta)
@@ -70,15 +65,16 @@ public partial class MovingEntity : BaseGameEntity
   
   public void ApplyAcceleration(Vector2 desiredVelocity, float delta)
   {
+    float sharpTurnFactor = 2.0f; // Increase this factor for sharper turns
     float decelerationFactor = 0.85f; // Adjust for smoother stops
 
     if (Velocity.Dot(desiredVelocity) < 0)
     {
-      Velocity = desiredVelocity.Normalized() * Mathf.Max(Acceleration * delta, desiredVelocity.Length() * 0.5f);
+      Velocity = desiredVelocity.Normalized() * Mathf.Max(_acceleration * delta * sharpTurnFactor, desiredVelocity.Length() * 0.5f);
     }
     else
     {
-      Velocity += (desiredVelocity - Velocity).Normalized() * Acceleration * delta;
+      Velocity += (desiredVelocity - Velocity).Normalized() * _acceleration * delta * sharpTurnFactor;
     }
 
     if (Velocity.Length() < 10f)

@@ -73,22 +73,23 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_52kos"]
-size = Vector2(117.002, 174)
+size = Vector2(2.62276, 3.63653)
 
 [node name="Guard" type="CharacterBody2D"]
+position = Vector2(-41, -1)
+scale = Vector2(5.3, 5.7)
 script = ExtResource("1_tpkhw")
-MaxSpeed = 1000
+AttackCooldown = 0.75
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-scale = Vector2(0.34375, 0.3125)
+scale = Vector2(0.005, 0.004)
 sprite_frames = SubResource("SpriteFrames_x6wym")
-animation = &"attack"
-frame = 2
-frame_progress = 0.285558
+animation = &"down"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-0.499552, 9.99822)
+position = Vector2(0.00013578, -8.35363e-05)
 rotation = 0.000297832
+scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_52kos")
 
 [node name="StateMachine" type="Node" parent="."]
