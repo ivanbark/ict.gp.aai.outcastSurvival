@@ -30,10 +30,15 @@ public partial class Graph : TileMapLayer
     // QueueRedraw();
   }
 
-  public Vertex GetVertexForPosition(Vector2I position)
+  public bool GetVertexForPosition(Vector2I position, out Vertex found_vertex)
   {
-    Vertex vert = ReadOnlyTryGetValue(new Vertex(position));
-    return vert;
+    if (!ReadOnlyTryGetValue(new Vertex(position), out Vertex vert))
+    {
+      found_vertex = null;
+      return false;
+    }
+    found_vertex = vert;
+    return true;
   }
 
 
@@ -64,7 +69,9 @@ public partial class Graph : TileMapLayer
         // this neighbor is valid and in the vertices hashset
         
         // make a connection with this neighbor
-        edges.Add(new Edge(current, neighbor, neighbor.isDiagonal? 141: 100)); //141 form diagonal and 100 for a straight line
+        Edge edge_to_neighbor = new (current, neighbor, neighbor.isDiagonal? 141: 100);
+        edges.Add(edge_to_neighbor); //141 form diagonal and 100 for a straight line
+        current.AddNeighbor(edge_to_neighbor);
 
         // enqueue this neighbor if not enqueued already
         if(!neighbor.Enqueued)

@@ -8,7 +8,9 @@ public partial class World : Node2D
   [Export]
   public MovingEntity[] movingEntity_list { get; set; }
 
-  
+  [Export]
+  public Graph graph_ref;
+
   [Export]
   public bool Playing { get; set; } = false;
 
@@ -94,4 +96,14 @@ public partial class World : Node2D
     }
   }
 
+
+  public void GetPathTo(Vector2I start, Vector2I destination) 
+  {
+    bool found_start = graph_ref.GetVertexForPosition(start, out Vertex startVertex);
+    bool found_destination = graph_ref.GetVertexForPosition(destination, out Vertex destinationtVertex);
+    if (found_start && found_destination) 
+    {
+      GD.Print("We can start to find a path");
+    }
+  } 
 }

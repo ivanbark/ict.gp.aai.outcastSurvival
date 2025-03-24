@@ -42,17 +42,18 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_52kos"]
-size = Vector2(77.0381, 127.977)
+size = Vector2(14, 18)
 
 [node name="Guard" type="CharacterBody2D"]
 script = ExtResource("1_tpkhw")
 MaxSpeed = 1000
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-scale = Vector2(0.147228, 0.137931)
+scale = Vector2(0.0277249, 0.0193965)
 sprite_frames = SubResource("SpriteFrames_x6wym")
 animation = &"down"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 rotation = 0.000297832
+scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_52kos")
