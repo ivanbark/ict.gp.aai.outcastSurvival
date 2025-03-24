@@ -5,8 +5,8 @@ public partial class BaseGameEntity : CharacterBody2D
 {
   [Export]
   public bool visualize_debug_info { get; set; } = false;
-  
-  // [Export]
+
+  [Export]
   public World World_ref { get; set; }
 
   // Called when the node enters the scene tree for the first time.
@@ -18,5 +18,7 @@ public partial class BaseGameEntity : CharacterBody2D
   // Called every frame. 'delta' is the elapsed time since the previous frame.
   public override void _Process(double delta)
   {
+    if (Engine.TimeScale == 0f)
+      return;
   }
 }
