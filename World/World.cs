@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Threading.Tasks;
 using OutCastSurvival.Entities;
+using System.Collections.Generic;
 
 namespace OutCastSurvival 
 {
@@ -15,7 +16,7 @@ public partial class World : Node2D
   public Graph graph_ref;
 
   [Export]
-  public bool Playing { get; set; } = false;
+  public bool Playing { get; set; } = true;
 
   [Export]
   public bool Step { get; set; } = false;
@@ -27,7 +28,7 @@ public partial class World : Node2D
   public override void _Process(double delta)
   {
     // Alleen input "Listeners hier", game logic in het onderste deel!
-    Engine.TimeScale = 0f;
+    // Engine.TimeScale = 0f;
     if (Input.IsActionJustPressed("pause_play_toggle")) {
       Playing = !Playing;
       
@@ -74,6 +75,26 @@ public partial class World : Node2D
   public Player GetPlayer()
   {
     return (Player)GetNode<CharacterBody2D>("Player");
+  }
+
+  public Sheep[] GetOtherSheep(Vector2 coord, float radius) 
+  {
+    List<Sheep> otherSheep = [];
+
+    // get all the sheep
+    var allsheep = GetTree().GetNodesInGroup("Entities");
+
+    // check if in the provided radius
+    foreach (Node entity in allsheep)
+    {
+      if (entity is Sheep sheep)
+      {
+        if ( sheep.Position.DistanceTo(coord) <= radius)
+          otherSheep.Add(sheep);
+      }
+    }
+
+    return [.. otherSheep];
   }
 
   private void UpdatePlayPauseLabel() {

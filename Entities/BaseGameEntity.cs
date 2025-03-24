@@ -5,7 +5,7 @@ namespace OutCastSurvival.Entities
 public partial class BaseGameEntity : CharacterBody2D
 {
   [Export]
-  public bool visualize_debug_info { get; set; } = false;
+  public bool visualize_debug_info = false;
 
   [Export]
   public World World_ref { get; set; }

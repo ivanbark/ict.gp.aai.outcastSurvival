@@ -66,7 +66,7 @@ public partial class MovingEntity : BaseGameEntity
     animatedSprite.GlobalRotation = 0;
     
     Velocity = Velocity.LimitLength(MaxSpeed);
-    Position += Velocity * (float)delta; 
+    Position += Velocity * (float)delta;
   }
   
   public void ApplyAcceleration(Vector2 desiredVelocity, float delta)
