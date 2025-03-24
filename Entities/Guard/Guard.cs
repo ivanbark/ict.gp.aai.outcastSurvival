@@ -3,34 +3,45 @@ using System;
 
 public partial class Guard : MovingEntity
 {
-    private Player player;
+    public Player Player;
+    private float _attackCooldown;
 
     public override void _Ready()
     {
         base._Ready();
-        AddToGroup("Entities");
-
-        player = World_ref.GetNode<Player>("Player");
-    }
-
-    public override void _Process(double delta)
-    {
-        base._Process(delta);
         
-        if (player == null) return;
-
-        SeekPlayer(player.Position, (float)delta);
+        AddToGroup("Entities");
+        
+        if (World_ref != null)
+            Player = World_ref.GetNode<Player>("Player");
+        
+        _attackCooldown = 0f;
     }
 
-    private void SeekPlayer(Vector2 targetPosition, float delta)
+    public void ChasePlayer(float delta)
     {
-        Vector2 desiredVelocity = SteeringBehaviour.Seek(Position, targetPosition, MaxSpeed);
+        if (Player == null)
+            return;
+        
+        Vector2 desiredVelocity = SteeringBehaviour.Seek(Position, Player.Position, MaxSpeed);
         ApplyAcceleration(desiredVelocity, delta);
-
-        if (Position.DistanceTo(targetPosition) < 190f) // make thsi the width of itself / 2 and the width of the target / 2
+    }
+    
+    public void AttackPlayer(float delta)
+    {
+        if (Player == null)
+            return;
+        
+        GD.Print("start attacking");
+        
+        if (Position.DistanceTo(Player.Position) < 150f && animatedSprite.Frame == 2 && _attackCooldown <= 0f)
         {
-            GD.Print("STOP!");
-            Velocity = Vector2.Zero;
+            _attackCooldown = .75f;
+            Player.TakeDamage(25);
+            GD.Print("Attacking");
         }
+        
+        _attackCooldown -= delta;
+        GD.Print("stop attacking");
     }
 }

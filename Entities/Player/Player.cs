@@ -8,6 +8,7 @@ public partial class Player : MovingEntity
   public override void _Ready()
   {
     base._Ready();
+    
     AddToGroup("Entities");
   }
 
@@ -61,5 +62,18 @@ public partial class Player : MovingEntity
       // DrawLine(Position, Heading, Colors.Red, 1);
       // }
 
+    }
+    
+    protected override void Die()
+    {
+      GD.Print("Player has died. Game Over!");
+
+      var uiManager = World_ref.GetNode<Ui>("UI");
+      if (uiManager != null)
+      {
+        uiManager.DisplayGameOverMessage();
+      }
+        
+      GetTree().Paused = true;
     }
 }
