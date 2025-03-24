@@ -21,6 +21,7 @@ public partial class World : Node
     {
         base._Ready();
     }
+    
     public override void _Process(double delta)
     {
       // Alleen input "Listeners hier", game logic in het onderste deel!
