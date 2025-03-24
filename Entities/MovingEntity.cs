@@ -20,7 +20,8 @@ public partial class MovingEntity : BaseGameEntity
   [Export]
   public int MaxSpeed { get; set; } = 900;
 
-  [Export] public int MaxForce { get; set; } = 1300;
+  [Export] 
+  public int MaxForce { get; set; } = 1300;
 
   [Export]
   public int MinSpeed { get; set; } = 0;

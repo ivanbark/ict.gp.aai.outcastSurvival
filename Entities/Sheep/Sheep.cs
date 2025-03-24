@@ -6,34 +6,33 @@ namespace OutCastSurvival.Entities
   public partial class Sheep : MovingEntity
   {
     [Export]
-    private float flocking_radius = 35.0f;
+    private float flocking_radius = 25.0f;
     
 
     [Export]
-    private float Separation_force = 1f;
+    private float Separation_force = 50f;
     private Vector2 Separation_force_vector;
     [Export]
     private float Alignment_force = 1f;
     private Vector2 Alignment_force_vector;
     [Export]
-    private float Cohesion_force = 1f;
+    private float Cohesion_force = 10f;
     private Vector2 Cohesion_force_vector;
 
     public override void _Ready()
     {
       base._Ready();
+      MaxForce = 600;
+      MaxSpeed = 25;
       
       AddToGroup("Entities");
       AddToGroup("Sheep");
     }
       public override void _Process(double delta)
       {
-        // Player player = World_ref.GetPlayer();
-        // if (player == null)
-        //   return;
-        Vector2 seek_force = SteeringBehaviour.Seek(Position,new(1200,550),Separation_force + 0.01f);
-        // wander
-        Velocity += seek_force;
+        // Vector2 seek_force = SteeringBehaviour.Seek(Position,new(1200,550),Separation_force + 0.01f);
+        // // wander
+        // Velocity += seek_force;
         // flocking
 
         //get entities in radius from world.
@@ -49,8 +48,14 @@ namespace OutCastSurvival.Entities
           if (sheep.Equals(this) || sheep.GetHashCode() == GetHashCode())
             continue;
           //seperation
-          separation_vec.X += sheep.Position.X - Position.X;
-          separation_vec.Y += sheep.Position.Y - Position.Y;
+          Vector2 offset = Position - sheep.Position;
+          float distance = offset.Length();
+
+          if (distance > 0.01f) // avoid division by zero or jitter at very small distances
+          {
+              offset = offset.Normalized() / distance; // stronger push when closer
+              separation_vec += offset;
+          }
 
           // alignment (not using for now, but implemnt her otherwise)
 
@@ -65,7 +70,7 @@ namespace OutCastSurvival.Entities
         {
           separation_vec /= num_sheep;
           separation_vec = separation_vec.Normalized();
-          Separation_force_vector = separation_vec * Separation_force * -1;
+          Separation_force_vector = separation_vec * Separation_force;
 
           cohesion_vec /= num_sheep;
           cohesion_vec -= Position;
@@ -102,6 +107,11 @@ namespace OutCastSurvival.Entities
               return (sheep.Position == Position && sheep.Velocity == Velocity);
            }
            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }  
 }
