@@ -17,12 +17,12 @@ public partial class GraphDrawer : Node2D
   {
     base._Draw();
     
-    foreach(var keyval  in graph.graph_collection) 
+    foreach(Vertex vertex  in graph.vertices) 
     {
-      Vector2I vec = keyval.Key;
-      if (keyval.Value.Visited)
-        DrawCircle(graph.MapToLocal(vec), 3, Colors.Red);
+      if (vertex.Visited)
+        DrawCircle(graph.MapToLocal(vertex.position), 3, Colors.Red);
     }
+    
     foreach (Edge edge in graph.edges)
     {
       DrawLine(graph.MapToLocal(edge.from.position), graph.MapToLocal(edge.to.position),Colors.Red,2);

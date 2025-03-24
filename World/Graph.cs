@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices.Marshalling;
 using Godot;
 
 public partial class Graph : TileMapLayer
@@ -8,10 +10,8 @@ public partial class Graph : TileMapLayer
   [Export]
   private Vector2I GraphOrigin = new(50, 50);
 
-  // collections of vertex's
-  public Dictionary<Vector2I, Vertex> graph_collection = [];
-
   public HashSet<Edge> edges = [];
+  public HashSet<Vertex> vertices = [];
 
   private readonly Queue<Vertex> vertex_queue = [];
 
@@ -20,12 +20,12 @@ public partial class Graph : TileMapLayer
   {
     if (GetCellSourceId(GraphOrigin) == -1)
       return;
-    vertex_queue.Enqueue(new(GraphOrigin));
-    //BFS
-    GenerateGraphBFS();
 
-    // DFS
-    // GenerateGraph(GraphOrigin);
+    Vertex start =new(GraphOrigin);
+    vertices.Add(start);
+    vertex_queue.Enqueue(start);
+
+    GenerateGraphBFS();
   }
 
   // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -35,18 +35,17 @@ public partial class Graph : TileMapLayer
   }
 
   private void GenerateGraphBFS()
-  { int i = 0;
-    while ( i < 16 && vertex_queue.Count > 0)
+  {
+    // int i = 0;
+    // while ( i < 25 && vertex_queue.Count > 0)
+    while (vertex_queue.Count > 0)
     {
-      // if(VertexesVisited >  MAX_VERTEXES)
-      //   return;
-
       // GD.Print(string.Join(", ", vertex_queue));
       GD.Print("Processing:" + vertex_queue.Peek());
       ProcessVertex(vertex_queue.Dequeue());
       // GD.Print(string.Join(", ", vertex_queue));
       GD.Print();
-      i++;
+      // i++;
     }
 
   }
@@ -59,58 +58,69 @@ public partial class Graph : TileMapLayer
     
     // set to visited and add to graph
     current.Visit();
-    graph_collection.TryAdd(current.position, current);
-
 
     // get neighbors
-    Vertex[] neighbors = GetNeighboringCells(current.position);
+    Vertex[] neighbors = GetNeighboringCells(current.position, out bool[] neighbors_added);
 
-    foreach (var neighbor in neighbors)
+    for(int i = 0; i < neighbors.Length; i++ )
     {
-      // check if valid vertex
-      if (GetCellSourceId(neighbor.position) != 0)
-        continue;
-
+      Vertex neighbor = neighbors[i];
+      
       // TODO: optimize enqueueing so it does not enter vertexes that already have been visited
       // check if the neighbor is already visited or in the queue
-      // if (!neighbor.Visited || !vertex_queue.Contains(neighbor))
-      if (!graph_collection.ContainsValue(neighbor) && !vertex_queue.Contains(neighbor))
+      if (neighbors_added[i])
         vertex_queue.Enqueue(neighbor); // register all neighbors
-      
-      
+
       // register edge to the neighbor in the hashset
       edges.Add(new(current, neighbor, neighbor.isDiagonal? 22 : 16)); // using an aproximation for the diagonal
     }
   }
 
 
-  private Vertex[] GetNeighboringCells(Vector2I referenceCell)
+  private Vertex[] GetNeighboringCells(Vector2I referenceCell, out bool[] neighbors_added)
   {
-    List<Vertex> neighbors = [];
-
-    Vector2I[] potentialNeighbors = [
+    List<Vertex> result = [];
+    Vertex[] neighbors = [
         // straight paths
-        new (referenceCell.X, referenceCell.Y - 1), // up
-        new (referenceCell.X, referenceCell.Y + 1), // down
-        new (referenceCell.X - 1, referenceCell.Y), // left
-        new (referenceCell.X + 1, referenceCell.Y), // right
+        new(new (referenceCell.X, referenceCell.Y - 1)), // up
+        new(new (referenceCell.X, referenceCell.Y + 1)), // down
+        new(new (referenceCell.X - 1, referenceCell.Y)), // left
+        new(new (referenceCell.X + 1, referenceCell.Y)), // right
         // diagonals the cost should be higher
-        // new (referenceCell.X - 1, referenceCell.Y - 1), // top left
-        // new (referenceCell.X + 1, referenceCell.Y - 1), // top right
-        // new (referenceCell.X - 1, referenceCell.Y + 1), // bottom left
-        // new (referenceCell.X + 1, referenceCell.Y + 1)  // bottom right
+        // new(new (referenceCell.X - 1, referenceCell.Y - 1),true), // top left
+        // new(new (referenceCell.X + 1, referenceCell.Y - 1),true), // top right
+        // new(new (referenceCell.X - 1, referenceCell.Y + 1),true), // bottom left
+        // new(new (referenceCell.X + 1, referenceCell.Y + 1) true), // bottom right
     ];
+    
+    neighbors_added = new bool[neighbors.Length];
 
-    for (int i = 0; i < potentialNeighbors.Length; i++)
+    for(int i = 0; i < neighbors.Length; i++)
     {
-      var neighbor = potentialNeighbors[i];
-      if (!graph_collection.ContainsKey(neighbor))
+      Vertex neighbor = neighbors[i];
+      // check if valid vertex
+      if (GetCellSourceId(neighbor.position) != 0) {
+        continue; // not a valid neighbor
+      }
+
+      
+      if (!vertices.Add(neighbor))
       {
-        neighbors.Add(new Vertex(neighbor, i > 3));
+        neighbors_added[i] = false;
+        // GD.Print("Vertex could not be added: " + neighbor);
+      } 
+      else 
+      {
+        neighbors_added[i] = true;
+        // GD.Print("Vertex could be added: " + neighbor);
+
+        bool found = vertices.TryGetValue(neighbor, out Vertex actualValue);
+        if (found) 
+          result.Add(actualValue);
       }
     }
 
-    return [.. neighbors];
+    return [.. result];
   }
 
   public override void _Draw()

@@ -30,7 +30,21 @@ private bool _visited = false;
     if (!neighbors.Contains(neighbor))
       neighbors.Add(neighbor);
   }
-  public override string ToString()
+
+    public override bool Equals(object obj)
+    {
+        if (obj is Vertex other)
+        {
+          return position == other.position;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return position.GetHashCode();
+    }
+    public override string ToString()
   {
     return position.ToString();
   }
