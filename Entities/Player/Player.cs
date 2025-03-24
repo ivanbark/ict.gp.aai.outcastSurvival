@@ -8,6 +8,7 @@ public partial class Player : MovingEntity
   public override void _Ready()
   {
     base._Ready();
+    
     AddToGroup("Entities");
   }
 
@@ -44,13 +45,35 @@ public partial class Player : MovingEntity
       Rotation = (float)Math.PI;
       animatedSprite2D.GlobalRotation = 0;
     }
+    
     QueueRedraw();
   }
   
     public override void _Draw()
     {
-        base._Draw();
+      // Line to target
+      // DrawLine(Position, World_ref.Target, Colors.Blue, 1);
 
-        DrawLine(Position, Heading, Colors.Blue, 3);
+      base._Draw();
+
+      // if(visualize_debug_info) {
+
+      // // heading is incorrect
+      // DrawLine(Position, Heading, Colors.Red, 1);
+      // }
+
+    }
+    
+    protected override void Die()
+    {
+      GD.Print("Player has died. Game Over!");
+
+      var uiManager = World_ref.GetNode<Ui>("UI");
+      if (uiManager != null)
+      {
+        uiManager.DisplayGameOverMessage();
+      }
+        
+      GetTree().Paused = true;
     }
 }

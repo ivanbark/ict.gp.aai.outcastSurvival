@@ -1,0 +1,129 @@
+[gd_scene load_steps=16 format=3 uid="uid://brmbbns17wh7r"]
+
+[ext_resource type="Script" path="res://Entities/Guard/Guard.cs" id="1_tpkhw"]
+[ext_resource type="Texture2D" uid="uid://bme50fd6evxef" path="res://art/guard/guard_down.png" id="2_q3pd4"]
+[ext_resource type="Texture2D" uid="uid://dj76c3imk2wks" path="res://art/guard/guard_attack_f1.png" id="2_vx2l4"]
+[ext_resource type="Texture2D" uid="uid://bkx6yxwj1hye3" path="res://art/guard/guard_attack_f2.png" id="3_wvwdm"]
+[ext_resource type="Texture2D" uid="uid://bwo7uc8ekolic" path="res://art/guard/guard_left.png" id="3_yew61"]
+[ext_resource type="Texture2D" uid="uid://cipqqifli1t8" path="res://art/guard/guard_right.png" id="4_2rqb3"]
+[ext_resource type="Texture2D" uid="uid://du6us5vbl61qk" path="res://art/guard/guard_attack_f3.png" id="4_yluq1"]
+[ext_resource type="Texture2D" uid="uid://dctm8gw876a7j" path="res://art/guard/guard_attack_f4.png" id="5_n0jab"]
+[ext_resource type="Texture2D" uid="uid://dj01duxs4xn8x" path="res://art/guard/guard_up.png" id="5_t22tx"]
+[ext_resource type="Script" path="res://StateMachine.cs" id="6_ormmd"]
+[ext_resource type="Script" path="res://States/ChaseState.cs" id="7_m6u2i"]
+[ext_resource type="Script" path="res://States/AttackState.cs" id="8_m132w"]
+[ext_resource type="Script" path="res://States/AlertState.cs" id="11_naac8"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_x6wym"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_vx2l4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_wvwdm")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_yluq1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_n0jab")
+}],
+"loop": true,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_q3pd4")
+}],
+"loop": true,
+"name": &"down",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_yew61")
+}],
+"loop": true,
+"name": &"left",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_2rqb3")
+}],
+"loop": true,
+"name": &"right",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_t22tx")
+}],
+"loop": true,
+"name": &"up",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_52kos"]
+size = Vector2(117.002, 174)
+
+[node name="Guard" type="CharacterBody2D"]
+script = ExtResource("1_tpkhw")
+MaxSpeed = 1000
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.34375, 0.3125)
+sprite_frames = SubResource("SpriteFrames_x6wym")
+animation = &"attack"
+frame = 2
+frame_progress = 0.285558
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.499552, 9.99822)
+rotation = 0.000297832
+shape = SubResource("RectangleShape2D_52kos")
+
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("6_ormmd")
+initialState = NodePath("Patrol")
+
+[node name="Patrol" type="Node" parent="StateMachine"]
+
+[node name="SubStateMachine" type="Node" parent="StateMachine/Patrol"]
+script = ExtResource("6_ormmd")
+initialState = NodePath("Idle")
+
+[node name="Idle" type="Node" parent="StateMachine/Patrol/SubStateMachine"]
+
+[node name="PatrolPath" type="Node" parent="StateMachine/Patrol/SubStateMachine"]
+
+[node name="Alert" type="Node" parent="StateMachine"]
+script = ExtResource("11_naac8")
+
+[node name="SubStateMachine" type="Node" parent="StateMachine/Alert"]
+script = ExtResource("6_ormmd")
+initialState = NodePath("PlayerDetected")
+
+[node name="PlayerLost" type="Node" parent="StateMachine/Alert/SubStateMachine"]
+
+[node name="SubStateMachine" type="Node" parent="StateMachine/Alert/SubStateMachine/PlayerLost"]
+script = ExtResource("6_ormmd")
+initialState = NodePath("SeekLastKnownPosition")
+
+[node name="SeekLastKnownPosition" type="Node" parent="StateMachine/Alert/SubStateMachine/PlayerLost/SubStateMachine"]
+
+[node name="Search" type="Node" parent="StateMachine/Alert/SubStateMachine/PlayerLost/SubStateMachine"]
+
+[node name="PlayerDetected" type="Node" parent="StateMachine/Alert/SubStateMachine"]
+
+[node name="SubStateMachine" type="Node" parent="StateMachine/Alert/SubStateMachine/PlayerDetected"]
+script = ExtResource("6_ormmd")
+initialState = NodePath("Chase")
+
+[node name="Chase" type="Node" parent="StateMachine/Alert/SubStateMachine/PlayerDetected/SubStateMachine"]
+script = ExtResource("7_m6u2i")
+
+[node name="Attack" type="Node" parent="StateMachine/Alert/SubStateMachine/PlayerDetected/SubStateMachine"]
+script = ExtResource("8_m132w")
