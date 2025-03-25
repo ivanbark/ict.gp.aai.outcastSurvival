@@ -3,7 +3,14 @@ using System;
 
 public partial class Guard : MovingEntity
 {
-    public Player Player;
+    private Node2D _player;
+    public Node2D Player
+    {
+        get => _player;
+        set => _player = value;
+    }
+
+    public AnimatedSprite2D AnimatedSprite { get; private set; }
 
     [Export]
     public float AttackCooldown;
@@ -16,30 +23,34 @@ public partial class Guard : MovingEntity
         AddToGroup("Entities");
 
         if (World_ref != null)
-            Player = World_ref.GetNode<Player>("Player");
+            _player = World_ref.GetNode<Player>("Player");
 
         _attackCooldown = 0f;
+        AnimatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
     }
 
     public void ChasePlayer(float delta)
     {
-        if (Player == null)
+        if (_player == null)
             return;
 
-        Vector2 desiredVelocity = SteeringBehaviour.Seek(Position, Player.Position, MaxSpeed);
+        Vector2 desiredVelocity = SteeringBehaviour.Seek(Position, _player.Position, MaxSpeed);
         ApplyAcceleration(desiredVelocity, delta);
     }
 
     public void AttackPlayer(float delta)
     {
-        if (Player == null)
+        if (_player == null)
             return;
 
-        if (Position.DistanceTo(Player.Position) <= AttackRange && _attackCooldown <= 0f)
+        if (Position.DistanceTo(_player.Position) <= AttackRange && _attackCooldown <= 0f)
         {
             GD.Print("Attacking");
             _attackCooldown = AttackCooldown;
-            Player.TakeDamage(AttackDamage);
+            if (_player is Player playerNode)
+            {
+                playerNode.TakeDamage(AttackDamage);
+            }
         }
 
         _attackCooldown -= delta;

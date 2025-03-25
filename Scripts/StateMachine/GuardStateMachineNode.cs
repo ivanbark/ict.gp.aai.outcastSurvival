@@ -1,0 +1,178 @@
+using Godot;
+using System;
+using StateMachine.States;
+
+namespace StateMachine
+{
+    public partial class GuardStateMachineNode : Node
+    {
+        private StateMachine _rootStateMachine;
+        private Guard _guard;
+
+        [Export]
+        public bool IsActive
+        {
+            get => _rootStateMachine?.IsActive ?? false;
+            set
+            {
+                if (_rootStateMachine != null)
+                    _rootStateMachine.SetActive(value);
+            }
+        }
+
+        public override void _Ready()
+        {
+            _guard = GetParent<Guard>();
+            if (_guard == null)
+            {
+                GD.PrintErr("GuardStateMachineNode must be a child of a Guard node!");
+                return;
+            }
+
+            InitializeStateMachine();
+            IsActive = true;  // Set the state machine to active after initialization
+        }
+
+        private void InitializeStateMachine()
+        {
+            _rootStateMachine = new StateMachine();
+            InitializePatrolStateMachine();
+            InitializeAlertStateMachine();
+            SetInitialState();
+            SubscribeToEvents();
+        }
+
+        private void InitializePatrolStateMachine()
+        {
+            var patrolStateMachine = new StateMachine(_rootStateMachine, null);
+            var patrolState = new PatrolState(_guard);
+            patrolState.SubStateMachine = patrolStateMachine;
+            _rootStateMachine.AddState(patrolState);
+
+            // Add Patrol sub-states
+            var idleState = new IdleState(_guard);
+            var patrolPathState = new PatrolPathState(_guard);
+            patrolStateMachine.AddState(idleState);
+            patrolStateMachine.AddState(patrolPathState);
+        }
+
+        private void InitializeAlertStateMachine()
+        {
+            var alertStateMachine = new StateMachine(_rootStateMachine, null);
+            var alertState = new AlertState(_guard);
+            alertState.SubStateMachine = alertStateMachine;
+            _rootStateMachine.AddState(alertState);
+
+            InitializePlayerLostStateMachine(alertStateMachine, alertState);
+            InitializePlayerDetectedStateMachine(alertStateMachine, alertState);
+        }
+
+        private void InitializePlayerLostStateMachine(StateMachine alertStateMachine, AlertState alertState)
+        {
+            var playerLostStateMachine = new StateMachine(alertStateMachine, alertState);
+            var playerLostState = new PlayerLostState(_guard);
+            playerLostState.SubStateMachine = playerLostStateMachine;
+            alertStateMachine.AddState(playerLostState);
+
+            // Add PlayerLost sub-states
+            var seekState = new SeekState(_guard);
+            var searchState = new SearchState(_guard);
+            playerLostStateMachine.AddState(seekState);
+            playerLostStateMachine.AddState(searchState);
+        }
+
+        private void InitializePlayerDetectedStateMachine(StateMachine alertStateMachine, AlertState alertState)
+        {
+            var playerDetectedStateMachine = new StateMachine(alertStateMachine, alertState);
+            var playerDetectedState = new PlayerDetectedState(_guard);
+            playerDetectedState.SubStateMachine = playerDetectedStateMachine;
+            alertStateMachine.AddState(playerDetectedState);
+
+            // Add PlayerDetected sub-states
+            var chaseState = new ChaseState(_guard);
+            var attackState = new AttackState(_guard);
+            playerDetectedStateMachine.AddState(chaseState);
+            playerDetectedStateMachine.AddState(attackState);
+        }
+
+        private void SetInitialState()
+        {
+            _rootStateMachine.SetState<AlertState>();
+            var alertState = _rootStateMachine.GetState<AlertState>();
+            if (alertState?.SubStateMachine != null)
+            {
+                alertState.SubStateMachine.SetState<PlayerDetectedState>();
+                var playerDetectedState = alertState.SubStateMachine.GetState<PlayerDetectedState>();
+                if (playerDetectedState?.SubStateMachine != null)
+                {
+                    playerDetectedState.SubStateMachine.SetState<ChaseState>();
+                }
+            }
+        }
+
+        private void SubscribeToEvents()
+        {
+            _rootStateMachine.OnStateChanged += OnStateChanged;
+            _rootStateMachine.OnChildStateChanged += OnChildStateChanged;
+        }
+
+        public override void _Process(double delta)
+        {
+            _rootStateMachine?.Update((float)delta);
+        }
+
+        public override void _UnhandledInput(InputEvent @event)
+        {
+            _rootStateMachine?.HandleInput(@event);
+        }
+
+        public void TransitionToAlert()
+        {
+            if (_rootStateMachine == null) return;
+
+            _rootStateMachine.SetState<AlertState>();
+            var alertState = _rootStateMachine.GetState<AlertState>();
+            if (alertState?.SubStateMachine != null)
+            {
+                alertState.SubStateMachine.SetState<PlayerDetectedState>();
+                var playerDetectedState = alertState.SubStateMachine.GetState<PlayerDetectedState>();
+                if (playerDetectedState?.SubStateMachine != null)
+                {
+                    playerDetectedState.SubStateMachine.SetState<ChaseState>();
+                }
+            }
+        }
+
+        public void TransitionToPatrol()
+        {
+            if (_rootStateMachine == null) return;
+
+            _rootStateMachine.SetState<PatrolState>();
+            var patrolState = _rootStateMachine.GetState<PatrolState>();
+            if (patrolState?.SubStateMachine != null)
+            {
+                patrolState.SubStateMachine.SetState<IdleState>();
+            }
+        }
+
+        private void OnStateChanged(IState from, IState to)
+        {
+            GD.Print($"State changed from {from?.StateName ?? "null"} to {to?.StateName ?? "null"}");
+        }
+
+        private void OnChildStateChanged(IState from, IState to)
+        {
+            GD.Print($"Child state changed from {from?.StateName ?? "null"} to {to?.StateName ?? "null"}");
+        }
+
+        public override void _ExitTree()
+        {
+            if (_rootStateMachine != null)
+            {
+                _rootStateMachine.OnStateChanged -= OnStateChanged;
+                _rootStateMachine.OnChildStateChanged -= OnChildStateChanged;
+                _rootStateMachine.SetActive(false);
+            }
+        }
+    }
+}

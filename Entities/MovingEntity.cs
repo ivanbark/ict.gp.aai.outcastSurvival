@@ -5,12 +5,12 @@ public partial class MovingEntity : BaseGameEntity
 {
   private Vector2 _heading;
   public AnimatedSprite2D animatedSprite;
-  
+
   [Export]
   public int MaxHealth = 100;
   public int CurrentHealth = 100;
 
-  [Export] 
+  [Export]
   public int AttackDamage = 25;
   [Export]
   public int AttackRange = 20;
@@ -28,14 +28,16 @@ public partial class MovingEntity : BaseGameEntity
   public override void _Ready()
   {
     base._Ready();
-    
+
     animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-    
+
     _acceleration = MaxForce / Mass;
   }
 
   public override void _Process(double delta)
   {
+    // GD.Print($"MovingEntity _Process - Velocity: {Velocity}");
+
     if (Mathf.Abs(Velocity.X) > Mathf.Abs(Velocity.Y))
     {
       if (Velocity.X > 0)
@@ -58,11 +60,11 @@ public partial class MovingEntity : BaseGameEntity
 
     Rotation = Velocity.Angle();
     animatedSprite.GlobalRotation = 0;
-    
+
     Velocity = Velocity.LimitLength(MaxSpeed);
-    Position += Velocity * (float)delta; 
+    Position += Velocity * (float)delta;
   }
-  
+
   public void ApplyAcceleration(Vector2 desiredVelocity, float delta)
   {
     float sharpTurnFactor = 2.0f; // Increase this factor for sharper turns
@@ -77,7 +79,8 @@ public partial class MovingEntity : BaseGameEntity
       Velocity += (desiredVelocity - Velocity).Normalized() * _acceleration * delta * sharpTurnFactor;
     }
 
-    if (Velocity.Length() < 10f)
+    // Only apply deceleration if both current and desired velocities are very small
+    if (Velocity.Length() < 10f && desiredVelocity.Length() < 10f)
     {
       Velocity *= decelerationFactor;
     }
@@ -96,7 +99,7 @@ public partial class MovingEntity : BaseGameEntity
   {
     QueueFree();
   }
-  
+
   public Vector2 Heading {
     get { return _heading; }
     private set { _heading = value; }
