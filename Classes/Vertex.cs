@@ -35,6 +35,15 @@ public class Vertex {
   }
   public Vertex(Vector2I position): this(position, false) {}
 
+  public Vertex(Vertex other)
+  {
+    position = other.position;
+    isDiagonal = other.isDiagonal;
+    _enqueued = other._enqueued;
+    _visited = other._visited;
+    neighbors = [.. other.neighbors];
+  }
+
   public void AddNeighbor(Edge neighbor) {
     if (!neighbors.Contains(neighbor))
       neighbors.Add(neighbor);

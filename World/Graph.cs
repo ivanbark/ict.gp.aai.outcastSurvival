@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.Marshalling;
+using System.Security.AccessControl;
 using Godot;
 
 public partial class Graph : TileMapLayer
@@ -15,6 +16,8 @@ public partial class Graph : TileMapLayer
   
   [Export]
   public int[] WalkableTileIds = [0];
+
+  public IHeuristicStrategy strategy = EuclideanHeuristic.Instance();
 
   public HashSet<Edge> edges = [];
   public HashSet<Vertex> vertices = [];
@@ -92,16 +95,16 @@ public partial class Graph : TileMapLayer
 
     // straight paths
     // down
-    if (TryGetVertexFromHashSet(new(new (referenceCell.position.X, referenceCell.position.Y + 1)), out Vertex down_vertex)) 
+    if (TryGetVertexFromHashSet(new(new Vector2I(referenceCell.position.X, referenceCell.position.Y + 1)), out Vertex down_vertex)) 
       neighbors.Add(down_vertex);
     // up
-    if (TryGetVertexFromHashSet(new(new (referenceCell.position.X, referenceCell.position.Y - 1)), out Vertex up_vertex)) 
+    if (TryGetVertexFromHashSet(new(new Vector2I(referenceCell.position.X, referenceCell.position.Y - 1)), out Vertex up_vertex)) 
       neighbors.Add(up_vertex);
     // left
-    if (TryGetVertexFromHashSet(new(new (referenceCell.position.X - 1, referenceCell.position.Y)), out Vertex left_vertex)) 
+    if (TryGetVertexFromHashSet(new(new Vector2I(referenceCell.position.X - 1, referenceCell.position.Y)), out Vertex left_vertex)) 
       neighbors.Add(left_vertex);
     // right
-    if (TryGetVertexFromHashSet(new(new (referenceCell.position.X + 1, referenceCell.position.Y)), out Vertex right_vertex)) 
+    if (TryGetVertexFromHashSet(new(new Vector2I(referenceCell.position.X + 1, referenceCell.position.Y)), out Vertex right_vertex)) 
       neighbors.Add(right_vertex);
 
     // diagonals the cost should be higher
@@ -159,5 +162,45 @@ public partial class Graph : TileMapLayer
   public override void _Draw()
   {
     base._Draw();
+  }
+
+
+  private List<Vertex> A_star(Vertex start, Vertex Destination) 
+  {
+    PriorityQueue<Edge, float> prio_queue = new();
+
+    var neighbors = start.neighbors;
+    foreach(var edge in neighbors) {
+      Vertex neighbor = edge.to == start ? edge.from : edge.to;
+      prio_queue.Enqueue(edge, edge.cost + strategy.DetermineHeuristicValue(start, Destination));
+
+    }
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    Vertex node = new(new Vector2I());
+    return [];
   }
 }
