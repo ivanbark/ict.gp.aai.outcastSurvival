@@ -89,7 +89,6 @@ animation = &"down"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0.00013578, -8.35363e-05)
 rotation = 0.000297832
-scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_52kos")
 
 [node name="StateMachine" type="Node" parent="."]
