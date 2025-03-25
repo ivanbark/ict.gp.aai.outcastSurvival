@@ -13,20 +13,16 @@ namespace StateMachine.States
         public override void Enter()
         {
             base.Enter();
-
-            // Initialize the sub-state machine if it doesn't exist
-            if (SubStateMachine == null)
-            {
-                SubStateMachine = new StateMachine(ParentStateMachine, this);
-                SubStateMachine.AddState(new ChaseState(_guard));
-                SubStateMachine.AddState(new AttackState(_guard));
-                SubStateMachine.SetState<ChaseState>();
-            }
         }
 
         public override void Update(float delta)
         {
             base.Update(delta);
+
+            if (_guard.Position.DistanceTo(_guard.Player.Position) > 100)
+            {
+                TransitionTo<PlayerLostState>();
+            }
         }
 
         public override void Exit()

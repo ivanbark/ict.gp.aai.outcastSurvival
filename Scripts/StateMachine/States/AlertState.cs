@@ -13,15 +13,6 @@ namespace StateMachine.States
         public override void Enter()
         {
             base.Enter();
-
-            // Initialize the sub-state machine if it doesn't exist
-            if (SubStateMachine == null)
-            {
-                SubStateMachine = new StateMachine(ParentStateMachine, this);
-                SubStateMachine.AddState(new PlayerDetectedState(_guard));
-                SubStateMachine.AddState(new PlayerLostState(_guard));
-                SubStateMachine.SetState<PlayerDetectedState>();
-            }
         }
 
         public override void Update(float delta)

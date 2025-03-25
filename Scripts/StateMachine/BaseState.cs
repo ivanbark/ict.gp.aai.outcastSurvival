@@ -125,10 +125,9 @@ namespace StateMachine
                 return;
             }
 
-            if (CanTransitionTo(targetState))
-            {
-                SubStateMachine.SetState<T>();
-            }
+            // For child state transitions, we don't check CanTransitionTo
+            // as it's meant for sibling state transitions only
+            SubStateMachine.SetState<T>();
         }
 
         protected void RevertToPreviousChildState()

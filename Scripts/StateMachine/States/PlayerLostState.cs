@@ -14,14 +14,7 @@ namespace StateMachine.States
         {
             base.Enter();
 
-            // Initialize the sub-state machine if it doesn't exist
-            if (SubStateMachine == null)
-            {
-                SubStateMachine = new StateMachine(ParentStateMachine, this);
-                SubStateMachine.AddState(new SeekState(_guard));
-                SubStateMachine.AddState(new SearchState(_guard));
-                SubStateMachine.SetState<SeekState>();
-            }
+            TransitionToChild<SeekState>();
         }
 
         public override void Update(float delta)

@@ -13,15 +13,6 @@ namespace StateMachine.States
         public override void Enter()
         {
             base.Enter();
-
-            // Initialize the sub-state machine if it doesn't exist
-            if (SubStateMachine == null)
-            {
-                SubStateMachine = new StateMachine(ParentStateMachine, this);
-                SubStateMachine.AddState(new IdleState(_guard));
-                SubStateMachine.AddState(new PatrolPathState(_guard));
-                SubStateMachine.SetState<IdleState>();
-            }
         }
 
         public override void Update(float delta)

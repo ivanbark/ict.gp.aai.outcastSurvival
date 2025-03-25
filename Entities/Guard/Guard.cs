@@ -4,6 +4,13 @@ using System;
 public partial class Guard : MovingEntity
 {
     private Node2D _player;
+    private Vector2 _lastKnownPlayerPosition;
+    public Vector2 LastKnownPlayerPosition
+    {
+        get => _lastKnownPlayerPosition;
+        set => _lastKnownPlayerPosition = value;
+    }
+
     public Node2D Player
     {
         get => _player;
@@ -35,6 +42,30 @@ public partial class Guard : MovingEntity
             return;
 
         Vector2 desiredVelocity = SteeringBehaviour.Seek(Position, _player.Position, MaxSpeed);
+        ApplyAcceleration(desiredVelocity, delta);
+    }
+
+    public void SeekLastKnownPlayerPosition(float delta)
+    {
+        if (Position.DistanceTo(_lastKnownPlayerPosition) <= 1f)
+        {
+            Velocity = Vector2.Zero;
+            return;
+        }
+
+        Vector2 desiredVelocity = SteeringBehaviour.Arrive(Position, _lastKnownPlayerPosition, MaxSpeed, 30);
+        ApplyAcceleration(desiredVelocity, delta);
+    }
+
+    public void SearchForPlayer(float delta, Vector2 searchPosition)
+    {
+        if (Position.DistanceTo(searchPosition) <= 1f)
+        {
+            Velocity = Vector2.Zero;
+            return;
+        }
+
+        Vector2 desiredVelocity = SteeringBehaviour.Arrive(Position, searchPosition, MaxSpeed, 30);
         ApplyAcceleration(desiredVelocity, delta);
     }
 
