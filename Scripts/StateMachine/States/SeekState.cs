@@ -8,7 +8,7 @@ namespace StateMachine.States
         public SeekState(Guard guard)
             : base(guard, "Seek")
         {
-        }
+        } 
 
         public override void Enter()
         {

@@ -5,6 +5,9 @@ public partial class MovingEntity : BaseGameEntity
 {
   private Vector2 _heading;
   public AnimatedSprite2D animatedSprite;
+  protected Node2D _debugInfo;
+  protected Label _stateLabel;
+  protected Label _healthLabel;
 
   [Export]
   public int MaxHealth = 100;
@@ -33,6 +36,14 @@ public partial class MovingEntity : BaseGameEntity
     GD.Print(animatedSprite);
 
     _acceleration = MaxForce / Mass;
+    _heading = Vector2.Right; // Initialize heading to face right
+
+    // Get debug info references
+    _debugInfo = GetNode<Node2D>("DebugInfo");
+    _stateLabel = GetNode<Label>("DebugInfo/State");
+    _healthLabel = GetNode<Label>("DebugInfo/Health");
+
+    _debugInfo.Visible = World_ref.visualize_debug_info;
   }
 
   public override void _Process(double delta)
@@ -40,6 +51,7 @@ public partial class MovingEntity : BaseGameEntity
     if (Engine.TimeScale == 0f)
       return;
 
+    // Update animation based on velocity
     if (Mathf.Abs(Velocity.X) > Mathf.Abs(Velocity.Y))
     {
       if (Velocity.X > 0)
@@ -60,11 +72,54 @@ public partial class MovingEntity : BaseGameEntity
       animatedSprite.Animation = "up";
     }
 
-    Rotation = Velocity.Angle();
+    // Update heading based on actual movement direction
+    if (Velocity.Length() > 0.1f)
+    {
+      _heading = Velocity.Normalized();
+      Rotation = Velocity.Angle();
+    }
+    else
+    {
+      // When not moving, maintain the last heading direction
+      Rotation = _heading.Angle();
+    }
+
     animatedSprite.GlobalRotation = 0;
 
     Velocity = Velocity.LimitLength(MaxSpeed);
     Position += Velocity * (float)delta;
+
+    // Counter-rotate the debug info to keep it unrotated
+    if (_debugInfo != null)
+    {
+      _debugInfo.Rotation = -Rotation;
+    }
+
+    // Update debug info
+    if (World_ref.visualize_debug_info)
+    {
+      UpdateDebugInfo();
+    }
+  }
+
+  protected virtual void UpdateDebugInfo()
+  {
+    // Update state label
+    if (_stateLabel != null)
+    {
+      _stateLabel.Text = $"State: {GetCurrentStateName()}";
+    }
+
+    // Update health label
+    if (_healthLabel != null)
+    {
+      _healthLabel.Text = $"HP: {CurrentHealth}/{MaxHealth}";
+    }
+  }
+
+  protected virtual string GetCurrentStateName()
+  {
+    return "Unknown";
   }
 
   public void ApplyAcceleration(Vector2 desiredVelocity, float delta)
@@ -108,7 +163,16 @@ public partial class MovingEntity : BaseGameEntity
   }
 
   protected void UpdateHeading() {
-    Heading = new Vector2(Velocity.X, Velocity.Y).Normalized();
+    if (Velocity.Length() > 0.1f)
+    {
+      _heading = Velocity.Normalized();
+    }
+  }
+
+  public override void _UnhandledInput(InputEvent @event) {
+    if (@event.IsActionPressed("visualize_debug_info")) {
+        _debugInfo.Visible = !_debugInfo.Visible;
+    }
   }
 }
 

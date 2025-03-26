@@ -4,9 +4,6 @@ using System;
 public partial class BaseGameEntity : CharacterBody2D
 {
   [Export]
-  public bool visualize_debug_info { get; set; } = false;
-
-  [Export]
   public World World_ref { get; set; }
 
   // Called when the node enters the scene tree for the first time.

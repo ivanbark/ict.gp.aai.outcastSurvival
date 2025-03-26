@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 
 public partial class World : Node2D
 {
+  [Export]
+  public bool visualize_debug_info { get; set; } = false;
 
   [Export]
   public MovingEntity[] movingEntity_list { get; set; }
@@ -50,6 +52,10 @@ public partial class World : Node2D
       GD.Print("Step forwards");
       Step = true;
       _ = Process_Step();
+    }
+
+    if (Input.IsActionJustPressed("visualize_debug_info")) {
+      visualize_debug_info = !visualize_debug_info;
     }
 
     // stop als op pauze

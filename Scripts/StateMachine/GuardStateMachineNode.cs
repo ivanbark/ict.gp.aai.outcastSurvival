@@ -125,12 +125,23 @@ namespace StateMachine
         {
             if (_rootStateMachine == null) return;
 
-            _rootStateMachine.SetState<AlertState>();
-            var alertState = _rootStateMachine.GetState<AlertState>();
-            if (alertState?.SubStateMachine != null)
+            // Check if we're already in a player detected state
+            var currentState = _rootStateMachine.CurrentState;
+            if (currentState is AlertState alertState)
             {
-                alertState.SubStateMachine.SetState<PlayerDetectedState>();
-                var playerDetectedState = alertState.SubStateMachine.GetState<PlayerDetectedState>();
+                var alertSubState = alertState.SubStateMachine?.CurrentState;
+                if (alertSubState is PlayerDetectedState)
+                {
+                    return; // Already in player detected state, no need to transition
+                }
+            }
+
+            _rootStateMachine.SetState<AlertState>();
+            var newAlertState = _rootStateMachine.GetState<AlertState>();
+            if (newAlertState?.SubStateMachine != null)
+            {
+                newAlertState.SubStateMachine.SetState<PlayerDetectedState>();
+                var playerDetectedState = newAlertState.SubStateMachine.GetState<PlayerDetectedState>();
                 if (playerDetectedState?.SubStateMachine != null)
                 {
                     playerDetectedState.SubStateMachine.SetState<ChaseState>();
@@ -148,6 +159,21 @@ namespace StateMachine
             {
                 patrolState.SubStateMachine.SetState<IdleState>();
             }
+        }
+
+        public IState GetCurrentState()
+        {
+            var rootState = _rootStateMachine.CurrentState;
+            if (rootState.SubStateMachine != null)
+            {
+                var subState = rootState.SubStateMachine.CurrentState;
+                if (subState.SubStateMachine != null)
+                {
+                    subState = subState.SubStateMachine.CurrentState;
+                }
+                return subState;
+            }
+            return rootState;
         }
 
         private void OnStateChanged(IState from, IState to)

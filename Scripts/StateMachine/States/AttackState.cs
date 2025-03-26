@@ -24,6 +24,7 @@ namespace StateMachine.States
 
         public override void Update(float delta)
         {
+            GD.Print("AttackState Update");
             if (!IsActive || _guard == null || _guard.Player == null) return;
 
             _guard.AttackPlayer(delta);

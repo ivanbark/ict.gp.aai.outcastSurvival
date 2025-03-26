@@ -11,6 +11,10 @@ namespace StateMachine
         private bool _isSneaking = false;
         private bool _isSprinting = false;
 
+        private PlayerSneakState _sneakState;
+        private PlayerWalkState _walkState;
+        private PlayerSprintState _sprintState;
+
         [Export]
         public bool IsActive
         {
@@ -40,16 +44,17 @@ namespace StateMachine
             _stateMachine = new StateMachine();
 
             // Add movement states
-            var sneakState = new PlayerSneakState(_player);
-            var walkState = new PlayerWalkState(_player);
-            var sprintState = new PlayerSprintState(_player);
+            _sneakState = new PlayerSneakState(_player);
+            _walkState = new PlayerWalkState(_player);
+            _sprintState = new PlayerSprintState(_player);
 
-            _stateMachine.AddState(sneakState);
-            _stateMachine.AddState(walkState);
-            _stateMachine.AddState(sprintState);
+            _stateMachine.AddState(_sneakState);
+            _stateMachine.AddState(_walkState);
+            _stateMachine.AddState(_sprintState);
 
             // Set initial state
             _stateMachine.SetState<PlayerWalkState>();
+            _player.CurrentState = _walkState;
         }
 
         public override void _Process(double delta)
@@ -93,14 +98,17 @@ namespace StateMachine
             if (_isSneaking)
             {
                 _stateMachine.SetState<PlayerSneakState>();
+                _player.CurrentState = _sneakState;
             }
             else if (_isSprinting)
             {
                 _stateMachine.SetState<PlayerSprintState>();
+                _player.CurrentState = _sprintState;
             }
             else
             {
                 _stateMachine.SetState<PlayerWalkState>();
+                _player.CurrentState = _walkState;
             }
         }
     }

@@ -43,6 +43,14 @@ namespace StateMachine.States
             _searchTime += delta;
         }
 
+        public override void Exit()
+        {
+            base.Exit();
+
+            _searchTime = 0f;
+            _searchPositionInitialized = false;
+        }
+
         public override bool CanTransitionTo(IState targetState)
         {
             if (targetState == null) return false;
