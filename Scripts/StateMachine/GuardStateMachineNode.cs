@@ -97,16 +97,11 @@ namespace StateMachine
 
         private void SetInitialState()
         {
-            _rootStateMachine.SetState<AlertState>();
-            var alertState = _rootStateMachine.GetState<AlertState>();
-            if (alertState?.SubStateMachine != null)
+            _rootStateMachine.SetState<PatrolState>();
+            var patrolState = _rootStateMachine.GetState<PatrolState>();
+            if (patrolState?.SubStateMachine != null)
             {
-                alertState.SubStateMachine.SetState<PlayerDetectedState>();
-                var playerDetectedState = alertState.SubStateMachine.GetState<PlayerDetectedState>();
-                if (playerDetectedState?.SubStateMachine != null)
-                {
-                    playerDetectedState.SubStateMachine.SetState<ChaseState>();
-                }
+                patrolState.SubStateMachine.SetState<IdleState>();
             }
         }
 
@@ -145,7 +140,7 @@ namespace StateMachine
 
         public void TransitionToPatrol()
         {
-            if (_rootStateMachine == null) return;
+            if (_rootStateMachine == null || _rootStateMachine.CurrentState == _rootStateMachine.GetState<PatrolState>()) return;
 
             _rootStateMachine.SetState<PatrolState>();
             var patrolState = _rootStateMachine.GetState<PatrolState>();

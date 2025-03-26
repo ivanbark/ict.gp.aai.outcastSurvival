@@ -1,9 +1,12 @@
 using Godot;
 using System;
+using StateMachine.States;
+using StateMachine;
 
 public partial class Player : MovingEntity
 {
   private Vector2 inputDirection = Vector2.Zero;
+  public IState CurrentState { get; private set; }
 
   public override void _Ready()
   {
@@ -14,60 +17,22 @@ public partial class Player : MovingEntity
 
   public override void _Process(double delta)
   {
-    // TODO: make use of physics from MovingEntity
-
-    var animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-
-    if(Input.IsActionPressed("move_up")) {
-      Position += Vector2.Up * 2;
-      animatedSprite2D.Animation = "up";
-      Rotation = (float)Math.PI;
-      animatedSprite2D.GlobalRotation = 0;
-    }
-
-    if(Input.IsActionPressed("move_down")) {
-      Position += Vector2.Down * 2;
-      animatedSprite2D.Animation = "down";
-      Rotation = (float)Math.PI;
-      animatedSprite2D.GlobalRotation = 0;
-    }
-
-    if(Input.IsActionPressed("move_left")) {
-      Position += Vector2.Left * 2;
-      animatedSprite2D.Animation = "left";
-      Rotation = (float)Math.PI;
-      animatedSprite2D.GlobalRotation = 0;
-    }
-
-    if(Input.IsActionPressed("move_right")) {
-      Position += Vector2.Right * 2;
-      animatedSprite2D.Animation = "right";
-      Rotation = (float)Math.PI;
-      animatedSprite2D.GlobalRotation = 0;
-    }
-
-    QueueRedraw();
+    base._Process(delta);
   }
 
-    public override void _Draw()
-    {
-      // Line to target
-      // DrawLine(Position, World_ref.Target, Colors.Blue, 1);
+  public override void _Draw()
+  {
+    base._Draw();
+  }
 
-      base._Draw();
+  protected override void Die()
+  {
+    GD.Print("Player has died. Game Over!");
+    GetTree().Paused = true;
+  }
 
-      // if(visualize_debug_info) {
-
-      // // heading is incorrect
-      // DrawLine(Position, Heading, Colors.Red, 1);
-      // }
-
-    }
-
-    protected override void Die()
-    {
-      GD.Print("Player has died. Game Over!");
-
-      GetTree().Paused = true;
-    }
+  public void SetCurrentState(IState state)
+  {
+    CurrentState = state;
+  }
 }

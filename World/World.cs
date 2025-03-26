@@ -24,10 +24,9 @@ public partial class World : Node2D
   public override void _Process(double delta)
   {
     // Alleen input "Listeners hier", game logic in het onderste deel!
-    // Engine.TimeScale = 0f;
     if (Input.IsActionJustPressed("pause_play_toggle")) {
       Playing = !Playing;
-      
+
       UpdatePlayPauseLabel();
 
       if (Playing) {
@@ -52,18 +51,10 @@ public partial class World : Node2D
       Step = true;
       _ = Process_Step();
     }
-    
+
     // stop als op pauze
     if (Engine.TimeScale == 0f)
           return;
-
-    // Als je niet op pauze staat moet hetgene hieronder uitgevoerd worden.
-          
-    // foreach(Node entity in GetTree().GetNodesInGroup("Entities")) {
-    //   if (entity is MovingEntity me) {
-    //     me.WrapArround();
-    //   }
-    // }
 
     QueueRedraw();
   }
@@ -97,13 +88,13 @@ public partial class World : Node2D
   }
 
 
-  public void GetPathTo(Vector2I start, Vector2I destination) 
+  public void GetPathTo(Vector2I start, Vector2I destination)
   {
     bool found_start = graph_ref.GetVertexForPosition(start, out Vertex startVertex);
     bool found_destination = graph_ref.GetVertexForPosition(destination, out Vertex destinationtVertex);
-    if (found_start && found_destination) 
+    if (found_start && found_destination)
     {
       GD.Print("We can start to find a path");
     }
-  } 
+  }
 }

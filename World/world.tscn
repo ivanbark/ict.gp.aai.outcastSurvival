@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=4 uid="uid://b8yq3d7rmcpor"]
+[gd_scene load_steps=19 format=4 uid="uid://b8yq3d7rmcpor"]
 
 [ext_resource type="Script" uid="uid://23dbctni36ld" path="res://World/World.cs" id="1_go68u"]
 [ext_resource type="Texture2D" uid="uid://dk7wlwgofhsfn" path="res://art/tilesets/grass.png" id="2_hvxdc"]
@@ -119,6 +119,9 @@ sources/2 = SubResource("TileSetAtlasSource_w47uh")
 sources/3 = SubResource("TileSetAtlasSource_lo5ox")
 sources/4 = SubResource("TileSetAtlasSource_h2aik")
 
+[sub_resource type="LabelSettings" id="LabelSettings_w47uh"]
+font_size = 60
+
 [sub_resource type="LabelSettings" id="LabelSettings_g6jkd"]
 font_size = 20
 
@@ -160,6 +163,7 @@ offset_left = -20.0
 offset_right = 20.0
 offset_bottom = 23.0
 grow_horizontal = 2
+label_settings = SubResource("LabelSettings_w47uh")
 
 [node name="DebugInfo" type="Label" parent="UI"]
 visible = false

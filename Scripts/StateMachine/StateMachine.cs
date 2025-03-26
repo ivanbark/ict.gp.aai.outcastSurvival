@@ -48,6 +48,9 @@ namespace StateMachine
             if (!_states.TryGetValue(typeof(T), out var newState))
                 throw new InvalidOperationException($"State of type {typeof(T)} not found!");
 
+            if (newState == _currentState)
+                return;
+
             if (_currentState != null)
             {
                 _currentState.Exit();

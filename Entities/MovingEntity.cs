@@ -30,13 +30,15 @@ public partial class MovingEntity : BaseGameEntity
     base._Ready();
 
     animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+    GD.Print(animatedSprite);
 
     _acceleration = MaxForce / Mass;
   }
 
   public override void _Process(double delta)
   {
-    // GD.Print($"MovingEntity _Process - Velocity: {Velocity}");
+    if (Engine.TimeScale == 0f)
+      return;
 
     if (Mathf.Abs(Velocity.X) > Mathf.Abs(Velocity.Y))
     {

@@ -1,10 +1,20 @@
 using Godot;
 using System;
+using Detection;
 
 public partial class Guard : MovingEntity
 {
     private Node2D _player;
     private Vector2 _lastKnownPlayerPosition;
+    private GuardDetectionSystem _detectionSystem;
+
+    [Export]
+    public float BaseDetectionRange = 200f;
+    [Export]
+    public float VisionAngle = 90f;
+    [Export]
+    public float VisionRange = 300f;
+
     public Vector2 LastKnownPlayerPosition
     {
         get => _lastKnownPlayerPosition;
@@ -16,8 +26,6 @@ public partial class Guard : MovingEntity
         get => _player;
         set => _player = value;
     }
-
-    public AnimatedSprite2D AnimatedSprite { get; private set; }
 
     [Export]
     public float AttackCooldown;
@@ -33,7 +41,24 @@ public partial class Guard : MovingEntity
             _player = World_ref.GetNode<Player>("Player");
 
         _attackCooldown = 0f;
-        AnimatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+
+        // Initialize detection system
+        _detectionSystem = new GuardDetectionSystem(this, BaseDetectionRange, VisionAngle, VisionRange);
+    }
+
+    public override void _Process(double delta)
+    {
+        base._Process(delta);
+
+        if (_player != null)
+        {
+            // Check for player detection
+            if (_detectionSystem.CanDetectPlayer(_player as Player))
+            {
+                _detectionSystem.UpdateLastKnownPlayerPosition(_player.Position);
+                GetNode<StateMachine.GuardStateMachineNode>("StateMachine").TransitionToAlert();
+            }
+        }
     }
 
     public void ChasePlayer(float delta)
