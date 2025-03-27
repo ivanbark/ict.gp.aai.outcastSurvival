@@ -11,16 +11,31 @@ namespace OutCastSurvival.Entities
 
     [Export]
     private float Separation_force = 50f;
-    private Vector2 Separation_force_vector;
+    private Vector2 Separation_force_vector = new(0,0);
     [Export]
     private float Alignment_force = 1f;
-    private Vector2 Alignment_force_vector;
+    private Vector2 Alignment_force_vector = new(0,0);
     [Export]
     private float Cohesion_force = 10f;
-    private Vector2 Cohesion_force_vector;
+    private Vector2 Cohesion_force_vector = new(0,0);
+
+    // [Export]
+    // private int NUM_
+
+    private Rect2 obstacleAvoidanceBox;
+    [Export]
+    private int widthObstacleAvoidanceBox;
+    [Export]
+    private int heightObstacleAvoidanceBox;
+    
+    [Export]
+    private float ObstacleAvoidance_force = 10f;
+    private Vector2 ObstacleAvoidance_force_vector = new(0,0);
 
     public override void _Ready()
     {
+      obstacleAvoidanceBox = new(new(0,-10), new(widthObstacleAvoidanceBox,heightObstacleAvoidanceBox));
+      
       base._Ready();
       MaxForce = 600;
       MaxSpeed = 25;
@@ -28,90 +43,111 @@ namespace OutCastSurvival.Entities
       AddToGroup("Entities");
       AddToGroup("Sheep");
     }
-      public override void _Process(double delta)
+    public override void _Process(double delta)
+    {
+      // Vector2 seek_force = SteeringBehaviour.Seek(Position,new(1200,550),Separation_force + 0.01f);
+      // Velocity += seek_force;
+      
+      
+      // wander
+      
+      // flocking
+
+      //get entities in radius from world.
+      Sheep[] otherSheep = World_ref.GetOtherSheep(Position, flocking_radius);
+
+      Vector2 separation_vec = new();
+      Vector2 cohesion_vec = new();
+      int num_sheep = 0;
+      foreach(Sheep sheep in otherSheep) 
       {
-        // Vector2 seek_force = SteeringBehaviour.Seek(Position,new(1200,550),Separation_force + 0.01f);
-        // // wander
-        // Velocity += seek_force;
-        // flocking
+        num_sheep++;
+        // dont compare to the same object
+        if (sheep.Equals(this) || sheep.GetHashCode() == GetHashCode())
+          continue;
+        //seperation
+        Vector2 offset = Position - sheep.Position;
+        float distance = offset.Length();
 
-        //get entities in radius from world.
-        Sheep[] otherSheep = World_ref.GetOtherSheep(Position, flocking_radius);
-
-        Vector2 separation_vec = new();
-        Vector2 cohesion_vec = new();
-        int num_sheep = 0;
-        foreach(Sheep sheep in otherSheep) 
+        if (distance > 0.01f) // avoid division by zero or jitter at very small distances
         {
-          num_sheep++;
-          // dont compare to the same object
-          if (sheep.Equals(this) || sheep.GetHashCode() == GetHashCode())
-            continue;
-          //seperation
-          Vector2 offset = Position - sheep.Position;
-          float distance = offset.Length();
-
-          if (distance > 0.01f) // avoid division by zero or jitter at very small distances
-          {
-              offset = offset.Normalized() / distance; // stronger push when closer
-              separation_vec += offset;
-          }
-
-          // alignment (not using for now, but implemnt her otherwise)
-
-          // cohesion
-          cohesion_vec.X += sheep.Position.X;
-          cohesion_vec.Y += sheep.Position.Y;
-
-
-        }
-        // GD.Print(num_sheep);
-        if (num_sheep != 0) 
-        {
-          separation_vec /= num_sheep;
-          separation_vec = separation_vec.Normalized();
-          Separation_force_vector = separation_vec * Separation_force;
-
-          cohesion_vec /= num_sheep;
-          cohesion_vec -= Position;
-          cohesion_vec = cohesion_vec.Normalized();
-          Cohesion_force_vector = cohesion_vec * Cohesion_force;
-
+            offset = offset.Normalized() / distance; // stronger push when closer
+            separation_vec += offset;
         }
 
-        Velocity += Separation_force_vector + Cohesion_force_vector;
-        base._Process(delta);
+        // alignment (not using for now, but implemnt her otherwise)
 
-        QueueRedraw();
+        // cohesion
+        cohesion_vec.X += sheep.Position.X;
+        cohesion_vec.Y += sheep.Position.Y;
+
+
+      }
+      // GD.Print(num_sheep);
+      if (num_sheep != 0) 
+      {
+        separation_vec /= num_sheep;
+        separation_vec = separation_vec.Normalized();
+        Separation_force_vector = separation_vec * Separation_force;
+
+        cohesion_vec /= num_sheep;
+        cohesion_vec -= Position;
+        cohesion_vec = cohesion_vec.Normalized();
+        Cohesion_force_vector = cohesion_vec * Cohesion_force;
+
       }
 
-      public override void _Draw()
-      {
-        base._Draw();
-        if (visualize_debug_info) {
-          // orientation and velocity
+      Velocity += Separation_force_vector + Cohesion_force_vector;
+      base._Process(delta);
+
+      QueueRedraw();
+    }
+
+    public override void _Draw()
+    {
+      base._Draw();
+      if (World_ref.visualize_debug_info) {
+        // orientation and velocity
 
 
-          //flocking:
-          DrawCircle(new(0,0),flocking_radius, Colors.Purple, false, 1);
-          //Seperation
-          DrawLine(new(),Separation_force_vector, Colors.Yellow, 1);
-          //Cohesion
-          DrawLine(new(),Cohesion_force_vector, Colors.Blue, 1);
-        }
+        //flocking:
+        DrawCircle(new(0,0),flocking_radius, Colors.Purple, false, 1);
+        //Seperation:
+        DrawLine(new(),Separation_force_vector, Colors.Yellow, 1);
+        //Cohesion:
+        DrawLine(new(),Cohesion_force_vector, Colors.Blue, 1);
+
+        //obstacel avoidance box:
+        DrawRect(obstacleAvoidanceBox,Colors.HotPink, false, 1);
       }
+    }
 
-        public override bool Equals(object obj)
-        {
-           if (obj is Sheep sheep) {
-              return (sheep.Position == Position && sheep.Velocity == Velocity);
-           }
-           return false;
-        }
+    public override bool Equals(object obj)
+    {
+      if (obj is Sheep sheep) {
+        return (sheep.Position == Position && sheep.Velocity == Velocity);
+      }
+      return false;
+    }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-    }  
+    public override int GetHashCode()
+    {
+      return base.GetHashCode();
+    }
+
+    protected override void UpdateDebugInfo()
+    {
+      // Update state label
+    if (_stateLabel != null)
+    {
+      _stateLabel.Text = "";
+    }
+
+    // Update health label
+    if (_healthLabel != null)
+    {
+      _healthLabel.Text = "";
+    }
+    }
+  }
 }

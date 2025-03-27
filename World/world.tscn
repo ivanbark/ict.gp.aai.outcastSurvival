@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=4 uid="uid://b8yq3d7rmcpor"]
+[gd_scene load_steps=21 format=4 uid="uid://b8yq3d7rmcpor"]
 
 [ext_resource type="Script" uid="uid://23dbctni36ld" path="res://World/World.cs" id="1_go68u"]
 [ext_resource type="Texture2D" uid="uid://dk7wlwgofhsfn" path="res://art/tilesets/grass.png" id="2_hvxdc"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://dvmgwpmosyikn" path="res://art/tilesets/tree.png" id="5_w47uh"]
 [ext_resource type="Texture2D" uid="uid://bdkg4do1ologi" path="res://art/tilesets/Wood.png" id="6_w47uh"]
 [ext_resource type="PackedScene" uid="uid://bn2tnmk0vhyxq" path="res://Entities/Player/player.tscn" id="7_yf0ba"]
+[ext_resource type="PackedScene" uid="uid://brmbbns17wh7r" path="res://Entities/Guard/guard.tscn" id="8_eidgh"]
 [ext_resource type="Script" uid="uid://c7aebnks01iyj" path="res://World/Herd.cs" id="10_w47uh"]
 [ext_resource type="PackedScene" uid="uid://bptqonjvfnyiu" path="res://Entities/Sheep/Sheep.tscn" id="11_lo5ox"]
 [ext_resource type="Script" uid="uid://ds3cc2n1ihrmj" path="res://World/Graph.cs" id="11_s8rmt"]
@@ -185,12 +186,10 @@ position = Vector2(1163, 592)
 World_ref = NodePath("..")
 
 [node name="Guard" parent="." node_paths=PackedStringArray("World_ref") instance=ExtResource("8_eidgh")]
-position = Vector2(1245, 532)
+position = Vector2(1325, 392)
 World_ref = NodePath("..")
-[node name="Herd" type="Node" parent="." node_paths=PackedStringArray("World_ref")]
+
+[node name="Herd" type="Node" parent="."]
 script = ExtResource("10_w47uh")
-World_ref = NodePath("..")
 SheepScene = ExtResource("11_lo5ox")
-numberOfChildren = 25
-visualize_debug_info = true
-startPostionOfHerd = Vector2(500, 300)
+startPostionOfHerd = Vector2(200, 200)

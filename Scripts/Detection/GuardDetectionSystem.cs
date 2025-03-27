@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using StateMachine.States;
+using OutCastSurvival.Entities;
 namespace Detection
 {
     public class GuardDetectionSystem
