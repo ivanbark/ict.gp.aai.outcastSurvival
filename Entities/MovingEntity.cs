@@ -6,43 +6,53 @@ public partial class MovingEntity : BaseGameEntity
 {
   private Vector2 _heading;
   public AnimatedSprite2D animatedSprite;
-  
+  protected Node2D _debugInfo;
+  protected Label _stateLabel;
+  protected Label _healthLabel;
+
   [Export]
   public int MaxHealth = 100;
   public int CurrentHealth = 100;
 
-  [Export] 
+  [Export]
   public int AttackDamage = 25;
-
-  [Export] 
-  public int Stamina = 100;
+  [Export]
+  public int AttackRange = 20;
 
   [Export]
-  public int MaxSpeed { get; set; } = 900;
+  public int MaxSpeed { get; set; } = 150;
 
-  [Export] 
-  public int MaxForce { get; set; } = 1300;
-
-  [Export]
-  public int MinSpeed { get; set; } = 0;
+  [Export] public int MaxForce { get; set; } = 217;
 
   [Export]
   public float Mass { get; set; } = 1.5f;
 
-  [Export] 
-  public float Acceleration = 0f;
+  private float _acceleration = 0f;
 
   public override void _Ready()
   {
     base._Ready();
-    
+
     animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-    
-    Acceleration = MaxForce / Mass;
+    GD.Print(animatedSprite);
+
+    _acceleration = MaxForce / Mass;
+    _heading = Vector2.Right; // Initialize heading to face right
+
+    // Get debug info references
+    _debugInfo = GetNode<Node2D>("DebugInfo");
+    _stateLabel = GetNode<Label>("DebugInfo/State");
+    _healthLabel = GetNode<Label>("DebugInfo/Health");
+
+    _debugInfo.Visible = World_ref.visualize_debug_info;
   }
 
   public override void _Process(double delta)
   {
+    if (Engine.TimeScale == 0f)
+      return;
+
+    // Update animation based on velocity
     if (Mathf.Abs(Velocity.X) > Mathf.Abs(Velocity.Y))
     {
       if (Velocity.X > 0)
@@ -63,27 +73,72 @@ public partial class MovingEntity : BaseGameEntity
       animatedSprite.Animation = "up";
     }
 
-    Rotation = Velocity.Angle();
+    // Update heading based on actual movement direction
+    if (Velocity.Length() > 0.1f)
+    {
+      _heading = Velocity.Normalized();
+      Rotation = Velocity.Angle();
+    }
+    else
+    {
+      // When not moving, maintain the last heading direction
+      Rotation = _heading.Angle();
+    }
+
     animatedSprite.GlobalRotation = 0;
-    
+
     Velocity = Velocity.LimitLength(MaxSpeed);
     Position += Velocity * (float)delta;
+
+    // Counter-rotate the debug info to keep it unrotated
+    if (_debugInfo != null)
+    {
+      _debugInfo.Rotation = -Rotation;
+    }
+
+    // Update debug info
+    if (World_ref.visualize_debug_info)
+    {
+      UpdateDebugInfo();
+    }
   }
-  
+
+  protected virtual void UpdateDebugInfo()
+  {
+    // Update state label
+    if (_stateLabel != null)
+    {
+      _stateLabel.Text = $"State: {GetCurrentStateName()}";
+    }
+
+    // Update health label
+    if (_healthLabel != null)
+    {
+      _healthLabel.Text = $"HP: {CurrentHealth}/{MaxHealth}";
+    }
+  }
+
+  protected virtual string GetCurrentStateName()
+  {
+    return "Unknown";
+  }
+
   public void ApplyAcceleration(Vector2 desiredVelocity, float delta)
   {
+    float sharpTurnFactor = 2.0f; // Increase this factor for sharper turns
     float decelerationFactor = 0.85f; // Adjust for smoother stops
 
     if (Velocity.Dot(desiredVelocity) < 0)
     {
-      Velocity = desiredVelocity.Normalized() * Mathf.Max(Acceleration * delta, desiredVelocity.Length() * 0.5f);
+      Velocity = desiredVelocity.Normalized() * Mathf.Max(_acceleration * delta * sharpTurnFactor, desiredVelocity.Length() * 0.5f);
     }
     else
     {
-      Velocity += (desiredVelocity - Velocity).Normalized() * Acceleration * delta;
+      Velocity += (desiredVelocity - Velocity).Normalized() * _acceleration * delta * sharpTurnFactor;
     }
 
-    if (Velocity.Length() < 10f)
+    // Only apply deceleration if both current and desired velocities are very small
+    if (Velocity.Length() < 10f && desiredVelocity.Length() < 10f)
     {
       Velocity *= decelerationFactor;
     }
@@ -102,14 +157,23 @@ public partial class MovingEntity : BaseGameEntity
   {
     QueueFree();
   }
-  
+
   public Vector2 Heading {
     get { return _heading; }
     private set { _heading = value; }
   }
 
   protected void UpdateHeading() {
-    Heading = new Vector2(Velocity.X, Velocity.Y).Normalized();
+    if (Velocity.Length() > 0.1f)
+    {
+      _heading = Velocity.Normalized();
+    }
+  }
+
+  public override void _UnhandledInput(InputEvent @event) {
+    if (@event.IsActionPressed("visualize_debug_info")) {
+        _debugInfo.Visible = !_debugInfo.Visible;
+    }
   }
 }
 

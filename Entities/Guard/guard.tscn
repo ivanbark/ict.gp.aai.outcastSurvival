@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://brmbbns17wh7r"]
+[gd_scene load_steps=15 format=3 uid="uid://brmbbns17wh7r"]
 
 [ext_resource type="Script" uid="uid://fsxbe643n17c" path="res://Entities/Guard/Guard.cs" id="1_tpkhw"]
 [ext_resource type="Texture2D" uid="uid://bme50fd6evxef" path="res://art/guard/guard_down.png" id="2_q3pd4"]
@@ -9,10 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://du6us5vbl61qk" path="res://art/guard/guard_attack_f3.png" id="4_yluq1"]
 [ext_resource type="Texture2D" uid="uid://dctm8gw876a7j" path="res://art/guard/guard_attack_f4.png" id="5_n0jab"]
 [ext_resource type="Texture2D" uid="uid://dj01duxs4xn8x" path="res://art/guard/guard_up.png" id="5_t22tx"]
-[ext_resource type="Script" uid="uid://dyx7f8flwmrfs" path="res://StateMachine.cs" id="6_ormmd"]
-[ext_resource type="Script" uid="uid://bl8edmv55ualb" path="res://States/ChaseState.cs" id="7_m6u2i"]
-[ext_resource type="Script" uid="uid://cwihdw51g6hv2" path="res://States/AttackState.cs" id="8_m132w"]
-[ext_resource type="Script" uid="uid://dwobeqxhsbnyh" path="res://States/AlertState.cs" id="11_naac8"]
+[ext_resource type="Script" uid="uid://cd24kq5ikbn35" path="res://Scripts/StateMachine/GuardStateMachineNode.cs" id="10_lfoyx"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_x6wym"]
 animations = [{
@@ -67,63 +64,58 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_52kos"]
-size = Vector2(117.002, 174)
+size = Vector2(19.9991, 36.9994)
+
+[sub_resource type="LabelSettings" id="LabelSettings_lfoyx"]
+font_size = 12
+shadow_size = 0
+
+[sub_resource type="LabelSettings" id="LabelSettings_xcd63"]
+font_size = 12
 
 [node name="Guard" type="CharacterBody2D"]
 script = ExtResource("1_tpkhw")
-MaxSpeed = 1000
+AttackCooldown = 0.75
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
-scale = Vector2(0.34375, 0.3125)
+scale = Vector2(0.04, 0.04)
 sprite_frames = SubResource("SpriteFrames_x6wym")
-animation = &"attack"
-frame = 2
-frame_progress = 0.285558
+animation = &"down"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-0.499552, 9.99822)
+position = Vector2(-0.000298619, -0.499999)
 rotation = 0.000297832
+scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_52kos")
 
 [node name="StateMachine" type="Node" parent="."]
-script = ExtResource("6_ormmd")
-initialState = NodePath("Patrol")
+script = ExtResource("10_lfoyx")
 
-[node name="Patrol" type="Node" parent="StateMachine"]
+[node name="DebugInfo" type="Node2D" parent="."]
 
-[node name="SubStateMachine" type="Node" parent="StateMachine/Patrol"]
-script = ExtResource("6_ormmd")
-initialState = NodePath("Idle")
+[node name="Background" type="ColorRect" parent="DebugInfo"]
+offset_left = -75.0
+offset_top = -60.0
+offset_right = 75.0
+offset_bottom = -30.0
+color = Color(0, 0, 0, 0.5)
 
-[node name="Idle" type="Node" parent="StateMachine/Patrol/SubStateMachine"]
+[node name="State" type="Label" parent="DebugInfo"]
+offset_left = -75.0
+offset_top = -61.0
+offset_right = 75.0
+offset_bottom = -44.0
+text = "State: Walk"
+label_settings = SubResource("LabelSettings_lfoyx")
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="PatrolPath" type="Node" parent="StateMachine/Patrol/SubStateMachine"]
-
-[node name="Alert" type="Node" parent="StateMachine"]
-script = ExtResource("11_naac8")
-
-[node name="SubStateMachine" type="Node" parent="StateMachine/Alert"]
-script = ExtResource("6_ormmd")
-initialState = NodePath("PlayerDetected")
-
-[node name="PlayerLost" type="Node" parent="StateMachine/Alert/SubStateMachine"]
-
-[node name="SubStateMachine" type="Node" parent="StateMachine/Alert/SubStateMachine/PlayerLost"]
-script = ExtResource("6_ormmd")
-initialState = NodePath("SeekLastKnownPosition")
-
-[node name="SeekLastKnownPosition" type="Node" parent="StateMachine/Alert/SubStateMachine/PlayerLost/SubStateMachine"]
-
-[node name="Search" type="Node" parent="StateMachine/Alert/SubStateMachine/PlayerLost/SubStateMachine"]
-
-[node name="PlayerDetected" type="Node" parent="StateMachine/Alert/SubStateMachine"]
-
-[node name="SubStateMachine" type="Node" parent="StateMachine/Alert/SubStateMachine/PlayerDetected"]
-script = ExtResource("6_ormmd")
-initialState = NodePath("Chase")
-
-[node name="Chase" type="Node" parent="StateMachine/Alert/SubStateMachine/PlayerDetected/SubStateMachine"]
-script = ExtResource("7_m6u2i")
-
-[node name="Attack" type="Node" parent="StateMachine/Alert/SubStateMachine/PlayerDetected/SubStateMachine"]
-script = ExtResource("8_m132w")
+[node name="Health" type="Label" parent="DebugInfo"]
+offset_left = -75.0
+offset_top = -46.0
+offset_right = 75.0
+offset_bottom = -29.0
+text = "HP: 100/100"
+label_settings = SubResource("LabelSettings_xcd63")
+horizontal_alignment = 1
+vertical_alignment = 1

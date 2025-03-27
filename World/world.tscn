@@ -120,11 +120,15 @@ sources/2 = SubResource("TileSetAtlasSource_w47uh")
 sources/3 = SubResource("TileSetAtlasSource_lo5ox")
 sources/4 = SubResource("TileSetAtlasSource_h2aik")
 
+[sub_resource type="LabelSettings" id="LabelSettings_w47uh"]
+font_size = 60
+
 [sub_resource type="LabelSettings" id="LabelSettings_g6jkd"]
 font_size = 20
 
 [node name="World" type="Node2D" node_paths=PackedStringArray("movingEntity_list", "graph_ref")]
 script = ExtResource("1_go68u")
+visualize_debug_info = true
 movingEntity_list = []
 graph_ref = NodePath("TileMapLayer")
 metadata/_edit_horizontal_guides_ = [0.0, -64.0]
@@ -161,6 +165,7 @@ offset_left = -20.0
 offset_right = 20.0
 offset_bottom = 23.0
 grow_horizontal = 2
+label_settings = SubResource("LabelSettings_w47uh")
 
 [node name="DebugInfo" type="Label" parent="UI"]
 visible = false
@@ -176,9 +181,12 @@ Step forward : F3
 label_settings = SubResource("LabelSettings_g6jkd")
 
 [node name="Player" parent="." node_paths=PackedStringArray("World_ref") instance=ExtResource("7_yf0ba")]
-position = Vector2(273, 205)
+position = Vector2(1163, 592)
 World_ref = NodePath("..")
 
+[node name="Guard" parent="." node_paths=PackedStringArray("World_ref") instance=ExtResource("8_eidgh")]
+position = Vector2(1245, 532)
+World_ref = NodePath("..")
 [node name="Herd" type="Node" parent="." node_paths=PackedStringArray("World_ref")]
 script = ExtResource("10_w47uh")
 World_ref = NodePath("..")
