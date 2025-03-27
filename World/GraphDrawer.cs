@@ -33,12 +33,17 @@ public partial class GraphDrawer : Node2D
       foreach(Vertex vertex  in graph.vertices) 
       {
         if (vertex.Visited)
-          DrawCircle(graph.MapToLocal(vertex.position), 2, Colors.Red);
+          DrawCircle(graph.MapToLocal(vertex.position), 2, Colors.Yellow);
       }
 
       foreach (Edge edge in graph.edges)
       {
-        DrawLine(graph.MapToLocal(edge.from.position), graph.MapToLocal(edge.to.position),Colors.Red,1);
+        DrawLine(graph.MapToLocal(edge.from.position), graph.MapToLocal(edge.to.position),Colors.Yellow,1);
+      }
+      GD.Print(graph.obstacles.Count + " obstacles");
+      foreach (Obstacle obstacle in graph.obstacles)
+      {
+        DrawCircle(graph.MapToLocal(obstacle.vertex.position), 3, Colors.Red);
       }
     }
   }
