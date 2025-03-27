@@ -19,6 +19,11 @@ public partial class Graph : TileMapLayer
   public HashSet<Edge> edges = [];
   public HashSet<Vertex> vertices = [];
 
+  public HashSet<Obstacle> obstacles = [];
+  
+  // prevents duplicate obstacles based on vertex position
+  public HashSet<Vertex> obstacle_vertexes = []; 
+
   private readonly Queue<Vertex> vertex_queue = [];
 
   // Called when the node enters the scene tree for the first time.
@@ -125,10 +130,22 @@ public partial class Graph : TileMapLayer
 
   private bool TryGetVertexFromHashSet(Vertex current, out Vertex output) 
   {
-    if (!WalkableTileIds.Contains(GetCellSourceId(current.position)))
+    int cell_id = GetCellSourceId(current.position);
+    if (!WalkableTileIds.Contains(cell_id))// a non walkable tile so it might be a obstacle
     {
-      output = null;
-      return false;
+      if (cell_id == -1) // empty tile so not an obstacle
+      {
+        output = null;
+        return false;
+      } 
+      else // map obstacle
+      {
+        TryGetObstacleVertex(current, out Vertex actualObstacleVertex);
+        Obstacle obstacle = new(actualObstacleVertex, (ObstacleType)cell_id);
+        obstacles.Add(obstacle);
+        output = null;
+        return false;
+      }
     }
 
     if (vertices.TryGetValue(current, out Vertex actualVertex)) 
@@ -142,6 +159,19 @@ public partial class Graph : TileMapLayer
     }
     return true;
   } 
+
+  private void TryGetObstacleVertex(Vertex probe, out Vertex output_vertex) 
+  {
+    if (obstacle_vertexes.TryGetValue(probe, out Vertex actualVertex)) 
+    {
+      output_vertex = actualVertex;
+    } 
+    else 
+    {
+      obstacle_vertexes.Add(probe);
+      output_vertex = probe;
+    }
+  }
 
   private bool ReadOnlyTryGetValue(Vertex probe, out Vertex output) 
   {
