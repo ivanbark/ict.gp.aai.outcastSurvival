@@ -5,8 +5,8 @@ namespace StateMachine.States
 {
     public class AttackState : BaseState
     {
-        public AttackState(Guard guard)
-            : base(guard, "Attack")
+        public AttackState(Guard guard, Node2D parent)
+            : base(guard, "Attack", parent)
         {
         }
 
@@ -16,15 +16,12 @@ namespace StateMachine.States
 
             _guard.Velocity = Vector2.Zero;
 
-            GD.Print(_guard.Velocity);
-
             _guard.animatedSprite.Animation = "attack";
             _guard.animatedSprite.Play();
         }
 
         public override void Update(float delta)
         {
-            GD.Print("AttackState Update");
             if (!IsActive || _guard == null || _guard.Player == null) return;
 
             _guard.AttackPlayer(delta);

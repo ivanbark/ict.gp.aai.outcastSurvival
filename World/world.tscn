@@ -127,6 +127,7 @@ font_size = 20
 
 [node name="World" type="Node2D" node_paths=PackedStringArray("movingEntity_list", "graph_ref")]
 script = ExtResource("1_go68u")
+visualize_debug_info = true
 movingEntity_list = []
 graph_ref = NodePath("TileMapLayer")
 metadata/_edit_horizontal_guides_ = [50.0, 72.0]

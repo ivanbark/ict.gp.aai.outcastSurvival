@@ -85,13 +85,13 @@ animation = &"down"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-0.000298619, -0.499999)
 rotation = 0.000297832
-scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_52kos")
 
 [node name="StateMachine" type="Node" parent="."]
 script = ExtResource("10_lfoyx")
 
 [node name="DebugInfo" type="Node2D" parent="."]
+visible = false
 
 [node name="Background" type="ColorRect" parent="DebugInfo"]
 offset_left = -75.0

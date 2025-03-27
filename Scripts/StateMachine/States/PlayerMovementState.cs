@@ -8,13 +8,15 @@ namespace StateMachine.States
         protected readonly Player _player;
         protected int _movementSpeed;
         protected float _noiseLevel;
+        protected float _hungerDepletionMultiplier;
 
-        protected PlayerMovementState(Player player, string stateName, int movementSpeed, float noiseLevel)
-            : base(null, stateName)
+        protected PlayerMovementState(Player player, string stateName, int movementSpeed, float noiseLevel, float hungerDepletionMultiplier, Node2D parent)
+            : base(null, stateName, parent)
         {
             _player = player;
             _movementSpeed = movementSpeed;
             _noiseLevel = noiseLevel;
+            _hungerDepletionMultiplier = hungerDepletionMultiplier;
         }
 
         public override void Enter()
@@ -56,6 +58,11 @@ namespace StateMachine.States
         public float GetNoiseLevel()
         {
             return _noiseLevel;
+        }
+
+        public float GetHungerDepletionMultiplier()
+        {
+            return _hungerDepletionMultiplier;
         }
     }
 }

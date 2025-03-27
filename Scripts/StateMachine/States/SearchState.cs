@@ -9,8 +9,8 @@ namespace StateMachine.States
         private Vector2 _searchPosition;
         private bool _searchPositionInitialized = false;
 
-        public SearchState(Guard guard)
-            : base(guard, "Search")
+        public SearchState(Guard guard, Node2D parent)
+            : base(guard, "Search", parent)
         {
         }
 

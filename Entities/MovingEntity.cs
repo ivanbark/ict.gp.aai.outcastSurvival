@@ -11,7 +11,7 @@ public partial class MovingEntity : BaseGameEntity
 
   [Export]
   public int MaxHealth = 100;
-  public int CurrentHealth = 100;
+  public int CurrentHealth;
 
   [Export]
   public int AttackDamage = 25;
@@ -37,6 +37,8 @@ public partial class MovingEntity : BaseGameEntity
 
     _acceleration = MaxForce / Mass;
     _heading = Vector2.Right; // Initialize heading to face right
+
+    CurrentHealth = MaxHealth;
 
     // Get debug info references
     _debugInfo = GetNode<Node2D>("DebugInfo");

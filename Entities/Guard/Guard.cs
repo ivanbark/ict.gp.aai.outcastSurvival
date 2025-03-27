@@ -63,7 +63,6 @@ public partial class Guard : MovingEntity
             // Check for player detection
             if (_detectionSystem.CanDetectPlayer(_player as Player))
             {
-                _lastKnownPlayerPosition = _player.Position;
                 _stateMachineNode.TransitionToAlert();
             }
         }

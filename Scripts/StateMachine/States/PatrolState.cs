@@ -5,8 +5,8 @@ namespace StateMachine.States
 {
     public class PatrolState : BaseState
     {
-        public PatrolState(Guard guard)
-            : base(guard, "Patrol")
+        public PatrolState(Guard guard, Node2D parent)
+            : base(guard, "Patrol", parent)
         {
         }
 

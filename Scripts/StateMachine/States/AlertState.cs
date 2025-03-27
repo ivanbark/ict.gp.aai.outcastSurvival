@@ -5,8 +5,8 @@ namespace StateMachine.States
 {
     public class AlertState : BaseState
     {
-        public AlertState(Guard guard)
-            : base(guard, "Alert")
+        public AlertState(Guard guard, Node2D parent)
+            : base(guard, "Alert", parent)
         {
         }
 

@@ -5,8 +5,8 @@ namespace StateMachine.States
 {
     public class PlayerDetectedState : BaseState
     {
-        public PlayerDetectedState(Guard guard)
-            : base(guard, "PlayerDetected")
+        public PlayerDetectedState(Guard guard, Node2D parent)
+            : base(guard, "PlayerDetected", parent)
         {
         }
 

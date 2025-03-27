@@ -72,19 +72,20 @@ zoom = Vector2(4, 4)
 script = ExtResource("6_4wf4l")
 
 [node name="DebugInfo" type="Node2D" parent="."]
+visible = false
 
 [node name="Background" type="ColorRect" parent="DebugInfo"]
 offset_left = -75.0
-offset_top = -60.0
+offset_top = -75.0
 offset_right = 75.0
 offset_bottom = -30.0
 color = Color(0, 0, 0, 0.5)
 
 [node name="State" type="Label" parent="DebugInfo"]
 offset_left = -75.0
-offset_top = -61.0
+offset_top = -76.0
 offset_right = 75.0
-offset_bottom = -44.0
+offset_bottom = -59.0
 text = "State: Walk"
 label_settings = SubResource("LabelSettings_4wf4l")
 horizontal_alignment = 1
@@ -92,10 +93,20 @@ vertical_alignment = 1
 
 [node name="Health" type="Label" parent="DebugInfo"]
 offset_left = -75.0
+offset_top = -61.0
+offset_right = 75.0
+offset_bottom = -44.0
+text = "HP: 100/100"
+label_settings = SubResource("LabelSettings_01a4e")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Hunger" type="Label" parent="DebugInfo"]
+offset_left = -75.0
 offset_top = -46.0
 offset_right = 75.0
 offset_bottom = -29.0
-text = "HP: 100/100"
+text = "Hunger: 100/100"
 label_settings = SubResource("LabelSettings_01a4e")
 horizontal_alignment = 1
 vertical_alignment = 1
