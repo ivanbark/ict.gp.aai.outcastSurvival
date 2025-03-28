@@ -67,11 +67,13 @@ public partial class MovingEntity : BaseGameEntity
     // Update animation based on velocity
     if (!_isAttacking)
     {
-      string direction = Mathf.Abs(Velocity.X) > Mathf.Abs(Velocity.Y)
-        ? (Velocity.X > 0 ? "right" : "left")
-        : (Velocity.Y > 0 ? "down" : "up");
-      animatedSprite.Animation = direction;
-      animatedSprite.FlipH = false;
+      if (Velocity != Vector2.Zero)
+      {
+        animatedSprite.Animation = Mathf.Abs(Velocity.X) > Mathf.Abs(Velocity.Y)
+          ? Velocity.X > 0 ? "right" : "left"
+          : Velocity.Y > 0 ? "down" : "up";
+        animatedSprite.FlipH = false;
+      }
     } else {
       animatedSprite.Animation = "attack";
       animatedSprite.FlipH = Velocity.X < 0;
