@@ -1,0 +1,78 @@
+[gd_scene load_steps=3 format=3 uid="uid://bo0c1x4my70ie"]
+
+[ext_resource type="Script" uid="uid://b63tiogw8djyu" path="res://UI/DebugScreen.cs" id="1_llkft"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_llkft"]
+
+[node name="Debug_screen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_llkft")
+metadata/_edit_vertical_guides_ = [96.0]
+metadata/_edit_horizontal_guides_ = [24.0, 48.0, 73.0, 96.0]
+
+[node name="Graph" type="Node" parent="."]
+
+[node name="Graph_btn" type="CheckButton" parent="Graph"]
+offset_left = 96.0
+offset_right = 140.0
+offset_bottom = 24.0
+
+[node name="Graph" type="Label" parent="Graph"]
+offset_right = 53.0
+offset_bottom = 23.0
+text = "Graph:"
+
+[node name="Obstacle" type="Node" parent="."]
+
+[node name="Obstacle_btn" type="CheckButton" parent="Obstacle"]
+offset_left = 96.0
+offset_top = 24.0
+offset_right = 140.0
+offset_bottom = 48.0
+
+[node name="Obstacle" type="Label" parent="Obstacle"]
+offset_top = 24.0
+offset_right = 72.0
+offset_bottom = 47.0
+text = "Obstacle:"
+
+[node name="Flocking" type="Label" parent="."]
+layout_mode = 0
+offset_top = 48.0
+offset_right = 64.0
+offset_bottom = 71.0
+text = "Flocking"
+label_settings = SubResource("LabelSettings_llkft")
+
+[node name="Seperation" type="Node" parent="."]
+
+[node name="Seperation_btn" type="CheckButton" parent="Seperation"]
+offset_left = 96.0
+offset_top = 73.0
+offset_right = 140.0
+offset_bottom = 97.0
+
+[node name="Seperation" type="Label" parent="Seperation"]
+offset_top = 73.0
+offset_right = 89.0
+offset_bottom = 96.0
+text = "Seperation:"
+
+[node name="Cohesion" type="Node" parent="."]
+
+[node name="Cohesion_btn" type="CheckButton" parent="Cohesion"]
+offset_left = 96.0
+offset_top = 96.0
+offset_right = 140.0
+offset_bottom = 120.0
+
+[node name="Cohesion" type="Label" parent="Cohesion"]
+offset_top = 96.0
+offset_right = 89.0
+offset_bottom = 119.0
+text = "Cohesion:"

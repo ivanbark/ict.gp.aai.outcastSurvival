@@ -66,9 +66,6 @@ autoplay = "right"
 position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_0n6si")
 
-[node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(4, 4)
-
 [node name="StateMachine" type="Node" parent="."]
 script = ExtResource("6_4wf4l")
 
