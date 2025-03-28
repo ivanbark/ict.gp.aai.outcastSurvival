@@ -51,7 +51,7 @@ namespace StateMachine
             _sneakState = new PlayerSneakState(_player, _parent);
             _walkState = new PlayerWalkState(_player, _parent);
             _sprintState = new PlayerSprintState(_player, _parent);
-            _hungryState = new PlayerHungryState(_player, _parent);
+            _hungryState = new PlayerHungryState(_player, _parent, _sneakState.GetNoiseLevel(), _sneakState.GetMovementSpeed());
 
             _stateMachine.AddState(_sneakState);
             _stateMachine.AddState(_walkState);
@@ -111,6 +111,7 @@ namespace StateMachine
             {
                 _stateMachine.SetState<PlayerHungryState>();
                 _player.CurrentState = _hungryState;
+                _hungryState.SetSneaking(_isSneaking);
             }
             else if (_isSneaking)
             {

@@ -6,7 +6,7 @@ namespace StateMachine.States
     public class PlayerSneakState : PlayerMovementState
     {
         public PlayerSneakState(Player player, Node2D parent)
-            : base(player, "Sneak", 50, 0.2f, 0.8f, parent)
+            : base(player, "Sneak", 30, 0.2f, 0.8f, parent)
         {
         }
 

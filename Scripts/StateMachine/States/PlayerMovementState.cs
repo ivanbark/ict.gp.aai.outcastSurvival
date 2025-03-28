@@ -55,6 +55,11 @@ namespace StateMachine.States
             }
         }
 
+        public int GetMovementSpeed()
+        {
+            return _movementSpeed;
+        }
+
         public float GetNoiseLevel()
         {
             return _noiseLevel;
