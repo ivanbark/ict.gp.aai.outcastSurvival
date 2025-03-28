@@ -12,12 +12,19 @@ public partial class MovingEntity : BaseGameEntity
 
   [Export]
   public int MaxHealth = 100;
-  public int CurrentHealth = 100;
+  public int CurrentHealth;
 
   [Export]
   public int AttackDamage = 25;
   [Export]
   public int AttackRange = 20;
+  private bool _isAttacking = false;
+  public bool IsAttacking {
+    get { return _isAttacking; }
+    set {
+      _isAttacking = value;
+    }
+  }
 
   [Export]
   public int MaxSpeed { get; set; } = 150;
@@ -34,17 +41,23 @@ public partial class MovingEntity : BaseGameEntity
     base._Ready();
 
     animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-    GD.Print(animatedSprite);
+    animatedSprite.Animation = "right";
+    animatedSprite.Play();
 
     _acceleration = MaxForce / Mass;
     _heading = Vector2.Right; // Initialize heading to face right
+
+    CurrentHealth = MaxHealth;
 
     // Get debug info references
     _debugInfo = GetNode<Node2D>("DebugInfo");
     _stateLabel = GetNode<Label>("DebugInfo/State");
     _healthLabel = GetNode<Label>("DebugInfo/Health");
 
-    _debugInfo.Visible = World_ref.visualize_debug_info;
+    if (_debugInfo != null)
+    {
+      _debugInfo.Visible = World_ref.visualize_debug_info;
+    }
   }
 
   public override void _Process(double delta)
@@ -53,24 +66,16 @@ public partial class MovingEntity : BaseGameEntity
       return;
 
     // Update animation based on velocity
-    if (Mathf.Abs(Velocity.X) > Mathf.Abs(Velocity.Y))
+    if (!_isAttacking)
     {
-      if (Velocity.X > 0)
-      {
-        animatedSprite.Animation = "right";
-      }
-      else if (Velocity.X < 0)
-      {
-        animatedSprite.Animation = "left";
-      }
-    }
-    else if (Velocity.Y > 0)
-    {
-      animatedSprite.Animation = "down";
-    }
-    else if (Velocity.Y < 0)
-    {
-      animatedSprite.Animation = "up";
+      string direction = Mathf.Abs(Velocity.X) > Mathf.Abs(Velocity.Y)
+        ? (Velocity.X > 0 ? "right" : "left")
+        : (Velocity.Y > 0 ? "down" : "up");
+      animatedSprite.Animation = direction;
+      animatedSprite.FlipH = false;
+    } else {
+      animatedSprite.Animation = "attack";
+      animatedSprite.FlipH = Velocity.X < 0;
     }
 
     // Update heading based on actual movement direction
@@ -97,7 +102,7 @@ public partial class MovingEntity : BaseGameEntity
     }
 
     // Update debug info
-    if (World_ref.visualize_debug_info)
+    if (World_ref.visualize_debug_info && _debugInfo != null)
     {
       UpdateDebugInfo();
     }

@@ -2,73 +2,72 @@ using Godot;
 using System;
 using Detection;
 using StateMachine;
+using OutCastSurvival.Entities;
 
-namespace OutCastSurvival.Entities 
+public partial class Guard : MovingEntity
 {
-    public partial class Guard : MovingEntity
+    private Node2D _player;
+    private Vector2 _lastKnownPlayerPosition;
+    private GuardDetectionSystem _detectionSystem;
+    private GuardStateMachineNode _stateMachineNode;
+
+    [Export]
+    public float BaseDetectionRange = 200f;
+    [Export]
+    public float VisionAngle = 90f;
+
+    // Debug visualization colors
+    private readonly Color _baseDetectionColor = new Color(1, 1, 0, 0.2f); // Yellow with transparency
+    private readonly Color _visionConeColor = new Color(0, 1, 0, 0.2f); // Green with transparency
+    private readonly Color _sideDetectionColor = new Color(1, 0.5f, 0, 0.2f); // Orange with transparency
+    private readonly Color _backDetectionColor = new Color(1, 0, 0, 0.2f); // Red with transparency
+
+    public Vector2 LastKnownPlayerPosition
     {
-        private Node2D _player;
-        private Vector2 _lastKnownPlayerPosition;
-        private GuardDetectionSystem _detectionSystem;
-        private GuardStateMachineNode _stateMachineNode;
+        get => _lastKnownPlayerPosition;
+        set => _lastKnownPlayerPosition = value;
+    }
 
-        [Export]
-        public float BaseDetectionRange = 200f;
-        [Export]
-        public float VisionAngle = 90f;
+    public Node2D Player
+    {
+        get => _player;
+        set => _player = value;
+    }
 
-        // Debug visualization colors
-        private readonly Color _baseDetectionColor = new Color(1, 1, 0, 0.2f); // Yellow with transparency
-        private readonly Color _visionConeColor = new Color(0, 1, 0, 0.2f); // Green with transparency
-        private readonly Color _sideDetectionColor = new Color(1, 0.5f, 0, 0.2f); // Orange with transparency
-        private readonly Color _backDetectionColor = new Color(1, 0, 0, 0.2f); // Red with transparency
+    [Export]
+    public float AttackCooldown;
+    private float _attackCooldown;
 
-        public Vector2 LastKnownPlayerPosition
-        {
-            get => _lastKnownPlayerPosition;
-            set => _lastKnownPlayerPosition = value;
-        }
+    public override void _Ready()
+    {
+        base._Ready();
 
-        public Node2D Player
-        {
-            get => _player;
-            set => _player = value;
-        }
+        AddToGroup("Entities");
 
-        [Export]
-        public float AttackCooldown;
-        private float _attackCooldown;
+        if (World_ref != null)
+            _player = World_ref.GetNode<Player>("Player");
 
-        public override void _Ready()
-        {
-            base._Ready();
+        _attackCooldown = 0f;
 
-            AddToGroup("Entities");
+        // Initialize detection system
+        _detectionSystem = new GuardDetectionSystem(this, BaseDetectionRange, VisionAngle);
 
-            if (World_ref != null)
-                _player = World_ref.GetNode<Player>("Player");
-
-            _attackCooldown = 0f;
-
-            // Initialize detection system
-            _detectionSystem = new GuardDetectionSystem(this, BaseDetectionRange, VisionAngle);
-
-            _stateMachineNode = GetNode<GuardStateMachineNode>("StateMachine");
-        }
+        _stateMachineNode = GetNode<GuardStateMachineNode>("StateMachine");
+    }
 
         public override void _Process(double delta)
         {
             base._Process(delta);
 
-            if (_player != null)
+        if (_player != null)
+        {
+            // Check for player detection
+            if (_detectionSystem.CanDetectPlayer(_player as Player))
             {
-                // Check for player detection
-                if (_detectionSystem.CanDetectPlayer(_player as Player))
-                {
-                    _lastKnownPlayerPosition = _player.Position;
-                    _stateMachineNode.TransitionToAlert();
-                }
+                _lastKnownPlayerPosition = _player.Position;
+                _stateMachineNode.TransitionToAlert();
             }
+        }
 
             // Request redraw every frame to update visualization
             QueueRedraw();
@@ -209,12 +208,11 @@ namespace OutCastSurvival.Entities
                 }
             }
 
-            _attackCooldown -= delta;
-        }
+        _attackCooldown -= delta;
+    }
 
-        protected override string GetCurrentStateName()
-        {
-            return _stateMachineNode?.GetCurrentState()?.StateName ?? "Unknown";
-        }
+    protected override string GetCurrentStateName()
+    {
+        return _stateMachineNode?.GetCurrentState()?.StateName ?? "Unknown";
     }
 }

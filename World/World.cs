@@ -9,7 +9,9 @@ namespace OutCastSurvival
 public partial class World : Node2D
 {
   [Export]
-  public bool visualize_debug_info { get; set; } = false;
+  public DebugScreen debug_ref;
+
+  public bool visualize_debug_info = false; //debug_ref.visualize_debug_info;
 
   [Export]
   public MovingEntity[] movingEntity_list { get; set; }
@@ -58,10 +60,12 @@ public partial class World : Node2D
       Step = true;
       _ = Process_Step();
     }
-
     if (Input.IsActionJustPressed("visualize_debug_info")) {
-      visualize_debug_info = !visualize_debug_info;
+      GD.Print("Debug screen toggle");
+      debug_ref.Visible = !debug_ref.Visible;
+      debug_ref.ShowDebug = true;
     }
+
 
     // stop als op pauze
     if (Engine.TimeScale == 0f)
@@ -110,19 +114,6 @@ public partial class World : Node2D
     Engine.TimeScale = 0f;
     Step = false;
   }
-
-  public override void _Draw() {
-    base._Draw();
-
-
-    // draw lines from me's to target
-    for (int i = 0; i < movingEntity_list.Length; i++)
-    {
-      MovingEntity me = movingEntity_list[i];
-      // DrawLine(me.Position, Target, Colors.Blue, 1);
-    }
-  }
-
 
   public void GetPathTo(Vector2I start, Vector2I destination)
   {

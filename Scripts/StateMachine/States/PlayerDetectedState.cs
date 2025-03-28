@@ -6,8 +6,8 @@ namespace StateMachine.States
 {
     public class PlayerDetectedState : BaseState
     {
-        public PlayerDetectedState(Guard guard)
-            : base(guard, "PlayerDetected")
+        public PlayerDetectedState(Guard guard, Node2D parent)
+            : base(guard, "PlayerDetected", parent)
         {
         }
 
@@ -20,7 +20,7 @@ namespace StateMachine.States
         {
             base.Update(delta);
 
-            if (_guard.Position.DistanceTo(_guard.Player.Position) > 100)
+            if (_guard.Position.DistanceTo(_guard.Player.Position) > _guard.BaseDetectionRange && !_guard.CanDetectPlayer())
             {
                 TransitionTo<PlayerLostState>();
             }

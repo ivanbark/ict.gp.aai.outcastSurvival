@@ -6,8 +6,8 @@ namespace StateMachine.States
 {
     public class IdleState : BaseState
     {
-        public IdleState(Guard guard)
-            : base(guard, "Idle")
+        public IdleState(Guard guard, Node2D parent)
+            : base(guard, "Idle", parent)
         {
         }
 

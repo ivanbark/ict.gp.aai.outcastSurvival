@@ -6,8 +6,8 @@ namespace StateMachine.States
 {
     public class PlayerLostState : BaseState
     {
-        public PlayerLostState(Guard guard)
-            : base(guard, "PlayerLost")
+        public PlayerLostState(Guard guard, Node2D parent)
+            : base(guard, "PlayerLost", parent)
         {
         }
 

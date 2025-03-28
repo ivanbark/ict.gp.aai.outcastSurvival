@@ -9,6 +9,7 @@ namespace StateMachine
     {
         private StateMachine _rootStateMachine;
         private Guard _guard;
+        private Node2D _parent;
 
         [Export]
         public bool IsActive
@@ -24,6 +25,7 @@ namespace StateMachine
         public override void _Ready()
         {
             _guard = GetParent<Guard>();
+            _parent = (Node2D)GetParent<Guard>();
             if (_guard == null)
             {
                 GD.PrintErr("GuardStateMachineNode must be a child of a Guard node!");
@@ -46,13 +48,13 @@ namespace StateMachine
         private void InitializePatrolStateMachine()
         {
             var patrolStateMachine = new StateMachine(_rootStateMachine, null);
-            var patrolState = new PatrolState(_guard);
+            var patrolState = new PatrolState(_guard, _parent);
             patrolState.SubStateMachine = patrolStateMachine;
             _rootStateMachine.AddState(patrolState);
 
             // Add Patrol sub-states
-            var idleState = new IdleState(_guard);
-            var patrolPathState = new PatrolPathState(_guard);
+            var idleState = new IdleState(_guard, _parent);
+            var patrolPathState = new PatrolPathState(_guard, _parent);
             patrolStateMachine.AddState(idleState);
             patrolStateMachine.AddState(patrolPathState);
         }
@@ -60,7 +62,7 @@ namespace StateMachine
         private void InitializeAlertStateMachine()
         {
             var alertStateMachine = new StateMachine(_rootStateMachine, null);
-            var alertState = new AlertState(_guard);
+            var alertState = new AlertState(_guard, _parent);
             alertState.SubStateMachine = alertStateMachine;
             _rootStateMachine.AddState(alertState);
 
@@ -71,13 +73,13 @@ namespace StateMachine
         private void InitializePlayerLostStateMachine(StateMachine alertStateMachine, AlertState alertState)
         {
             var playerLostStateMachine = new StateMachine(alertStateMachine, alertState);
-            var playerLostState = new PlayerLostState(_guard);
+            var playerLostState = new PlayerLostState(_guard, _parent);
             playerLostState.SubStateMachine = playerLostStateMachine;
             alertStateMachine.AddState(playerLostState);
 
             // Add PlayerLost sub-states
-            var seekState = new SeekState(_guard);
-            var searchState = new SearchState(_guard);
+            var seekState = new SeekState(_guard, _parent);
+            var searchState = new SearchState(_guard, _parent);
             playerLostStateMachine.AddState(seekState);
             playerLostStateMachine.AddState(searchState);
         }
@@ -85,13 +87,13 @@ namespace StateMachine
         private void InitializePlayerDetectedStateMachine(StateMachine alertStateMachine, AlertState alertState)
         {
             var playerDetectedStateMachine = new StateMachine(alertStateMachine, alertState);
-            var playerDetectedState = new PlayerDetectedState(_guard);
+            var playerDetectedState = new PlayerDetectedState(_guard, _parent);
             playerDetectedState.SubStateMachine = playerDetectedStateMachine;
             alertStateMachine.AddState(playerDetectedState);
 
             // Add PlayerDetected sub-states
-            var chaseState = new ChaseState(_guard);
-            var attackState = new AttackState(_guard);
+            var chaseState = new ChaseState(_guard, _parent);
+            var attackState = new AttackState(_guard, _parent);
             playerDetectedStateMachine.AddState(chaseState);
             playerDetectedStateMachine.AddState(attackState);
         }
@@ -179,12 +181,12 @@ namespace StateMachine
 
         private void OnStateChanged(IState from, IState to)
         {
-            GD.Print($"State changed from {from?.StateName ?? "null"} to {to?.StateName ?? "null"}");
+            GD.Print($"Guard: State changed from {from?.StateName ?? "null"} to {to?.StateName ?? "null"}");
         }
 
         private void OnChildStateChanged(IState from, IState to)
         {
-            GD.Print($"Child state changed from {from?.StateName ?? "null"} to {to?.StateName ?? "null"}");
+            GD.Print($"Guard: Child state changed from {from?.StateName ?? "null"} to {to?.StateName ?? "null"}");
         }
 
         public override void _ExitTree()

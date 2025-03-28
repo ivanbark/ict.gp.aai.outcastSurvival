@@ -6,10 +6,10 @@ namespace StateMachine.States
 {
     public class SeekState : BaseState
     {
-        public SeekState(Guard guard)
-            : base(guard, "Seek")
+        public SeekState(Guard guard, Node2D parent)
+            : base(guard, "Seek", parent)
         {
-        } 
+        }
 
         public override void Enter()
         {

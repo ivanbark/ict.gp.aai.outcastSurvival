@@ -6,8 +6,8 @@ namespace StateMachine.States
 {
     public class ChaseState : BaseState
     {
-        public ChaseState(Guard guard)
-            : base(guard, "Chase")
+        public ChaseState(Guard guard, Node2D parent)
+            : base(guard, "Chase", parent)
         {
         }
 
@@ -18,12 +18,11 @@ namespace StateMachine.States
 
         public override void Update(float delta)
         {
-            GD.Print("ChaseState Update");
             if (!IsActive || _guard == null || _guard.Player == null) return;
 
             _guard.ChasePlayer(delta);
 
-            if (_guard.Position.DistanceTo(_guard.Player.Position) <= _guard.AttackRange - 5)
+            if (_guard.Position.DistanceTo(_guard.Player.Position) <= _guard.AttackRange * .7f)
             {
                 if (ParentStateMachine != null)
                 {

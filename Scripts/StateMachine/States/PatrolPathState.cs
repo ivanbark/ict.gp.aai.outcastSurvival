@@ -6,8 +6,8 @@ namespace StateMachine.States
 {
     public class PatrolPathState : BaseState
     {
-        public PatrolPathState(Guard guard)
-            : base(guard, "PatrolPath")
+        public PatrolPathState(Guard guard, Node2D parent)
+            : base(guard, "PatrolPath", parent)
         {
         }
 
