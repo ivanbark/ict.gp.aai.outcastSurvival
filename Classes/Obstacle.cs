@@ -13,6 +13,11 @@ public class Obstacle
     this.vertex = vertex;
     this.type = type;
   }
+  public Obstacle(Obstacle obstacle) 
+  {
+    vertex = new(obstacle.vertex.position);
+    type = obstacle.type;
+  }
 
   public override bool Equals(object obj)
   {

@@ -80,7 +80,7 @@ public partial class World : Node2D
     List<Sheep> otherSheep = [];
 
     // get all the sheep
-    var allsheep = GetTree().GetNodesInGroup("Entities");
+    var allsheep = GetTree().GetNodesInGroup("Sheep");
 
     // check if in the provided radius
     foreach (Node entity in allsheep)
