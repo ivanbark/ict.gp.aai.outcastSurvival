@@ -6,7 +6,7 @@ using OutCastSurvival.Entities;
 
 public partial class Guard : MovingEntity
 {
-    private Node2D _player;
+    private MovingEntity _player;
     private Vector2 _lastKnownPlayerPosition;
     private GuardDetectionSystem _detectionSystem;
     private GuardStateMachineNode _stateMachineNode;
@@ -28,7 +28,7 @@ public partial class Guard : MovingEntity
         set => _lastKnownPlayerPosition = value;
     }
 
-    public Node2D Player
+    public MovingEntity Player
     {
         get => _player;
         set => _player = value;
@@ -215,4 +215,10 @@ public partial class Guard : MovingEntity
     {
         return _stateMachineNode?.GetCurrentState()?.StateName ?? "Unknown";
     }
+
+  internal bool CanDetectPlayer()
+  {
+    throw new NotImplementedException();
+  }
+
 }

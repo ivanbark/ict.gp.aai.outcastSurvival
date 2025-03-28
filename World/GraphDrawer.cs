@@ -1,5 +1,5 @@
 using Godot;
-using OutCastSurvival.Entities;
+using OutCastSurvival;
 using System;
 
 public partial class GraphDrawer : Node2D

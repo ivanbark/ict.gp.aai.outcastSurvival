@@ -1,4 +1,5 @@
 using Godot;
+using OutCastSurvival;
 using System;
 
 public partial class DebugScreen : Control
