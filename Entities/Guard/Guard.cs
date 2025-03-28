@@ -5,7 +5,7 @@ using StateMachine;
 
 public partial class Guard : MovingEntity
 {
-    private Node2D _player;
+    private MovingEntity _player;
     private Vector2 _lastKnownPlayerPosition;
     private GuardDetectionSystem _detectionSystem;
     private GuardStateMachineNode _stateMachineNode;
@@ -27,7 +27,7 @@ public partial class Guard : MovingEntity
         set => _lastKnownPlayerPosition = value;
     }
 
-    public Node2D Player
+    public MovingEntity Player
     {
         get => _player;
         set => _player = value;
@@ -207,6 +207,11 @@ public partial class Guard : MovingEntity
         }
 
         _attackCooldown -= delta;
+    }
+
+    public bool CanDetectPlayer()
+    {
+        return _detectionSystem.CanDetectPlayer(_player as Player);
     }
 
     protected override string GetCurrentStateName()
