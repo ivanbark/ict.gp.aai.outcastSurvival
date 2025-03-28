@@ -44,18 +44,18 @@ namespace OutCastSurvival.Entities
 
     public override void _Ready()
     {
-      obstacleAvoidanceBox = new(new(0,-heightObstacleAvoidanceBox/2), new(widthObstacleAvoidanceBox,heightObstacleAvoidanceBox));
       
       base._Ready();
       MaxForce = 600;
-      MaxSpeed = 25;
-      
+      MaxSpeed = 20;
+      obstacleAvoidanceBox = new(new(0,-heightObstacleAvoidanceBox/2), new(widthObstacleAvoidanceBox,heightObstacleAvoidanceBox));
+
       AddToGroup("Entities");
       AddToGroup("Sheep");
     }
     public override void _Process(double delta)
     {
-      Vector2 seek_force = SteeringBehaviour.Seek(Position,new(1200,550),SeekForce);
+      Vector2 seek_force = SteeringBehaviour.Seek(Position,new(1700,950),SeekForce);
       Velocity += seek_force;
 
 
@@ -251,8 +251,8 @@ namespace OutCastSurvival.Entities
         DrawLine(new(),Cohesion_force_vector, Colors.Blue, 1);
 
         //obstacle avoidance:
-        // DrawRect(obstacleAvoidanceBox,Colors.HotPink, false, 1);
-        // DrawLine(new(),ObstacleAvoidance_force_vector, Colors.HotPink, 1);
+        DrawRect(obstacleAvoidanceBox,Colors.HotPink, false, 1);
+        DrawLine(new(),ObstacleAvoidance_force_vector, Colors.HotPink, 1);
       }
     }
 

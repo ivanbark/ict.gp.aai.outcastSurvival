@@ -22,7 +22,7 @@ public partial class Herd : Node
     for (int i = 0; i < numberOfChildren; i++)
     {
       Sheep sheep = SheepScene.Instantiate<Sheep>();
-      sheep.Position = startPostionOfHerd + new Vector2(GD.Randf() * 10, GD.Randf() * 10);
+      sheep.Position = startPostionOfHerd + new Vector2(GD.Randf() * 100, GD.Randf() * 100) - new Vector2(GD.Randf() * 100, GD.Randf() * 100);
       AddChild(sheep);
     }
   }
