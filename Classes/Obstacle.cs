@@ -38,4 +38,10 @@ public class Obstacle
     hash = hash * 31 + type.GetHashCode();
     return hash;
   }
+
+  public override string ToString()
+  {
+    return $"Vertex: {vertex}, Type: {type}";
+  }
+
 }

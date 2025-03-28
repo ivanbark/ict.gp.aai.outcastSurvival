@@ -26,10 +26,12 @@ public partial class Graph : TileMapLayer
 
   private readonly Queue<Vertex> vertex_queue = [];
 
+  public int TileSize;
   // Called when the node enters the scene tree for the first time.
   public override void _Ready()
   {
      GenerateGraphBFS();
+     TileSize = TileSet.TileSize.X; // also could use Y, tiles are squares.
   }
 
   // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -184,6 +186,13 @@ public partial class Graph : TileMapLayer
       output = probe;
     }
     return true;
+  }
+
+
+  public void TranslateToGlobal(Vertex input)
+  {
+    input.position *= TileSize;
+    input.position += new Vector2I(TileSize/2, TileSize/2);
   }
 
   public override void _Draw()

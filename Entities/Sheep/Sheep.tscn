@@ -50,9 +50,14 @@ font_size = 12
 
 [node name="Sheep" type="CharacterBody2D"]
 script = ExtResource("1_c257q")
-widthObstacleAvoidanceBox = 60
-heightObstacleAvoidanceBox = 60
-ObstacleAvoidance_force = 100.0
+Cohesion_radius = 100.0
+Seperation_radius = 32.0
+SeekForce = 0.5
+Separation_force = 85.0
+Cohesion_force = 2.0
+widthObstacleAvoidanceBox = 50
+heightObstacleAvoidanceBox = 30
+ObstacleAvoidance_force = 4.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_omd8u")
