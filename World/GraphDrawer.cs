@@ -3,47 +3,43 @@ using System;
 
 public partial class GraphDrawer : Node2D
 {
-
   [Export]
-  public bool draw_graph = true;
-
-  [Export]
-  private Graph graph;
+  private World world_ref;
 
   public override void _Ready()
   {
+    world_ref.debug_ref.DebugOptionChanged += () => QueueRedraw();
   }
 
   public override void _Process(double delta)
   {
       base._Process(delta);
-      if (Input.IsActionJustPressed("toggle_display_graph")) {
-        GD.Print("Toggle Graph");
-        draw_graph = !draw_graph;
-        QueueRedraw();
-      }
-      
-    
   }
+
   public override void _Draw()
   {
     base._Draw();
-    if (draw_graph) 
+    if (!world_ref.debug_ref.ShowDebug) 
+      return;
+    if (world_ref.debug_ref.ShowGraph) 
     {
-      foreach(Vertex vertex  in graph.vertices) 
+      foreach(Vertex vertex  in world_ref.graph_ref.vertices) 
       {
         if (vertex.Visited)
-          DrawCircle(graph.MapToLocal(vertex.position), 2, Colors.Yellow);
+          DrawCircle(world_ref.graph_ref.MapToLocal(vertex.position), 2, Colors.Yellow);
       }
 
-      foreach (Edge edge in graph.edges)
+      foreach (Edge edge in world_ref.graph_ref.edges)
       {
-        DrawLine(graph.MapToLocal(edge.from.position), graph.MapToLocal(edge.to.position),Colors.Yellow,1);
+        DrawLine(world_ref.graph_ref.MapToLocal(edge.from.position), world_ref.graph_ref.MapToLocal(edge.to.position),Colors.Yellow,1);
       }
-      GD.Print(graph.obstacles.Count + " obstacles");
-      foreach (Obstacle obstacle in graph.obstacles)
+    }
+    if (world_ref.debug_ref.ShowObstacles)
+    {
+      GD.Print(world_ref.graph_ref.obstacles.Count + " obstacles");
+      foreach (Obstacle obstacle in world_ref.graph_ref.obstacles)
       {
-        DrawCircle(graph.MapToLocal(obstacle.vertex.position), 3, Colors.Red);
+        DrawCircle(world_ref.graph_ref.MapToLocal(obstacle.vertex.position), 3, Colors.Red);
       }
     }
   }
