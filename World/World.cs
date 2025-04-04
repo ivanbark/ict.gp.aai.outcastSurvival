@@ -63,7 +63,8 @@ public partial class World : Node2D
     if (Input.IsActionJustPressed("visualize_debug_info")) {
       GD.Print("Debug screen toggle");
       debug_ref.Visible = !debug_ref.Visible;
-      debug_ref.ShowDebug = true;
+      debug_ref.ShowDebug = !debug_ref.ShowDebug;
+      debug_ref.SendGraphicsUpdate();
     }
 
 

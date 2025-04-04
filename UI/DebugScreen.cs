@@ -30,24 +30,29 @@ public partial class DebugScreen : Control
 
     graph_btn = InitializeCheckButton("Graph_btn", value => {
       ShowGraph = value;
-      EmitSignal(nameof(DebugOptionChanged));
+      SendGraphicsUpdate();
       });
     obstacle_btn = InitializeCheckButton("Obstacle_btn", value => {
       ShowObstacles = value;
-      EmitSignal(nameof(DebugOptionChanged));
+      SendGraphicsUpdate();
       });
     seperation_btn = InitializeCheckButton("Seperation_btn", value => {
       ShowSeperation = value;
-      EmitSignal(nameof(DebugOptionChanged));
+      SendGraphicsUpdate();
       });
     cohesion_btn = InitializeCheckButton("Cohesion_btn", value => {
       ShowCohesion = value;
-      EmitSignal(nameof(DebugOptionChanged));
+      SendGraphicsUpdate();
       });
     obstacleAvoidance_btn = InitializeCheckButton("ObstacleAvoidance_btn", value => {
       ShowObstacleAvoidance = value;
-      EmitSignal(nameof(DebugOptionChanged));
+      SendGraphicsUpdate();
       });
+  }
+
+  public void SendGraphicsUpdate() 
+  {
+    EmitSignal(nameof(DebugOptionChanged));
   }
 
   private CheckButton InitializeCheckButton(string nodePath, Action<bool> onToggle)
