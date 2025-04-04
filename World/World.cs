@@ -1,6 +1,8 @@
 using Godot;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 
 public partial class World : Node2D
 {
@@ -21,10 +23,52 @@ public partial class World : Node2D
   [Export]
   public bool Step { get; set; } = false;
 
+  [Export]
+  public int NumberOfChests { get; set; } = 12;
+
+  private Globals _globals;
+
   public override void _Ready()
   {
       base._Ready();
+      SpawnChests();
+      _globals = GetNode<Globals>("/root/Globals");
   }
+
+  private void SpawnChests()
+  {
+      var random = new Random();
+      var chestScene = GD.Load<PackedScene>("res://Items/gold_chest.tscn");
+      var spawnedChests = new List<Vector2>();
+      const float MIN_DISTANCE = 300f; // Minimum distance between chests
+
+      for (int i = 0; i < NumberOfChests; i++)
+      {
+          // Get a random walkable position from the graph
+          var vertices = graph_ref.vertices.ToList();
+          if (vertices.Count == 0) continue;
+
+          Vector2 position;
+          int attempts = 0;
+          const int MAX_ATTEMPTS = 50;
+
+          do
+          {
+              var randomVertex = vertices[random.Next(vertices.Count)];
+              position = graph_ref.MapToLocal(randomVertex.position);
+              attempts++;
+          } while (spawnedChests.Any(p => p.DistanceTo(position) < MIN_DISTANCE) && attempts < MAX_ATTEMPTS);
+
+          if (attempts >= MAX_ATTEMPTS) continue; // Skip if we couldn't find a valid position
+
+          // Create and add the chest
+          var chest = chestScene.Instantiate<GoldChest>();
+          AddChild(chest);
+          chest.Position = position;
+          spawnedChests.Add(position);
+      }
+  }
+
   public override void _Process(double delta)
   {
     // Alleen input "Listeners hier", game logic in het onderste deel!
@@ -93,5 +137,12 @@ public partial class World : Node2D
     {
       GD.Print("We can start to find a path");
     }
+  }
+
+  public void EndGame(bool isWon)
+  {
+    _globals.EndGame(isWon);
+    GetTree().Paused = true;
+    GetTree().ChangeSceneToFile("res://end_game_screen.tscn");
   }
 }
