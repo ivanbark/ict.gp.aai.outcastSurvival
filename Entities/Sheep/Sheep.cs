@@ -52,6 +52,7 @@ namespace OutCastSurvival.Entities
 
       AddToGroup("Entities");
       AddToGroup("Sheep");
+      World_ref.debug_ref.DebugOptionChanged += () => QueueRedraw();
     }
     public override void _Process(double delta)
     {
@@ -238,19 +239,25 @@ namespace OutCastSurvival.Entities
     public override void _Draw()
     {
       base._Draw();
-      if (World_ref.visualize_debug_info) {
-        // orientation and velocity
+      if(!World_ref.debug_ref.ShowDebug)
+        return;
+      // orientation and velocity
 
 
-        //flocking:
-        //Seperation:
+      //flocking:
+      //Seperation:
+      if (World_ref.debug_ref.ShowSeperation) {
         DrawCircle(new(0,0),Seperation_radius, Colors.Red, false, 1);
         DrawLine(new(),Separation_force_vector, Colors.Yellow, 1);
-        //Cohesion:
+      }
+
+      //Cohesion:
+      if (World_ref.debug_ref.ShowCohesion) {
         DrawCircle(new(0,0),Cohesion_radius, Colors.Purple, false, 1);
         DrawLine(new(),Cohesion_force_vector, Colors.Blue, 1);
-
-        //obstacle avoidance:
+      }
+      //obstacle avoidance:
+      if(World_ref.debug_ref.ShowObstacleAvoidance){
         DrawRect(obstacleAvoidanceBox,Colors.HotPink, false, 1);
         DrawLine(new(),ObstacleAvoidance_force_vector, Colors.HotPink, 1);
       }

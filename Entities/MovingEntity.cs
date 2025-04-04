@@ -102,7 +102,7 @@ public partial class MovingEntity : BaseGameEntity
     }
 
     // Update debug info
-    if (World_ref.visualize_debug_info && _debugInfo != null)
+    if (World_ref.debug_ref.ShowDebug && _debugInfo != null)
     {
       UpdateDebugInfo();
     }

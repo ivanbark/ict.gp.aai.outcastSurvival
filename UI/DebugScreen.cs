@@ -16,12 +16,15 @@ public partial class DebugScreen : Control
   public bool ShowSeperation {get; private set;}
   private CheckButton cohesion_btn;
   public bool ShowCohesion {get; private set;}
+  private CheckButton obstacleAvoidance_btn;
+  public bool ShowObstacleAvoidance {get; private set;}
 
   private World world_ref;
 
   public override void _Ready()
   {
     base._Ready();
+    ShowDebug = false;
     
     world_ref = GetParent<World>();
 
@@ -41,10 +44,10 @@ public partial class DebugScreen : Control
       ShowCohesion = value;
       EmitSignal(nameof(DebugOptionChanged));
       });
-    // seperation_btn = InitializeCheckButton("Seperation_btn", value => {
-    //   ShowSeperation = value;
-    //   EmitSignal(nameof(DebugOptionChanged));
-    //   });
+    obstacleAvoidance_btn = InitializeCheckButton("ObstacleAvoidance_btn", value => {
+      ShowObstacleAvoidance = value;
+      EmitSignal(nameof(DebugOptionChanged));
+      });
   }
 
   private CheckButton InitializeCheckButton(string nodePath, Action<bool> onToggle)
