@@ -61,11 +61,6 @@ namespace StateMachine
             _stateHistory.Push(_currentState);
             _currentState = newState;
             _currentState.Enter();
-
-            if (_parentState != null)
-            {
-                _parentState.OnChildStateEnter(newState);
-            }
         }
 
         public void RevertToPreviousState()
@@ -82,11 +77,6 @@ namespace StateMachine
 
             _currentState = previousState;
             _currentState.Enter();
-
-            if (_parentState != null)
-            {
-                _parentState.OnChildStateEnter(previousState);
-            }
         }
 
         public void Update(float delta)

@@ -57,7 +57,7 @@ namespace StateMachine.States
             if (targetState == null) return false;
 
             // Allow transitions to PlayerDetectedState or PatrolState
-            return targetState is PlayerDetectedState || targetState is PatrolState;
+            return targetState is PlayerDetectedState || targetState is PatrolState || targetState is SeekState;
         }
     }
 }

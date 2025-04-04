@@ -135,7 +135,7 @@ namespace StateMachine
                 var alertSubState = alertState.SubStateMachine?.CurrentState;
                 if (alertSubState is PlayerDetectedState)
                 {
-                    return; // Already in player detected state, no need to transition
+                    return;
                 }
             }
 

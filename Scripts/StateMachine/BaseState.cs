@@ -67,21 +67,6 @@ namespace StateMachine
             GD.Print($"{_parent.Name}: Transitioning from {from?.StateName ?? "null"} to {to?.StateName ?? "null"}");
         }
 
-        public virtual void OnChildStateEnter(IState childState)
-        {
-            GD.Print($"{_parent.Name}: Child state {childState.StateName} entered in {StateName}");
-        }
-
-        public virtual void OnChildStateExit(IState childState)
-        {
-            GD.Print($"{_parent.Name}: Child state {childState.StateName} exited in {StateName}");
-        }
-
-        public virtual void OnChildStateTransition(IState from, IState to)
-        {
-            GD.Print($"{_parent.Name}: Child state transition from {from?.StateName ?? "null"} to {to?.StateName ?? "null"} in {StateName}");
-        }
-
         public virtual bool CanTransitionTo(IState targetState)
         {
             return targetState != null;
@@ -105,6 +90,7 @@ namespace StateMachine
             if (CanTransitionTo(targetState))
             {
                 ParentStateMachine.SetState<T>();
+                
             }
         }
 
