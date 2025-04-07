@@ -43,6 +43,15 @@ namespace OutCastSurvival.Entities
     public Obstacle closestObstacle = null;
 
     public List<Vertex> path = null;
+    public int pathIndex = 0;
+
+
+    [Export]
+    private float PathFollowing_force = 10f;
+    private Vector2 PathFollowing_force_vector = new(0, 0);
+
+    [Export]
+    private float PathFollowing_radius = 10f;
 
     public override void _Ready()
     {
@@ -65,20 +74,32 @@ namespace OutCastSurvival.Entities
         Vector2I graphCoords = new((int)Position.X / tileSize, (int)Position.Y / tileSize);
 
         World_ref.graph_ref.GetVertexForPosition(graphCoords, out Vertex start);
-        path = World_ref.graph_ref.A_star(start, World_ref.TargetVertex);
+        path = World_ref.graph_ref.A_star(start, World_ref.TargetVertex); //new(new Vector2I(480, 160)));
       }
-      // else
-      // {
-      // if (path.Count > 0)
-      // {
-      //   Position = path[0].position;
-      //   path.RemoveAt(0);
-      // }
-      // }
-
-
-      // Vector2 seek_force = SteeringBehaviour.Seek(Position, new(1700, 950), SeekForce);
-      // Velocity += seek_force;
+      else
+      {
+        Vector2 PathFollowing_force_vector = SteeringBehaviour.PathFollowing(Position, path, pathIndex) * PathFollowing_force;
+        // GD.Print($"PathFollowing_force_vector: {PathFollowing_force_vector}");
+        Velocity += PathFollowing_force_vector;
+        if (path != null && path.Count > 0)
+        {
+          if (Position.DistanceTo(path[pathIndex].position) < PathFollowing_radius)
+          {
+            GD.Print("Reached waypoint");
+            World_ref.debug_ref.SendGraphicsUpdate();
+            pathIndex++;
+          }
+        }
+        // check if we reached the end of the path
+        if (path != null && pathIndex >= path.Count)
+        {
+          GD.Print("Reached destination");
+          path = null;
+          pathIndex = 0;
+          World_ref.TargetVertex = null;
+          World_ref.debug_ref.SendGraphicsUpdate();
+        }
+      }
 
 
       // wander
@@ -281,6 +302,12 @@ namespace OutCastSurvival.Entities
         {
           DrawRect(obstacleAvoidanceBox, Colors.HotPink, false, 1);
           DrawLine(new(), ObstacleAvoidance_force_vector, Colors.HotPink, 1);
+        }
+
+        // path following
+        if (World_ref.debug_ref.ShowPathFollowing)
+        {
+          DrawLine(new(), PathFollowing_force_vector, Colors.Green, 1);
         }
       }
     }

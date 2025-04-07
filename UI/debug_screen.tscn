@@ -99,7 +99,19 @@ text = "A* paths"
 
 [node name="Paths_btn" type="CheckButton" parent="."]
 layout_mode = 0
-offset_left = 184.0
+offset_left = 177.0
 offset_top = 209.0
-offset_right = 228.0
+offset_right = 221.0
 offset_bottom = 233.0
+
+[node name="PathFloowing" type="Label" parent="."]
+offset_top = 233.0
+offset_right = 163.0
+offset_bottom = 256.0
+text = "Path following forces"
+
+[node name="PathFollowing_btn" type="CheckButton" parent="."]
+offset_left = 177.0
+offset_top = 233.0
+offset_right = 221.0
+offset_bottom = 257.0

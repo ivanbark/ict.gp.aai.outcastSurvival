@@ -20,6 +20,8 @@ public partial class DebugScreen : Control
   public bool ShowObstacleAvoidance { get; private set; }
   private CheckButton Paths_btn;
   public bool ShowPaths { get; private set; }
+  private CheckButton PathFollowing_btn;
+  public bool ShowPathFollowing { get; private set; }
 
   private World world_ref;
 
@@ -58,6 +60,11 @@ public partial class DebugScreen : Control
     Paths_btn = InitializeCheckButton("Paths_btn", value =>
     {
       ShowPaths = value;
+      SendGraphicsUpdate();
+    });
+    PathFollowing_btn = InitializeCheckButton("PathFollowing_btn", value =>
+    {
+      ShowPathFollowing = value;
       SendGraphicsUpdate();
     });
   }

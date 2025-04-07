@@ -55,9 +55,9 @@ Seperation_radius = 25.0
 SeekForce = 4.5
 Separation_force = 100.0
 Cohesion_force = 2.0
-widthObstacleAvoidanceBox = 50
+widthObstacleAvoidanceBox = 40
 heightObstacleAvoidanceBox = 15
-ObstacleAvoidance_force = 4.0
+ObstacleAvoidance_force = 5.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_omd8u")

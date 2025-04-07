@@ -59,10 +59,11 @@ public partial class GraphDrawer : Node2D
             List<Vertex> path = sheep.path;
             if (path != null)
             {
-              for (int i = 0; i < path.Count - 1; i++)
+              GD.Print("Path: " + path.Count);
+              for (int i = sheep.pathIndex; i < path.Count - 1; i++)
               {
-                Vector2 start = new(path[i].position.X * world_ref.graph_ref.TileSize + world_ref.graph_ref.TileSize / 2, path[i].position.Y * world_ref.graph_ref.TileSize + world_ref.graph_ref.TileSize / 2);
-                Vector2 end = new(path[i + 1].position.X * world_ref.graph_ref.TileSize + world_ref.graph_ref.TileSize / 2, path[i + 1].position.Y * world_ref.graph_ref.TileSize + world_ref.graph_ref.TileSize / 2);
+                Vector2 start = new(path[i].position.X, path[i].position.Y);
+                Vector2 end = new(path[i + 1].position.X, path[i + 1].position.Y);
                 DrawLine(start, end, Colors.RoyalBlue, 5);
                 DrawCircle(start, 5, Colors.RoyalBlue);
               }

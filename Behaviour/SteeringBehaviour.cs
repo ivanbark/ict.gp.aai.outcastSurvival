@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public class SteeringBehaviour
 {
@@ -55,5 +56,37 @@ public class SteeringBehaviour
         }
 
         return steeringForce;
+    }
+
+    // path folowing
+    public static Vector2 PathFollowing(Vector2 position, List<Vertex> path, int pathIndex)
+    {
+        if (path == null || path.Count == 0)
+        {
+            return Vector2.Zero;
+        }
+
+        // Get the current and next waypoints
+        Vertex currentWaypoint = path[pathIndex];
+        Vertex nextWaypoint = path[(pathIndex + 1) % path.Count];
+
+        // Calculate the direction to the next waypoint
+        Vector2 direction = (nextWaypoint.position - currentWaypoint.position);
+        direction /= direction.Length();
+
+        // Calculate the distance to the next waypoint
+        float distanceToNextWaypoint = currentWaypoint.position.DistanceTo(nextWaypoint.position);
+
+        // Calculate the distance to the current position
+        float distanceToCurrentPosition = currentWaypoint.position.DistanceTo((Vector2I)position);
+
+        // If we're close to the next waypoint, move to it
+        if (distanceToCurrentPosition < distanceToNextWaypoint)
+        {
+            return Seek(position, currentWaypoint.position, 1.0f);
+        }
+
+        // Otherwise, move towards the next waypoint
+        return Seek(position, nextWaypoint.position, 1.0f);
     }
 }

@@ -262,7 +262,9 @@ public partial class Graph : TileMapLayer
     Vertex current_vertex = Destination;
     while (current_vertex != null)
     {
-      path.Add(current_vertex);
+      var tmp = new Vertex(current_vertex);
+      TranslateToGlobal(tmp);
+      path.Add(tmp);
       current_vertex = current_vertex.A_Star_previous;
     }
     path.Reverse();
