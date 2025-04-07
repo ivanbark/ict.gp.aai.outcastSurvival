@@ -48,7 +48,6 @@ namespace StateMachine
         {
             _stateMachine = new StateMachine();
 
-            // Add movement states
             _sneakState = new PlayerSneakState(_player, _parent);
             _walkState = new PlayerWalkState(_player, _parent);
             _sprintState = new PlayerSprintState(_player, _parent);
@@ -79,7 +78,6 @@ namespace StateMachine
         {
             if (!IsActive) return;
 
-            // Handle sneak hold
             if (@event.IsActionPressed("sneak"))
             {
                 _isSneaking = true;
@@ -91,7 +89,6 @@ namespace StateMachine
                 UpdateMovementState();
             }
 
-            // Handle sprint hold
             if (@event.IsActionPressed("sprint"))
             {
                 _isSprinting = true;

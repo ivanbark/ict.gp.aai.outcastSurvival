@@ -1,6 +1,6 @@
 using Godot;
 using System;
-namespace OutCastSurvival.Entities 
+namespace OutCastSurvival.Entities
 {
 public partial class MovingEntity : BaseGameEntity
 {
@@ -41,22 +41,23 @@ public partial class MovingEntity : BaseGameEntity
     base._Ready();
 
     animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-    animatedSprite.Animation = "right";
-    animatedSprite.Play();
+    animatedSprite.Play("right");
 
     _acceleration = MaxForce / Mass;
     _heading = Vector2.Right; // Initialize heading to face right
 
     CurrentHealth = MaxHealth;
 
-    // Get debug info references
-    _debugInfo = GetNode<Node2D>("DebugInfo");
-    _stateLabel = GetNode<Label>("DebugInfo/State");
-    _healthLabel = GetNode<Label>("DebugInfo/Health");
-
-    if (_debugInfo != null)
+    // Get debug info references with null checks
+    if (HasNode("DebugInfo"))
     {
-      _debugInfo.Visible = World_ref.visualize_debug_info;
+      _debugInfo = GetNode<Node2D>("DebugInfo");
+      if (_debugInfo != null)
+      {
+        _stateLabel = GetNodeOrNull<Label>("DebugInfo/State");
+        _healthLabel = GetNodeOrNull<Label>("DebugInfo/Health");
+        _debugInfo.Visible = World_ref.visualize_debug_info;
+      }
     }
   }
 
@@ -70,14 +71,15 @@ public partial class MovingEntity : BaseGameEntity
     {
       if (Velocity != Vector2.Zero)
       {
-        animatedSprite.Animation = Mathf.Abs(Velocity.X) > Mathf.Abs(Velocity.Y)
+        var animation = Mathf.Abs(Velocity.X) > Mathf.Abs(Velocity.Y)
           ? Velocity.X > 0 ? "right" : "left"
           : Velocity.Y > 0 ? "down" : "up";
+        animatedSprite.Play(animation);
         animatedSprite.FlipH = false;
       }
     } else {
-      animatedSprite.Animation = "attack";
-      animatedSprite.FlipH = Velocity.X < 0;
+      animatedSprite.Play("attack");
+      animatedSprite.FlipH = _heading.X < 0;
     }
 
     // Update heading based on actual movement direction
@@ -151,9 +153,12 @@ public partial class MovingEntity : BaseGameEntity
     }
   }
 
-  public void TakeDamage(int damage)
+  public virtual void TakeDamage(int damage)
   {
+    GD.Print("Taking damage");
+    GD.Print(CurrentHealth);
     CurrentHealth -= damage;
+    GD.Print(CurrentHealth);
     if (CurrentHealth <= 0)
     {
       Die();
@@ -178,7 +183,7 @@ public partial class MovingEntity : BaseGameEntity
   }
 
   public override void _UnhandledInput(InputEvent @event) {
-    if (@event.IsActionPressed("visualize_debug_info")) {
+    if (@event.IsActionPressed("visualize_debug_info") && _debugInfo != null) {
         _debugInfo.Visible = !_debugInfo.Visible;
     }
   }

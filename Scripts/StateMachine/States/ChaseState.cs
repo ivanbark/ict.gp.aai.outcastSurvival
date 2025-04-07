@@ -40,7 +40,6 @@ namespace StateMachine.States
         {
             if (targetState == null) return false;
 
-            // Allow transitions to AttackState or PlayerLostState
             return targetState is AttackState || targetState is PlayerLostState;
         }
     }

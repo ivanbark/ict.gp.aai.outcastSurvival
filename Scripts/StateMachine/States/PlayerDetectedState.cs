@@ -35,7 +35,6 @@ namespace StateMachine.States
         {
             if (targetState == null) return false;
 
-            // Allow transitions to PlayerLostState
             return targetState is PlayerLostState;
         }
     }

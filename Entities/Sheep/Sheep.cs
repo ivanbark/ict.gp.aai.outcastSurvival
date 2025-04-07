@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
-namespace OutCastSurvival.Entities 
+namespace OutCastSurvival.Entities
 {
   public partial class Sheep : MovingEntity
   {
     [Export]
     private float Cohesion_radius = 45.0f;
-    
+
     [Export]
     private float Seperation_radius = 15.0f;
-    
+
     [Export]
     private float SeekForce = 2f;
 
@@ -35,16 +35,15 @@ namespace OutCastSurvival.Entities
     private int widthObstacleAvoidanceBox;
     [Export]
     private int heightObstacleAvoidanceBox;
-    
+
     [Export]
     private float ObstacleAvoidance_force = 10f;
     private Vector2 ObstacleAvoidance_force_vector = new(0,0);
-    
+
     public Obstacle closestObstacle = null;
 
     public override void _Ready()
     {
-      
       base._Ready();
       MaxForce = 600;
       MaxSpeed = 20;
@@ -71,11 +70,11 @@ namespace OutCastSurvival.Entities
       var allObstacles = World_ref.graph_ref.obstacles;
       List<Obstacle> obstaclesInBox = [];
       closestObstacle = null;
-      
+
       foreach (Obstacle obstacle in allObstacles)
       {
         Rect2 globalSpaceBox = new(Position + obstacleAvoidanceBox.Position, obstacleAvoidanceBox.Size);
-          
+
         Obstacle globalspaceObstacle = new(obstacle); // to keep the original obstacle the same
         World_ref.graph_ref.TranslateToGlobal(globalspaceObstacle.vertex);
 
@@ -104,7 +103,7 @@ namespace OutCastSurvival.Entities
         }
         sumOfLateral += CalculateLateralVec(obstacle);
       }
-      
+
       // get steering force
       // if (closestObstacle != null)
       // {
@@ -116,7 +115,7 @@ namespace OutCastSurvival.Entities
 
       //   float brakeCoefficient = 0.2f;
 
-      //   // avoidance_vec.X = closestObstacle.vertex.position.X * brakeCoefficient; 
+      //   // avoidance_vec.X = closestObstacle.vertex.position.X * brakeCoefficient;
       //   Vector2 braking_vec = Velocity * -brakeCoefficient;
       //   avoidance_vec = braking_vec + lateral_vec;
       // }
@@ -190,7 +189,7 @@ namespace OutCastSurvival.Entities
 
         // alignment (not using for now, but implemnt her otherwise)
       }
-      foreach(Sheep sheep in cohesionSheepList) 
+      foreach(Sheep sheep in cohesionSheepList)
       {
         num_cohesion_sheep++;
         // cohesion
@@ -205,7 +204,7 @@ namespace OutCastSurvival.Entities
         Separation_force_vector = separation_vec * Separation_force;
       }
 
-      if(num_cohesion_sheep != 0) 
+      if(num_cohesion_sheep != 0)
       {
         cohesion_vec /= num_cohesion_sheep;
         cohesion_vec -= Position;
@@ -272,6 +271,15 @@ namespace OutCastSurvival.Entities
     public override int GetHashCode()
     {
       return base.GetHashCode();
+    }
+
+    protected override void Die()
+    {
+      var meatScene = GD.Load<PackedScene>("res://Items/Meat.tscn");
+      var meat = meatScene.Instantiate<Meat>();
+      World_ref.AddChild(meat);
+      meat.Position = Position;
+      QueueFree();
     }
 
     protected override void UpdateDebugInfo()

@@ -39,7 +39,6 @@ namespace StateMachine.States
         {
             if (targetState == null) return false;
 
-            // Allow transitions to SearchState
             return targetState is SearchState;
         }
     }

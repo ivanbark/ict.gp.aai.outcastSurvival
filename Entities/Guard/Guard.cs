@@ -12,7 +12,7 @@ public partial class Guard : MovingEntity
     private GuardStateMachineNode _stateMachineNode;
 
     [Export]
-    public float BaseDetectionRange = 200f;
+    public float BaseDetectionRange = 400f;
     [Export]
     public float VisionAngle = 90f;
 
@@ -80,7 +80,7 @@ public partial class Guard : MovingEntity
             // Get the inverse scale to compensate for the Guard's scale
             Vector2 inverseScale = new Vector2(1f / Scale.X, 1f / Scale.Y);
 
-            if (World_ref.visualize_debug_info) {
+            if (World_ref.debug_ref.ShowDebug) {
                 // Draw base detection range
                 DrawCircle(Vector2.Zero, BaseDetectionRange * inverseScale.X, _baseDetectionColor);
 
@@ -216,9 +216,17 @@ public partial class Guard : MovingEntity
         return _stateMachineNode?.GetCurrentState()?.StateName ?? "Unknown";
     }
 
-  internal bool CanDetectPlayer()
-  {
-    throw new NotImplementedException();
-  }
+    internal bool CanDetectPlayer()
+    {
+        return _detectionSystem.CanDetectPlayer(_player as Player);
+    }
+
+    public override void TakeDamage(int damage)
+    {
+        if (!CanDetectPlayer())
+            damage *= 10;
+
+        base.TakeDamage(damage);
+    }
 
 }

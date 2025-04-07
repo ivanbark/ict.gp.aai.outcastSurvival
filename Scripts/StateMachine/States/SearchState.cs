@@ -28,7 +28,7 @@ namespace StateMachine.States
             {
                 var random = new Random();
                 float angle = (float)(random.NextDouble() * 2 * Math.PI);
-                float radius = 50f + (float)(random.NextDouble() * 50); // Minimum 50, maximum 100
+                float radius = 50f + (float)(random.NextDouble() * 50);
                 _searchPosition = _guard.LastKnownPlayerPosition + new Vector2(
                     radius * (float)Math.Cos(angle),
                     radius * (float)Math.Sin(angle)
@@ -56,7 +56,6 @@ namespace StateMachine.States
         {
             if (targetState == null) return false;
 
-            // Allow transitions to PlayerDetectedState or PatrolState
             return targetState is PlayerDetectedState || targetState is PatrolState || targetState is SeekState;
         }
     }
