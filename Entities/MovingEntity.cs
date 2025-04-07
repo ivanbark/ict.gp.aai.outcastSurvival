@@ -40,6 +40,8 @@ public partial class MovingEntity : BaseGameEntity
   {
     base._Ready();
 
+    World_ref.debug_ref.DebugOptionChanged += InitializeDebugInfo;
+
     animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
     animatedSprite.Play("right");
 
@@ -48,16 +50,21 @@ public partial class MovingEntity : BaseGameEntity
 
     CurrentHealth = MaxHealth;
 
+    InitializeDebugInfo();
+  }
+
+  public void InitializeDebugInfo()
+  {
     // Get debug info references with null checks
     if (HasNode("DebugInfo"))
     {
       _debugInfo = GetNode<Node2D>("DebugInfo");
-      if (_debugInfo != null)
+      if (_debugInfo != null && World_ref.debug_ref.ShowInfoBox)
       {
         _stateLabel = GetNodeOrNull<Label>("DebugInfo/State");
         _healthLabel = GetNodeOrNull<Label>("DebugInfo/Health");
-        _debugInfo.Visible = World_ref.visualize_debug_info;
       }
+        _debugInfo.Visible = World_ref.debug_ref.ShowInfoBox;
     }
   }
 
@@ -106,7 +113,7 @@ public partial class MovingEntity : BaseGameEntity
     }
 
     // Update debug info
-    if (World_ref.debug_ref.ShowDebug && _debugInfo != null)
+    if (World_ref.debug_ref.ShowDebug && _debugInfo != null && World_ref.debug_ref.ShowInfoBox)
     {
       UpdateDebugInfo();
     }
@@ -179,12 +186,6 @@ public partial class MovingEntity : BaseGameEntity
     if (Velocity.Length() > 0.1f)
     {
       _heading = Velocity.Normalized();
-    }
-  }
-
-  public override void _UnhandledInput(InputEvent @event) {
-    if (@event.IsActionPressed("visualize_debug_info") && _debugInfo != null) {
-        _debugInfo.Visible = !_debugInfo.Visible;
     }
   }
 }

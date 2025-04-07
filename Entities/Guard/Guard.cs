@@ -80,7 +80,7 @@ public partial class Guard : MovingEntity
             // Get the inverse scale to compensate for the Guard's scale
             Vector2 inverseScale = new Vector2(1f / Scale.X, 1f / Scale.Y);
 
-            if (World_ref.debug_ref.ShowDebug) {
+            if (World_ref.debug_ref.ShowDebug && World_ref.debug_ref.ShowDetectionInfo) {
                 // Draw base detection range
                 DrawCircle(Vector2.Zero, BaseDetectionRange * inverseScale.X, _baseDetectionColor);
 
