@@ -17,7 +17,7 @@ public partial class Graph : TileMapLayer
   [Export]
   public int[] WalkableTileIds = [0];
 
-  public IHeuristicStrategy strategy = EuclideanHeuristic.Instance();
+  public IHeuristicStrategy strategy = null;
 
   public HashSet<Edge> edges = [];
   public HashSet<Vertex> vertices = [];
@@ -34,6 +34,8 @@ public partial class Graph : TileMapLayer
   public override void _Ready()
   {
     GenerateGraphBFS();
+    // strategy = EuclideanHeuristic.Instance();
+    strategy = ManhattanHeuristic.Instance();
     TileSize = TileSet.TileSize.X; // also could use Y, tiles are squares.
   }
 
@@ -82,7 +84,9 @@ public partial class Graph : TileMapLayer
         // this neighbor is valid and in the vertices hashset
 
         // make a connection with this neighbor
-        Edge edge_to_neighbor = new(current, neighbor, neighbor.isDiagonal ? 141 : 100);
+        var cost = neighbor.isDiagonal ? 141 : 100;
+        neighbor.isDiagonal = false;
+        Edge edge_to_neighbor = new(current, neighbor, cost);
         edges.Add(edge_to_neighbor); //141 form diagonal and 100 for a straight line
         current.AddNeighbor(edge_to_neighbor);
 
@@ -102,16 +106,16 @@ public partial class Graph : TileMapLayer
 
     // straight paths
     // down
-    if (TryGetVertexFromHashSet(new(new Vector2I(referenceCell.position.X, referenceCell.position.Y + 1)), out Vertex down_vertex))
+    if (TryGetVertexFromHashSet(new(new Vector2I(referenceCell.position.X, referenceCell.position.Y + 1), false), out Vertex down_vertex))
       neighbors.Add(down_vertex);
     // up
-    if (TryGetVertexFromHashSet(new(new Vector2I(referenceCell.position.X, referenceCell.position.Y - 1)), out Vertex up_vertex))
+    if (TryGetVertexFromHashSet(new(new Vector2I(referenceCell.position.X, referenceCell.position.Y - 1), false), out Vertex up_vertex))
       neighbors.Add(up_vertex);
     // left
-    if (TryGetVertexFromHashSet(new(new Vector2I(referenceCell.position.X - 1, referenceCell.position.Y)), out Vertex left_vertex))
+    if (TryGetVertexFromHashSet(new(new Vector2I(referenceCell.position.X - 1, referenceCell.position.Y), false), out Vertex left_vertex))
       neighbors.Add(left_vertex);
     // right
-    if (TryGetVertexFromHashSet(new(new Vector2I(referenceCell.position.X + 1, referenceCell.position.Y)), out Vertex right_vertex))
+    if (TryGetVertexFromHashSet(new(new Vector2I(referenceCell.position.X + 1, referenceCell.position.Y), false), out Vertex right_vertex))
       neighbors.Add(right_vertex);
 
     // diagonals the cost should be higher
@@ -204,43 +208,65 @@ public partial class Graph : TileMapLayer
   }
 
 
-  private List<Vertex> A_star(Vertex start, Vertex Destination)
+  public List<Vertex> A_star(Vertex start, Vertex Destination)
   {
+    List<Vertex> path = [];
+
+    //reset all vertexes.
+    foreach (Vertex vertex in vertices)
+      vertex.Reset_A_Star();
+
     PriorityQueue<Edge, float> prio_queue = new();
 
-    var neighbors = start.neighbors;
-    foreach (var edge in neighbors)
-    {
-      Vertex neighbor = edge.to == start ? edge.from : edge.to;
-      prio_queue.Enqueue(edge, edge.cost + strategy.DetermineHeuristicValue(start, Destination));
+    start.A_Star_distance = 0;
 
+    // enqueue start vertex
+    Edge Start_to_start = new(start, start, 0); // dummy edge
+    prio_queue.Enqueue(Start_to_start, Start_to_start.cost + strategy.DetermineHeuristicValue(start, Destination));
+
+    // while pq is not empty
+    while (prio_queue.Count != 0)
+    {
+      // node current - pq.pop/dequeue
+      Edge currentEdge = prio_queue.Dequeue();
+      Vertex current = currentEdge.to == start ? currentEdge.from : currentEdge.to;
+
+      // if current is dest break
+      if (current == Destination) break;
+
+      //set current to visited
+      current.A_Star_visited = true;
+
+      // for each neighbor check if visited and the potential cost
+      foreach (var edge in current.neighbors)
+      {
+        Vertex neighbor = edge.to == current ? edge.from : edge.to;
+        if (!neighbor.A_Star_visited) // calc cost and heuristic and add to pq.
+        {
+          float cost = current.A_Star_distance + edge.cost;
+
+          // check if the cost is less than the current distance or if it is -inf
+          if (neighbor.A_Star_distance == -Mathf.Inf || cost < neighbor.A_Star_distance)
+          {
+            neighbor.A_Star_distance = cost;
+            neighbor.A_Star_previous = current;
+            // enqueue the neighbor
+            prio_queue.Enqueue(edge, cost + strategy.DetermineHeuristicValue(neighbor, Destination));
+          }
+        }
+
+      }
     }
 
+    // backtrack the path
+    Vertex current_vertex = Destination;
+    while (current_vertex != null)
+    {
+      path.Add(current_vertex);
+      current_vertex = current_vertex.A_Star_previous;
+    }
+    path.Reverse();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    Vertex node = new(new Vector2I());
-    return [];
+    return path;
   }
 }
