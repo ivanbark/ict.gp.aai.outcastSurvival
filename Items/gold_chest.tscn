@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://cuu8rmn4w0o1p"]
+
+[ext_resource type="Script" uid="uid://ccbas1bh3bhje" path="res://Items/GoldChest.cs" id="1_3hs1b"]
+[ext_resource type="Texture2D" uid="uid://cyvm661lcuv8u" path="res://art/Treasure Chest closed 254x254.png" id="2_3hs1b"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2gbif"]
+size = Vector2(20, 14)
+
+[node name="Area2D" type="Area2D"]
+script = ExtResource("1_3hs1b")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_2gbif")
+
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 244.0
+offset_bottom = 244.0
+scale = Vector2(0.0800003, 0.0800003)
+texture = ExtResource("2_3hs1b")

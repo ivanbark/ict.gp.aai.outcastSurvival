@@ -11,11 +11,14 @@ public partial class Player : MovingEntity
   public PlayerMovementState CurrentState { get; set; }
   private PlayerStateMachineNode _stateMachineNode;
 
+  public int CurrentGold = 0;
+  private int _maxGold = 100;
+
   [Export]
   public float MaxHunger = 100f;
   public float CurrentHunger;
   private Label _hungerLabel;
-
+  private Label _goldLabel;
   [Export]
   public int BaseHungerDepletionRate = 4;
   private float _hungerDepletionTimer = 0f;
@@ -28,6 +31,7 @@ public partial class Player : MovingEntity
     _hungerLabel = GetNode<Label>("DebugInfo/Hunger");
     _stateMachineNode = GetNode<PlayerStateMachineNode>("StateMachine");
     _hungerDepletionTimer = _hungerDepletionInterval;
+    _goldLabel = GetNode<Label>("DebugInfo/Gold");
   }
 
   public override void _Process(double delta)
@@ -39,6 +43,7 @@ public partial class Player : MovingEntity
     if (World_ref.visualize_debug_info)
     {
       UpdateHungerLabel();
+      UpdateGoldLabel();
     }
   }
 
@@ -63,6 +68,14 @@ public partial class Player : MovingEntity
     }
   }
 
+  private void UpdateGoldLabel()
+  {
+    if (_goldLabel != null)
+    {
+      _goldLabel.Text = $"Gold: {CurrentGold}/{_maxGold}";
+    }
+  }
+
   protected override string GetCurrentStateName()
   {
     return CurrentState?.GetType().Name ?? "Unknown";
@@ -71,7 +84,13 @@ public partial class Player : MovingEntity
   protected override void Die()
   {
     GD.Print("Player has died. Game Over!");
-    GetTree().Paused = true;
+    World_ref.EndGame(false);
+  }
+
+  protected void Win()
+  {
+    GD.Print("Player has won. You win!");
+    World_ref.EndGame(true);
   }
 
   public void DecreaseHunger(float amount)
@@ -102,6 +121,12 @@ public partial class Player : MovingEntity
     {
       _stateMachineNode.SetHungry(false);
     }
+  }
+
+  public void CollectGold(int amount)
+  {
+    CurrentGold += amount;
+    if (CurrentGold >= _maxGold) Win();
   }
 }
 }
