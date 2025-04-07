@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://bn2tnmk0vhyxq"]
+[gd_scene load_steps=11 format=3 uid="uid://bn2tnmk0vhyxq"]
 
 [ext_resource type="Script" uid="uid://c6ybr3e2rwqll" path="res://Entities/Player/Player.cs" id="1_s88pm"]
 [ext_resource type="Texture2D" uid="uid://c5glqs3lnnmnb" path="res://art/player/player_down.png" id="2_n3jhy"]
 [ext_resource type="Texture2D" uid="uid://bp7x0yig55bt4" path="res://art/player/player_left.png" id="3_kpcoo"]
 [ext_resource type="Texture2D" uid="uid://c8rdod3rpk233" path="res://art/player/player_right.png" id="4_m0lf3"]
 [ext_resource type="Texture2D" uid="uid://d2mp2pamatmp7" path="res://art/player/player_up.png" id="5_slley"]
+[ext_resource type="Script" uid="uid://c2naoftdypgmm" path="res://Scripts/StateMachine/PlayerStateMachineNode.cs" id="6_4wf4l"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_f70dq"]
 animations = [{
@@ -42,20 +43,68 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0n6si"]
-size = Vector2(2.62271, 4)
+size = Vector2(20, 35)
+
+[sub_resource type="LabelSettings" id="LabelSettings_4wf4l"]
+font_size = 12
+shadow_size = 0
+
+[sub_resource type="LabelSettings" id="LabelSettings_01a4e"]
+font_size = 12
 
 [node name="Player" type="CharacterBody2D"]
-scale = Vector2(5.338, 5.5)
 script = ExtResource("1_s88pm")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(-7.15256e-07, 9.53674e-07)
-scale = Vector2(0.00536892, 0.00440537)
+scale = Vector2(0.04, 0.04)
 sprite_frames = SubResource("SpriteFrames_f70dq")
-animation = &"down"
+animation = &"right"
+autoplay = "right"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-8.93288e-08, 4.33488e-08)
+position = Vector2(0, -0.5)
 shape = SubResource("RectangleShape2D_0n6si")
 
-[node name="Camera2D" type="Camera2D" parent="."]
+[node name="StateMachine" type="Node" parent="."]
+script = ExtResource("6_4wf4l")
+
+[node name="DebugInfo" type="Node2D" parent="."]
+visible = false
+
+[node name="Background" type="ColorRect" parent="DebugInfo"]
+offset_left = -75.0
+offset_top = -75.0
+offset_right = 75.0
+offset_bottom = -30.0
+color = Color(0, 0, 0, 0.5)
+
+[node name="State" type="Label" parent="DebugInfo"]
+offset_left = -75.0
+offset_top = -76.0
+offset_right = 75.0
+offset_bottom = -59.0
+text = "State: Walk"
+label_settings = SubResource("LabelSettings_4wf4l")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Health" type="Label" parent="DebugInfo"]
+offset_left = -75.0
+offset_top = -61.0
+offset_right = 75.0
+offset_bottom = -44.0
+text = "HP: 100/100"
+label_settings = SubResource("LabelSettings_01a4e")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Hunger" type="Label" parent="DebugInfo"]
+offset_left = -75.0
+offset_top = -46.0
+offset_right = 75.0
+offset_bottom = -29.0
+text = "Hunger: 100/100"
+label_settings = SubResource("LabelSettings_01a4e")
+horizontal_alignment = 1
+vertical_alignment = 1

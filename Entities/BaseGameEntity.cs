@@ -1,11 +1,9 @@
 using Godot;
 using System;
-
+namespace OutCastSurvival.Entities 
+{
 public partial class BaseGameEntity : CharacterBody2D
 {
-  [Export]
-  public bool visualize_debug_info { get; set; } = false;
-
   [Export]
   public World World_ref { get; set; }
 
@@ -21,4 +19,5 @@ public partial class BaseGameEntity : CharacterBody2D
     if (Engine.TimeScale == 0f)
       return;
   }
+}
 }

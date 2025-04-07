@@ -1,0 +1,90 @@
+[gd_scene load_steps=2 format=3 uid="uid://bo0c1x4my70ie"]
+
+[ext_resource type="Script" uid="uid://b63tiogw8djyu" path="res://UI/DebugScreen.cs" id="1_llkft"]
+
+[node name="Debug_screen" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -7.0
+offset_right = -7.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_llkft")
+metadata/_edit_vertical_guides_ = [177.0]
+
+[node name="Graph" type="Label" parent="."]
+layout_mode = 0
+offset_right = 53.0
+offset_bottom = 23.0
+text = "Graph:"
+
+[node name="Graph_btn" type="CheckButton" parent="."]
+layout_mode = 0
+offset_left = 177.0
+offset_right = 221.0
+offset_bottom = 24.0
+
+[node name="Obstacle_btn" type="CheckButton" parent="."]
+layout_mode = 0
+offset_left = 177.0
+offset_top = 24.0
+offset_right = 221.0
+offset_bottom = 48.0
+
+[node name="Obstacle" type="Label" parent="."]
+layout_mode = 0
+offset_top = 24.0
+offset_right = 72.0
+offset_bottom = 47.0
+text = "Obstacle:"
+
+[node name="Flocking" type="Label" parent="."]
+layout_mode = 0
+offset_top = 73.0
+offset_right = 64.0
+offset_bottom = 96.0
+text = "Sheep Flocking"
+
+[node name="Seperation" type="Label" parent="."]
+layout_mode = 0
+offset_top = 98.0
+offset_right = 89.0
+offset_bottom = 121.0
+text = "Seperation:"
+
+[node name="Seperation_btn" type="CheckButton" parent="."]
+layout_mode = 0
+offset_left = 177.0
+offset_top = 98.0
+offset_right = 221.0
+offset_bottom = 122.0
+
+[node name="Cohesion" type="Label" parent="."]
+layout_mode = 0
+offset_top = 121.0
+offset_right = 89.0
+offset_bottom = 144.0
+text = "Cohesion:"
+
+[node name="Cohesion_btn" type="CheckButton" parent="."]
+layout_mode = 0
+offset_left = 177.0
+offset_top = 121.0
+offset_right = 221.0
+offset_bottom = 145.0
+
+[node name="ObstacleAvoidance" type="Label" parent="."]
+layout_mode = 0
+offset_top = 145.0
+offset_right = 89.0
+offset_bottom = 168.0
+text = "Obstacle Avoidance:"
+
+[node name="ObstacleAvoidance_btn" type="CheckButton" parent="."]
+layout_mode = 0
+offset_left = 177.0
+offset_top = 145.0
+offset_right = 221.0
+offset_bottom = 169.0

@@ -1,0 +1,74 @@
+using Godot;
+using OutCastSurvival.Entities;
+using System;
+
+namespace StateMachine.States
+{
+    public abstract class PlayerMovementState : BaseState
+    {
+        protected readonly Player _player;
+        protected int _movementSpeed;
+        protected float _noiseLevel;
+        protected float _hungerDepletionMultiplier;
+
+        protected PlayerMovementState(Player player, string stateName, int movementSpeed, float noiseLevel, float hungerDepletionMultiplier, Node2D parent)
+            : base(null, stateName, parent)
+        {
+            _player = player;
+            _movementSpeed = movementSpeed;
+            _noiseLevel = noiseLevel;
+            _hungerDepletionMultiplier = hungerDepletionMultiplier;
+        }
+
+        public override void Enter()
+        {
+            base.Enter();
+            _player.MaxSpeed = _movementSpeed;
+        }
+
+        public override void Update(float delta)
+        {
+            base.Update(delta);
+            HandleMovement(delta);
+        }
+
+        protected virtual void HandleMovement(float delta)
+        {
+            Vector2 inputDirection = Vector2.Zero;
+
+            if (Input.IsActionPressed("move_up"))
+                inputDirection += Vector2.Up;
+            if (Input.IsActionPressed("move_down"))
+                inputDirection += Vector2.Down;
+            if (Input.IsActionPressed("move_left"))
+                inputDirection += Vector2.Left;
+            if (Input.IsActionPressed("move_right"))
+                inputDirection += Vector2.Right;
+
+            if (inputDirection != Vector2.Zero)
+            {
+                inputDirection = inputDirection.Normalized();
+                _player.Velocity = inputDirection * _movementSpeed;
+            }
+            else
+            {
+                _player.Velocity = Vector2.Zero;
+            }
+        }
+
+        public int GetMovementSpeed()
+        {
+            return _movementSpeed;
+        }
+
+        public float GetNoiseLevel()
+        {
+            return _noiseLevel;
+        }
+
+        public float GetHungerDepletionMultiplier()
+        {
+            return _hungerDepletionMultiplier;
+        }
+    }
+}

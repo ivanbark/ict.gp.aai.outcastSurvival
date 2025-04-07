@@ -1,79 +1,107 @@
 using Godot;
 using System;
+using StateMachine.States;
+using StateMachine;
 
+namespace OutCastSurvival.Entities 
+{
 public partial class Player : MovingEntity
-{ 
+{
   private Vector2 inputDirection = Vector2.Zero;
+  public PlayerMovementState CurrentState { get; set; }
+  private PlayerStateMachineNode _stateMachineNode;
 
+  [Export]
+  public float MaxHunger = 100f;
+  public float CurrentHunger;
+  private Label _hungerLabel;
+
+  [Export]
+  public int BaseHungerDepletionRate = 4;
+  private float _hungerDepletionTimer = 0f;
+  private float _hungerDepletionInterval = 3f;
   public override void _Ready()
   {
     base._Ready();
-    
     AddToGroup("Entities");
+    CurrentHunger = MaxHunger;
+    _hungerLabel = GetNode<Label>("DebugInfo/Hunger");
+    _stateMachineNode = GetNode<PlayerStateMachineNode>("StateMachine");
+    _hungerDepletionTimer = _hungerDepletionInterval;
   }
 
   public override void _Process(double delta)
   {
-    // TODO: make use of physics from MovingEntity
-    
-    var animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-    
-    if(Input.IsActionPressed("move_up")) {
-      Position += Vector2.Up * 10;
-      animatedSprite2D.Animation = "up";
-      Rotation = (float)Math.PI;
-      animatedSprite2D.GlobalRotation = 0;
+    base._Process(delta);
+
+    DepleteHunger((float)delta);
+
+    if (World_ref.visualize_debug_info)
+    {
+      UpdateHungerLabel();
     }
-  
-    if(Input.IsActionPressed("move_down")) {
-      Position += Vector2.Down * 10;
-      animatedSprite2D.Animation = "down";
-      Rotation = (float)Math.PI;
-      animatedSprite2D.GlobalRotation = 0;
-    }
-  
-    if(Input.IsActionPressed("move_left")) {
-      Position += Vector2.Left * 10;
-      animatedSprite2D.Animation = "left";
-      Rotation = (float)Math.PI;
-      animatedSprite2D.GlobalRotation = 0;
-    }
-  
-    if(Input.IsActionPressed("move_right")) {
-      Position += Vector2.Right * 10;
-      animatedSprite2D.Animation = "right";
-      Rotation = (float)Math.PI;
-      animatedSprite2D.GlobalRotation = 0;
-    }
-    
-    QueueRedraw();
   }
-  
-    public override void _Draw()
+
+  private void DepleteHunger(float delta)
+  {
+    if (Velocity.Length() > 0 || CurrentState == _stateMachineNode.GetStateMachine().GetState<PlayerHungryState>())
     {
-      // Line to target
-      // DrawLine(Position, World_ref.Target, Colors.Blue, 1);
-
-      base._Draw();
-
-      // if(visualize_debug_info) {
-
-      // // heading is incorrect
-      // DrawLine(Position, Heading, Colors.Red, 1);
-      // }
-
-    }
-    
-    protected override void Die()
-    {
-      GD.Print("Player has died. Game Over!");
-
-      var uiManager = World_ref.GetNode<Ui>("UI");
-      if (uiManager != null)
+      _hungerDepletionTimer -= delta;
+      if (_hungerDepletionTimer <= 0f)
       {
-        uiManager.DisplayGameOverMessage();
+        DecreaseHunger(BaseHungerDepletionRate * CurrentState.GetHungerDepletionMultiplier());
+        _hungerDepletionTimer = _hungerDepletionInterval;
       }
-        
-      GetTree().Paused = true;
     }
+  }
+
+  private void UpdateHungerLabel()
+  {
+    if (_hungerLabel != null)
+    {
+      _hungerLabel.Text = $"Hunger: {CurrentHunger}/{MaxHunger}";
+    }
+  }
+
+  protected override string GetCurrentStateName()
+  {
+    return CurrentState?.GetType().Name ?? "Unknown";
+  }
+
+  protected override void Die()
+  {
+    GD.Print("Player has died. Game Over!");
+    GetTree().Paused = true;
+  }
+
+  public void DecreaseHunger(float amount)
+  {
+    if (CurrentHunger == 0)
+    {
+      TakeDamage(20);
+      return;
+    }
+
+    CurrentHunger -= amount;
+    CurrentHunger = MathF.Round(CurrentHunger, 1);
+    if (CurrentHunger < 0)
+    {
+      CurrentHunger = 0;
+    }
+  }
+
+  public void Eat(int amount)
+  {
+    CurrentHunger += amount;
+    if (CurrentHunger > MaxHunger)
+    {
+      CurrentHunger = MaxHunger;
+    }
+
+    if (CurrentHunger > MaxHunger * 0.2f)
+    {
+      _stateMachineNode.SetHungry(false);
+    }
+  }
+}
 }
