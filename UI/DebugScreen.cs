@@ -9,15 +9,17 @@ public partial class DebugScreen : Control
   public bool ShowDebug = false;
 
   private CheckButton graph_btn;
-  public bool ShowGraph {get; private set;}
+  public bool ShowGraph { get; private set; }
   private CheckButton obstacle_btn;
-  public bool ShowObstacles {get; private set;}
+  public bool ShowObstacles { get; private set; }
   private CheckButton seperation_btn;
-  public bool ShowSeperation {get; private set;}
+  public bool ShowSeperation { get; private set; }
   private CheckButton cohesion_btn;
-  public bool ShowCohesion {get; private set;}
+  public bool ShowCohesion { get; private set; }
   private CheckButton obstacleAvoidance_btn;
-  public bool ShowObstacleAvoidance {get; private set;}
+  public bool ShowObstacleAvoidance { get; private set; }
+  private CheckButton Paths_btn;
+  public bool ShowPaths { get; private set; }
 
   private World world_ref;
 
@@ -25,32 +27,42 @@ public partial class DebugScreen : Control
   {
     base._Ready();
     ShowDebug = false;
-    
+
     world_ref = GetParent<World>();
 
-    graph_btn = InitializeCheckButton("Graph_btn", value => {
+    graph_btn = InitializeCheckButton("Graph_btn", value =>
+    {
       ShowGraph = value;
       SendGraphicsUpdate();
-      });
-    obstacle_btn = InitializeCheckButton("Obstacle_btn", value => {
+    });
+    obstacle_btn = InitializeCheckButton("Obstacle_btn", value =>
+    {
       ShowObstacles = value;
       SendGraphicsUpdate();
-      });
-    seperation_btn = InitializeCheckButton("Seperation_btn", value => {
+    });
+    seperation_btn = InitializeCheckButton("Seperation_btn", value =>
+    {
       ShowSeperation = value;
       SendGraphicsUpdate();
-      });
-    cohesion_btn = InitializeCheckButton("Cohesion_btn", value => {
+    });
+    cohesion_btn = InitializeCheckButton("Cohesion_btn", value =>
+    {
       ShowCohesion = value;
       SendGraphicsUpdate();
-      });
-    obstacleAvoidance_btn = InitializeCheckButton("ObstacleAvoidance_btn", value => {
+    });
+    obstacleAvoidance_btn = InitializeCheckButton("ObstacleAvoidance_btn", value =>
+    {
       ShowObstacleAvoidance = value;
       SendGraphicsUpdate();
-      });
+    });
+    Paths_btn = InitializeCheckButton("Paths_btn", value =>
+    {
+      ShowPaths = value;
+      SendGraphicsUpdate();
+    });
   }
 
-  public void SendGraphicsUpdate() 
+  public void SendGraphicsUpdate()
   {
     EmitSignal(nameof(DebugOptionChanged));
   }

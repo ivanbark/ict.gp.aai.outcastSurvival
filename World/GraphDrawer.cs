@@ -43,7 +43,7 @@ public partial class GraphDrawer : Node2D
       }
 
 
-      if (true)
+      if (world_ref.debug_ref.ShowPaths)
       {
         if (world_ref.TargetVertex != null)
         {
