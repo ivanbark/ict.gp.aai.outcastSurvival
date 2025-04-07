@@ -13,6 +13,7 @@ namespace StateMachine
         private bool _isSneaking = false;
         private bool _isSprinting = false;
         private bool _isHungry = false;
+        public bool IsHungry { get { return _isHungry; } }
 
         private PlayerSneakState _sneakState;
         private PlayerWalkState _walkState;

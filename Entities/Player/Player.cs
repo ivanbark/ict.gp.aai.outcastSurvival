@@ -81,6 +81,11 @@ public partial class Player : MovingEntity
 
   private void Attack()
   {
+    if (_stateMachineNode.IsHungry)
+        return;
+
+    DecreaseHunger(8);
+
     _previousAnimation = animatedSprite.Animation;
     IsAttacking = true;
 
