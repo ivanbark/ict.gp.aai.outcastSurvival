@@ -13,6 +13,11 @@ public class Obstacle
     this.vertex = vertex;
     this.type = type;
   }
+  public Obstacle(Obstacle obstacle) 
+  {
+    vertex = new(obstacle.vertex.position);
+    type = obstacle.type;
+  }
 
   public override bool Equals(object obj)
   {
@@ -33,4 +38,10 @@ public class Obstacle
     hash = hash * 31 + type.GetHashCode();
     return hash;
   }
+
+  public override string ToString()
+  {
+    return $"Vertex: {vertex}, Type: {type}";
+  }
+
 }
