@@ -70,30 +70,35 @@ offset_right = 221.0
 offset_bottom = 169.0
 
 [node name="Flocking" type="Label" parent="."]
+layout_mode = 0
 offset_top = 73.0
 offset_right = 64.0
 offset_bottom = 96.0
 text = "Sheep Flocking"
 
 [node name="Seperation" type="Label" parent="."]
+layout_mode = 0
 offset_top = 98.0
 offset_right = 89.0
 offset_bottom = 121.0
 text = "Seperation:"
 
 [node name="Seperation_btn" type="CheckButton" parent="."]
+layout_mode = 0
 offset_left = 177.0
 offset_top = 98.0
 offset_right = 221.0
 offset_bottom = 122.0
 
 [node name="Paths" type="Label" parent="."]
+layout_mode = 0
 offset_top = 209.0
 offset_right = 115.0
 offset_bottom = 232.0
 text = "A* paths"
 
 [node name="Paths_btn" type="CheckButton" parent="."]
+layout_mode = 0
 offset_left = 184.0
 offset_top = 209.0
 offset_right = 228.0

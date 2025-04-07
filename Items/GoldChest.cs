@@ -1,4 +1,5 @@
 using Godot;
+using OutCastSurvival.Entities;
 using System;
 
 public partial class GoldChest : Area2D
