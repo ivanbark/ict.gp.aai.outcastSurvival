@@ -1,6 +1,7 @@
 using Godot;
 using System;
-
+namespace OutCastSurvival.Entities 
+{
 public partial class BaseGameEntity : CharacterBody2D
 {
   [Export]
@@ -18,4 +19,5 @@ public partial class BaseGameEntity : CharacterBody2D
     if (Engine.TimeScale == 0f)
       return;
   }
+}
 }

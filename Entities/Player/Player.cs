@@ -3,6 +3,8 @@ using System;
 using StateMachine.States;
 using StateMachine;
 
+namespace OutCastSurvival.Entities 
+{
 public partial class Player : MovingEntity
 {
   private Vector2 inputDirection = Vector2.Zero;
@@ -126,4 +128,5 @@ public partial class Player : MovingEntity
     CurrentGold += amount;
     if (CurrentGold >= _maxGold) Win();
   }
+}
 }
