@@ -1,15 +1,13 @@
-[gd_scene load_steps=5 format=3 uid="uid://c2q05ag5mfu68"]
+[gd_scene load_steps=4 format=3 uid="uid://c0b3kb3cxgioq"]
 
-[ext_resource type="Script" uid="uid://djavjmt6arx0q" path="res://TitleScreen.cs" id="1_sf2e2"]
-[ext_resource type="Texture2D" uid="uid://c8rdod3rpk233" path="res://art/player/player_right.png" id="2_tic01"]
+[ext_resource type="Script" uid="uid://bpeumf6djw072" path="res://EndGameScreen.cs" id="1_qxwmb"]
+[ext_resource type="Texture2D" uid="uid://c8rdod3rpk233" path="res://art/player/player_right.png" id="2_ijwp0"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_tm44h"]
 font_size = 121
 
-[sub_resource type="LabelSettings" id="LabelSettings_tic01"]
-font_size = 25
-
-[node name="TitleScreen" type="Control"]
+[node name="EndGameScreen" type="Control"]
+z_index = 4096
 clip_contents = true
 layout_mode = 3
 anchors_preset = 15
@@ -17,7 +15,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-script = ExtResource("1_sf2e2")
+script = ExtResource("1_qxwmb")
 metadata/_edit_vertical_guides_ = [20.0]
 metadata/_edit_horizontal_guides_ = [1060.0, 1020.0, 1000.0, 960.0, 940.0, 900.0]
 metadata/_edit_use_anchors_ = true
@@ -54,16 +52,7 @@ offset_top = 105.0
 offset_right = 250.0
 offset_bottom = 225.0
 theme_override_font_sizes/font_size = 50
-text = "Play"
-
-[node name="Help" type="Button" parent="VBoxContainer/HBoxContainer/TitleScreenControl"]
-layout_mode = 0
-offset_left = -250.0
-offset_top = 292.0
-offset_right = 250.0
-offset_bottom = 412.0
-theme_override_font_sizes/font_size = 50
-text = "Help"
+text = "Go Again"
 
 [node name="Title" type="Label" parent="VBoxContainer/HBoxContainer/TitleScreenControl"]
 layout_mode = 1
@@ -75,8 +64,9 @@ offset_top = -225.0
 offset_right = 456.0
 offset_bottom = -44.0
 grow_horizontal = 2
-text = "Outcast survival"
+text = "End"
 label_settings = SubResource("LabelSettings_tm44h")
+horizontal_alignment = 1
 
 [node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer/TitleScreenControl"]
 layout_mode = 0
@@ -84,38 +74,5 @@ offset_left = -985.0
 offset_top = -274.0
 offset_right = -535.0
 offset_bottom = 543.84
-texture = ExtResource("2_tic01")
+texture = ExtResource("2_ijwp0")
 expand_mode = 5
-
-[node name="HelpScreenControl" type="Control" parent="VBoxContainer/HBoxContainer"]
-visible = false
-layout_mode = 2
-
-[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer/HelpScreenControl"]
-layout_mode = 0
-offset_left = -777.0
-offset_top = -141.0
-offset_right = 777.0
-offset_bottom = 274.0
-text = "Get 100 gold from gold chests, 
-avoid the guards and kill them if neccesairy. 
-You need food to settle your hunger, 
-kill sheep to eat!
-
-Controls:
-WASD or ARROWS - Movement
-F - Attack
-SHIFT - Sneak
-CTRL - Sprint
-I - Enter debug mode"
-label_settings = SubResource("LabelSettings_tic01")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="CloseHelp" type="Button" parent="VBoxContainer/HBoxContainer/HelpScreenControl"]
-offset_left = -250.0
-offset_top = -337.0
-offset_right = 250.0
-offset_bottom = -217.0
-theme_override_font_sizes/font_size = 50
-text = "Close"
