@@ -111,6 +111,19 @@ offset_top = 229.0
 offset_right = 241.0
 offset_bottom = 253.0
 
+[node name="PathFollowing" type="Label" parent="."]
+offset_left = 20.0
+offset_top = 233.0
+offset_right = 163.0
+offset_bottom = 256.0
+text = "Path following forces"
+
+[node name="PathFollowing_btn" type="CheckButton" parent="."]
+offset_left = 197.0
+offset_top = 233.0
+offset_right = 221.0
+offset_bottom = 257.0
+
 [node name="DebugInfo" type="Label" parent="."]
 layout_mode = 0
 offset_left = 20.0

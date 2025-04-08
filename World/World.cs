@@ -133,6 +133,7 @@ namespace OutCastSurvival
           if (entity is Sheep sheepEntity)
           {
             sheepEntity.path = null;
+            sheepEntity.pathIndex = 0;
           }
         }
 

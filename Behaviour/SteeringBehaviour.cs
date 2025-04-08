@@ -1,5 +1,7 @@
 using Godot;
+using OutCastSurvival.Entities;
 using System;
+using System.Collections.Generic;
 
 public class SteeringBehaviour
 {
@@ -47,5 +49,31 @@ public class SteeringBehaviour
         }
 
         return steeringForce;
+    }
+
+    // path folowing
+    public static Vector2 PathFollowing(Sheep me, double delta, Vector2 position, List<Vertex> path, int pathIndex)
+    {
+        if (path == null || path.Count == 0)
+        {
+            return Vector2.Zero;
+        }
+
+        // deternime the future position of the entity
+        Vector2 futurePosition = position + me.Velocity * (float)delta;
+
+        // if within range of the next waypoint dont do anything
+        // else move towards the next waypoint
+
+        Vector2 nextWaypoint = path[pathIndex].position;
+        float distanceToNextWaypoint = futurePosition.DistanceTo(nextWaypoint);
+        if (distanceToNextWaypoint > me.PathFollowing_radius)
+        {
+            // Move towards the next waypoint
+            return Seek(position, nextWaypoint, me.MaxSpeed);
+        }
+        else
+            return Vector2.Zero;
+
     }
 }
