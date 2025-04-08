@@ -24,7 +24,7 @@ namespace OutCastSurvival.Classes
           // Process each line of the rule set
           var parts = line.Split(["THEN"], StringSplitOptions.RemoveEmptyEntries);
           var consequent_parts = parts[1];
-          var rule = new FuzzyRule(consequent_parts.Split("IS")[1].Trim());
+          var rule = new FuzzyRule(consequent_parts.Split("IS")[1].Trim(), line);
 
           var antecedent_parts = parts[0];
           var antecedents = antecedent_parts.Split(["AND"], StringSplitOptions.RemoveEmptyEntries);

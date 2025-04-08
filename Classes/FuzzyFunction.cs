@@ -45,7 +45,7 @@ namespace OutCastSurvival.Classes
       {
         // sort keys in ascending order
         var sortedKeys = new List<float>(MembershipValues.Keys);
-        sortedKeys.Sort();
+        // sortedKeys.Sort();
 
         // clamp to min or max if out of bounds
         if (value <= sortedKeys[0])
@@ -72,17 +72,6 @@ namespace OutCastSurvival.Classes
 
       // Exact match or fallback
       return MembershipValues.TryGetValue(value, out float membership) ? membership : 0f;
-    }
-
-    public void GenerateLUT()
-    {
-      // Generate a lookup table for the membership values
-      // This is a placeholder implementation and should be replaced with actual logic
-      foreach (var key in MembershipValues.Keys)
-      {
-        float value = GetMembershipValue(key);
-        GD.Print($"Value: {key}, Membership: {value}");
-      }
     }
 
     public float GetDefuzzificationValue()

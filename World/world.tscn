@@ -173,11 +173,11 @@ visible = false
 script = ExtResource("10_w47uh")
 World_ref = NodePath("..")
 SheepScene = ExtResource("11_h2aik")
-numberOfChildren = 26
+numberOfChildren = 1
 startPostionOfHerd = Vector2(300, 300)
 
 [node name="Player" parent="." node_paths=PackedStringArray("World_ref") instance=ExtResource("7_yf0ba")]
-position = Vector2(1163, 592)
+position = Vector2(496, 518)
 World_ref = NodePath("..")
 
 [node name="Window" parent="." instance=ExtResource("14_awrha")]

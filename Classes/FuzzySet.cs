@@ -12,7 +12,7 @@ namespace OutCastSurvival.Classes
     public string name { get; private set; }
     public float minValue { get; private set; }
     public float maxValue { get; private set; }
-    public readonly Dictionary<String, FuzzyFunction> functions = [];
+    public readonly Dictionary<string, FuzzyFunction> functions = [];
 
     public void Save()
     {
@@ -66,7 +66,7 @@ namespace OutCastSurvival.Classes
             {
               if (function != null)
               {
-                functions.Add(functionName, function);
+                functions.Add(functionName.Trim(), function);
               }
               function = null;
             }

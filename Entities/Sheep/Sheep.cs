@@ -92,10 +92,10 @@ namespace OutCastSurvival.Entities
       // adding all the forces together
       Velocity += Separation_force_vector + Cohesion_force_vector + ObstacleAvoidance_force_vector + PathFollowing_force_vector;
 
-      if (PathFollowing_force_vector.Length() <= 0 && Separation_force_vector.Length() <= 0)
-      {
-        Velocity = Vector2.Zero;
-      }
+      // if (PathFollowing_force_vector.Length() <= 0 && Separation_force_vector.Length() <= 0)
+      // {
+      //   Velocity = Vector2.Zero;
+      // }
 
       base._Process(delta);
 
@@ -119,9 +119,10 @@ namespace OutCastSurvival.Entities
       float noiselevel = player.CurrentState.GetNoiseLevel();
       float fuzzyDesision = _fuzzyLogic.calculate(angle, noiselevel);
 
+      GD.Print($"Fuzzy desision: {fuzzyDesision}");
       if (fuzzyDesision < 0)
       {
-        _fuzzyLogic_vector = SteeringBehaviour.Flee(Position, player.Position, MaxSpeed) * -1 * fuzzyDesision;
+        _fuzzyLogic_vector = SteeringBehaviour.Flee(Position, player.Position, MaxSpeed) * -100 * fuzzyDesision;
         Velocity += _fuzzyLogic_vector;
       }
     }
@@ -363,7 +364,8 @@ namespace OutCastSurvival.Entities
         if (World_ref.debug_ref.ShowFuzzy)
         {
           Vector2 rotatedForce = _fuzzyLogic_vector.Rotated(-Rotation);
-          DrawLine(new(), rotatedForce, Colors.Orange, 1);
+          GD.Print($"Fuzzy: {rotatedForce}");
+          DrawLine(new(), rotatedForce * 100, Colors.Orange, 1);
         }
       }
     }
