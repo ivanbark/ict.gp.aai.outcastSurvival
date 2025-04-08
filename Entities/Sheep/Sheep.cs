@@ -19,13 +19,13 @@ namespace OutCastSurvival.Entities
 
     [Export]
     private float Separation_force = 50f;
-    private Vector2 Separation_force_vector = new(0,0);
+    private Vector2 Separation_force_vector = new(0, 0);
     [Export]
     private float Alignment_force = 1f;
-    private Vector2 Alignment_force_vector = new(0,0);
+    private Vector2 Alignment_force_vector = new(0, 0);
     [Export]
     private float Cohesion_force = 10f;
-    private Vector2 Cohesion_force_vector = new(0,0);
+    private Vector2 Cohesion_force_vector = new(0, 0);
 
     // [Export]
     // private int NUM_
@@ -38,16 +38,18 @@ namespace OutCastSurvival.Entities
 
     [Export]
     private float ObstacleAvoidance_force = 10f;
-    private Vector2 ObstacleAvoidance_force_vector = new(0,0);
+    private Vector2 ObstacleAvoidance_force_vector = new(0, 0);
 
     public Obstacle closestObstacle = null;
+
+    public List<Vertex> path = null;
 
     public override void _Ready()
     {
       base._Ready();
       MaxForce = 600;
       MaxSpeed = 20;
-      obstacleAvoidanceBox = new(new(0,-heightObstacleAvoidanceBox/2), new(widthObstacleAvoidanceBox,heightObstacleAvoidanceBox));
+      obstacleAvoidanceBox = new(new(0, -heightObstacleAvoidanceBox / 2), new(widthObstacleAvoidanceBox, heightObstacleAvoidanceBox));
 
       AddToGroup("Entities");
       AddToGroup("Sheep");
@@ -55,8 +57,27 @@ namespace OutCastSurvival.Entities
     }
     public override void _Process(double delta)
     {
-      Vector2 seek_force = SteeringBehaviour.Seek(Position,new(1700,950),SeekForce);
-      Velocity += seek_force;
+      if (path == null && World_ref.TargetVertex != null)
+      {
+        // get graph coords
+        int tileSize = World_ref.graph_ref.TileSize;
+        Vector2I graphCoords = new((int)Position.X / tileSize, (int)Position.Y / tileSize);
+
+        World_ref.graph_ref.GetVertexForPosition(graphCoords, out Vertex start);
+        path = World_ref.graph_ref.A_star(start, World_ref.TargetVertex);
+      }
+      // else
+      // {
+      // if (path.Count > 0)
+      // {
+      //   Position = path[0].position;
+      //   path.RemoveAt(0);
+      // }
+      // }
+
+
+      // Vector2 seek_force = SteeringBehaviour.Seek(Position, new(1700, 950), SeekForce);
+      // Velocity += seek_force;
 
 
       // wander
@@ -79,7 +100,7 @@ namespace OutCastSurvival.Entities
         World_ref.graph_ref.TranslateToGlobal(globalspaceObstacle.vertex);
 
         // determine if in box
-        if (globalspaceObstacle.vertex.position.X >=  globalSpaceBox.Position.X &&
+        if (globalspaceObstacle.vertex.position.X >= globalSpaceBox.Position.X &&
           globalspaceObstacle.vertex.position.X <= globalSpaceBox.Position.X + globalSpaceBox.Size.X &&
           globalspaceObstacle.vertex.position.Y >= globalSpaceBox.Position.Y &&
           globalspaceObstacle.vertex.position.Y <= globalSpaceBox.Position.Y + globalSpaceBox.Size.Y)
@@ -96,7 +117,7 @@ namespace OutCastSurvival.Entities
       {
         // get closest
         float distance = ((Vector2)obstacle.vertex.position).DistanceTo(Position);
-        if ( distance < distantTClosestoObstacle)
+        if (distance < distantTClosestoObstacle)
         {
           distantTClosestoObstacle = distance;
           closestObstacle = obstacle;
@@ -189,7 +210,7 @@ namespace OutCastSurvival.Entities
 
         // alignment (not using for now, but implemnt her otherwise)
       }
-      foreach(Sheep sheep in cohesionSheepList)
+      foreach (Sheep sheep in cohesionSheepList)
       {
         num_cohesion_sheep++;
         // cohesion
@@ -204,7 +225,7 @@ namespace OutCastSurvival.Entities
         Separation_force_vector = separation_vec * Separation_force;
       }
 
-      if(num_cohesion_sheep != 0)
+      if (num_cohesion_sheep != 0)
       {
         cohesion_vec /= num_cohesion_sheep;
         cohesion_vec -= Position;
@@ -238,31 +259,35 @@ namespace OutCastSurvival.Entities
     public override void _Draw()
     {
       base._Draw();
-      if(World_ref.debug_ref.ShowDebug)
+      if (World_ref.debug_ref.ShowDebug)
       {
         //flocking:
         //Seperation:
-        if (World_ref.debug_ref.ShowSeperation) {
-          DrawCircle(new(0,0),Seperation_radius, Colors.Red, false, 1);
-          DrawLine(new(),Separation_force_vector, Colors.Yellow, 1);
+        if (World_ref.debug_ref.ShowSeperation)
+        {
+          DrawCircle(new(0, 0), Seperation_radius, Colors.Red, false, 1);
+          DrawLine(new(), Separation_force_vector, Colors.Yellow, 1);
         }
 
         //Cohesion:
-        if (World_ref.debug_ref.ShowCohesion) {
-          DrawCircle(new(0,0),Cohesion_radius, Colors.Purple, false, 1);
-          DrawLine(new(),Cohesion_force_vector, Colors.Blue, 1);
+        if (World_ref.debug_ref.ShowCohesion)
+        {
+          DrawCircle(new(0, 0), Cohesion_radius, Colors.Purple, false, 1);
+          DrawLine(new(), Cohesion_force_vector, Colors.Blue, 1);
         }
         //obstacle avoidance:
-        if(World_ref.debug_ref.ShowObstacleAvoidance){
-          DrawRect(obstacleAvoidanceBox,Colors.HotPink, false, 1);
-          DrawLine(new(),ObstacleAvoidance_force_vector, Colors.HotPink, 1);
+        if (World_ref.debug_ref.ShowObstacleAvoidance)
+        {
+          DrawRect(obstacleAvoidanceBox, Colors.HotPink, false, 1);
+          DrawLine(new(), ObstacleAvoidance_force_vector, Colors.HotPink, 1);
         }
       }
     }
 
     public override bool Equals(object obj)
     {
-      if (obj is Sheep sheep) {
+      if (obj is Sheep sheep)
+      {
         return (sheep.Position == Position && sheep.Velocity == Velocity);
       }
       return false;
@@ -285,16 +310,16 @@ namespace OutCastSurvival.Entities
     protected override void UpdateDebugInfo()
     {
       // Update state label
-    if (_stateLabel != null)
-    {
-      _stateLabel.Text = "";
-    }
+      if (_stateLabel != null)
+      {
+        _stateLabel.Text = "";
+      }
 
-    // Update health label
-    if (_healthLabel != null)
-    {
-      _healthLabel.Text = "";
-    }
+      // Update health label
+      if (_healthLabel != null)
+      {
+        _healthLabel.Text = "";
+      }
     }
   }
 }

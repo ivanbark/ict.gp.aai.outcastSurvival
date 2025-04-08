@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.Marshalling;
+using System.Security.AccessControl;
 using Godot;
 
 public partial class Graph : TileMapLayer
@@ -12,17 +13,19 @@ public partial class Graph : TileMapLayer
 
   [Export]
   private bool USING_DIAGONALS = false;
-  
+
   [Export]
   public int[] WalkableTileIds = [0];
+
+  public IHeuristicStrategy strategy = null;
 
   public HashSet<Edge> edges = [];
   public HashSet<Vertex> vertices = [];
 
   public HashSet<Obstacle> obstacles = [];
-  
+
   // prevents duplicate obstacles based on vertex position
-  public HashSet<Vertex> obstacle_vertexes = []; 
+  public HashSet<Vertex> obstacle_vertexes = [];
 
   private readonly Queue<Vertex> vertex_queue = [];
 
@@ -30,8 +33,10 @@ public partial class Graph : TileMapLayer
   // Called when the node enters the scene tree for the first time.
   public override void _Ready()
   {
-     GenerateGraphBFS();
-     TileSize = TileSet.TileSize.X; // also could use Y, tiles are squares.
+    GenerateGraphBFS();
+    // strategy = EuclideanHeuristic.Instance();
+    strategy = ManhattanHeuristic.Instance();
+    TileSize = TileSet.TileSize.X; // also could use Y, tiles are squares.
   }
 
   // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -58,7 +63,7 @@ public partial class Graph : TileMapLayer
     // done by setting vertex.Enqueued to false by default.
 
     //set distance at start vertex to 0 and Enqueue the start vertex
-    if(!TryGetVertexFromHashSet(new (GraphOrigin), out Vertex start_vertex)) 
+    if (!TryGetVertexFromHashSet(new(GraphOrigin), out Vertex start_vertex))
     {
       return;// not a valid starting vertex
     }
@@ -66,7 +71,7 @@ public partial class Graph : TileMapLayer
     vertex_queue.Enqueue(start_vertex);
 
     //While queue not empty
-    while(vertex_queue.Count != 0) 
+    while (vertex_queue.Count != 0)
     {
       // Vertex = dequeue
       Vertex current = vertex_queue.Dequeue();
@@ -74,17 +79,19 @@ public partial class Graph : TileMapLayer
 
       //for each neighbor do:
       Vertex[] neighbors = GetNeighboringCells(current);
-      foreach (Vertex neighbor in neighbors) 
+      foreach (Vertex neighbor in neighbors)
       {
         // this neighbor is valid and in the vertices hashset
-        
+
         // make a connection with this neighbor
-        Edge edge_to_neighbor = new (current, neighbor, neighbor.isDiagonal? 141: 100);
+        var cost = neighbor.isDiagonal ? 141 : 100;
+        neighbor.isDiagonal = false;
+        Edge edge_to_neighbor = new(current, neighbor, cost);
         edges.Add(edge_to_neighbor); //141 form diagonal and 100 for a straight line
         current.AddNeighbor(edge_to_neighbor);
 
         // enqueue this neighbor if not enqueued already
-        if(!neighbor.Enqueued)
+        if (!neighbor.Enqueued)
         {
           neighbor.Enqueue();
           vertex_queue.Enqueue(neighbor);
@@ -99,38 +106,38 @@ public partial class Graph : TileMapLayer
 
     // straight paths
     // down
-    if (TryGetVertexFromHashSet(new(new (referenceCell.position.X, referenceCell.position.Y + 1)), out Vertex down_vertex)) 
+    if (TryGetVertexFromHashSet(new(new Vector2I(referenceCell.position.X, referenceCell.position.Y + 1), false), out Vertex down_vertex))
       neighbors.Add(down_vertex);
     // up
-    if (TryGetVertexFromHashSet(new(new (referenceCell.position.X, referenceCell.position.Y - 1)), out Vertex up_vertex)) 
+    if (TryGetVertexFromHashSet(new(new Vector2I(referenceCell.position.X, referenceCell.position.Y - 1), false), out Vertex up_vertex))
       neighbors.Add(up_vertex);
     // left
-    if (TryGetVertexFromHashSet(new(new (referenceCell.position.X - 1, referenceCell.position.Y)), out Vertex left_vertex)) 
+    if (TryGetVertexFromHashSet(new(new Vector2I(referenceCell.position.X - 1, referenceCell.position.Y), false), out Vertex left_vertex))
       neighbors.Add(left_vertex);
     // right
-    if (TryGetVertexFromHashSet(new(new (referenceCell.position.X + 1, referenceCell.position.Y)), out Vertex right_vertex)) 
+    if (TryGetVertexFromHashSet(new(new Vector2I(referenceCell.position.X + 1, referenceCell.position.Y), false), out Vertex right_vertex))
       neighbors.Add(right_vertex);
 
     // diagonals the cost should be higher
-    if (USING_DIAGONALS) 
+    if (USING_DIAGONALS)
     {
       // top left
-      if (TryGetVertexFromHashSet(new(new (referenceCell.position.X - 1, referenceCell.position.Y - 1), true), out Vertex top_left_vertex)) 
+      if (TryGetVertexFromHashSet(new(new(referenceCell.position.X - 1, referenceCell.position.Y - 1), true), out Vertex top_left_vertex))
         neighbors.Add(top_left_vertex);
       // top right
-      if (TryGetVertexFromHashSet(new(new (referenceCell.position.X + 1, referenceCell.position.Y - 1), true), out Vertex top_right_vertex)) 
+      if (TryGetVertexFromHashSet(new(new(referenceCell.position.X + 1, referenceCell.position.Y - 1), true), out Vertex top_right_vertex))
         neighbors.Add(top_right_vertex);
       // bottom left
-      if (TryGetVertexFromHashSet(new(new (referenceCell.position.X - 1, referenceCell.position.Y + 1), true), out Vertex bottom_left_vertex)) 
+      if (TryGetVertexFromHashSet(new(new(referenceCell.position.X - 1, referenceCell.position.Y + 1), true), out Vertex bottom_left_vertex))
         neighbors.Add(bottom_left_vertex);
       // bottom right
-      if (TryGetVertexFromHashSet(new(new (referenceCell.position.X + 1, referenceCell.position.Y + 1), true), out Vertex bottom_right_vertex)) 
+      if (TryGetVertexFromHashSet(new(new(referenceCell.position.X + 1, referenceCell.position.Y + 1), true), out Vertex bottom_right_vertex))
         neighbors.Add(bottom_right_vertex);
     }
     return [.. neighbors];
   }
 
-  private bool TryGetVertexFromHashSet(Vertex current, out Vertex output) 
+  private bool TryGetVertexFromHashSet(Vertex current, out Vertex output)
   {
     int cell_id = GetCellSourceId(current.position);
     if (!WalkableTileIds.Contains(cell_id))// a non walkable tile so it might be a obstacle
@@ -139,7 +146,7 @@ public partial class Graph : TileMapLayer
       {
         output = null;
         return false;
-      } 
+      }
       else // map obstacle
       {
         TryGetObstacleVertex(current, out Vertex actualObstacleVertex);
@@ -150,38 +157,38 @@ public partial class Graph : TileMapLayer
       }
     }
 
-    if (vertices.TryGetValue(current, out Vertex actualVertex)) 
+    if (vertices.TryGetValue(current, out Vertex actualVertex))
     {
       output = actualVertex;
-    } 
-    else 
+    }
+    else
     {
       vertices.Add(current);
       output = current;
     }
     return true;
-  } 
+  }
 
-  private void TryGetObstacleVertex(Vertex probe, out Vertex output_vertex) 
+  private void TryGetObstacleVertex(Vertex probe, out Vertex output_vertex)
   {
-    if (obstacle_vertexes.TryGetValue(probe, out Vertex actualVertex)) 
+    if (obstacle_vertexes.TryGetValue(probe, out Vertex actualVertex))
     {
       output_vertex = actualVertex;
-    } 
-    else 
+    }
+    else
     {
       obstacle_vertexes.Add(probe);
       output_vertex = probe;
     }
   }
 
-  private bool ReadOnlyTryGetValue(Vertex probe, out Vertex output) 
+  private bool ReadOnlyTryGetValue(Vertex probe, out Vertex output)
   {
-    if (vertices.TryGetValue(probe, out Vertex actualVertex)) 
+    if (vertices.TryGetValue(probe, out Vertex actualVertex))
     {
       output = actualVertex;
-    } 
-    else 
+    }
+    else
     {
       output = probe;
     }
@@ -192,11 +199,74 @@ public partial class Graph : TileMapLayer
   public void TranslateToGlobal(Vertex input)
   {
     input.position *= TileSize;
-    input.position += new Vector2I(TileSize/2, TileSize/2);
+    input.position += new Vector2I(TileSize / 2, TileSize / 2);
   }
 
   public override void _Draw()
   {
     base._Draw();
+  }
+
+
+  public List<Vertex> A_star(Vertex start, Vertex Destination)
+  {
+    List<Vertex> path = [];
+
+    //reset all vertexes.
+    foreach (Vertex vertex in vertices)
+      vertex.Reset_A_Star();
+
+    PriorityQueue<Edge, float> prio_queue = new();
+
+    start.A_Star_distance = 0;
+
+    // enqueue start vertex
+    Edge Start_to_start = new(start, start, 0); // dummy edge
+    prio_queue.Enqueue(Start_to_start, Start_to_start.cost + strategy.DetermineHeuristicValue(start, Destination));
+
+    // while pq is not empty
+    while (prio_queue.Count != 0)
+    {
+      // node current - pq.pop/dequeue
+      Edge currentEdge = prio_queue.Dequeue();
+      Vertex current = currentEdge.to == start ? currentEdge.from : currentEdge.to;
+
+      // if current is dest break
+      if (current == Destination) break;
+
+      //set current to visited
+      current.A_Star_visited = true;
+
+      // for each neighbor check if visited and the potential cost
+      foreach (var edge in current.neighbors)
+      {
+        Vertex neighbor = edge.to == current ? edge.from : edge.to;
+        if (!neighbor.A_Star_visited) // calc cost and heuristic and add to pq.
+        {
+          float cost = current.A_Star_distance + edge.cost;
+
+          // check if the cost is less than the current distance or if it is -inf
+          if (neighbor.A_Star_distance == -Mathf.Inf || cost < neighbor.A_Star_distance)
+          {
+            neighbor.A_Star_distance = cost;
+            neighbor.A_Star_previous = current;
+            // enqueue the neighbor
+            prio_queue.Enqueue(edge, cost + strategy.DetermineHeuristicValue(neighbor, Destination));
+          }
+        }
+
+      }
+    }
+
+    // backtrack the path
+    Vertex current_vertex = Destination;
+    while (current_vertex != null)
+    {
+      path.Add(current_vertex);
+      current_vertex = current_vertex.A_Star_previous;
+    }
+    path.Reverse();
+
+    return path;
   }
 }
