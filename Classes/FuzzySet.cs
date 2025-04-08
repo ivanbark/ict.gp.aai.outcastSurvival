@@ -1,16 +1,18 @@
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Godot;
 
 namespace OutCastSurvival.Classes
 {
+
   public partial class Fuzzyset
   {
 
     public string name { get; private set; }
     public float minValue { get; private set; }
     public float maxValue { get; private set; }
-    public readonly List<FuzzyFunction> functions = [];
+    public readonly Dictionary<String, FuzzyFunction> functions = [];
 
     public void Save()
     {
@@ -25,7 +27,7 @@ namespace OutCastSurvival.Classes
         file.StoreString($"Max value :{maxValue.ToString(CultureInfo.InvariantCulture)}");
         file.StoreString("\n");
         file.StoreString("Fuzzy Functions\n");
-        foreach (FuzzyFunction function in functions)
+        foreach (FuzzyFunction function in functions.Values)
         {
           file.StoreString($"Fuzzy Function-{function.name}\n");
           foreach (var membershipValue in function.MembershipValues)
@@ -50,7 +52,7 @@ namespace OutCastSurvival.Classes
         if (file.GetLine() == "Fuzzy Functions")
         {
           string line = file.GetLine();
-          string functionName;
+          string functionName = "";
           FuzzyFunction function = null;
 
           while (line != "End Fuzzy Functions")
@@ -64,7 +66,7 @@ namespace OutCastSurvival.Classes
             {
               if (function != null)
               {
-                functions.Add(function);
+                functions.Add(functionName, function);
               }
               function = null;
             }
@@ -83,10 +85,18 @@ namespace OutCastSurvival.Classes
         }
 
         file.Close();
+
+        // foreach (var function in functions)
+        //   function.GenerateLUT();
+
         return true;
       }
       else
+      {
+        GD.PrintErr($"Failed to load fuzzy set {name}");
         return false;
+      }
+
 
     }
 
@@ -101,11 +111,11 @@ namespace OutCastSurvival.Classes
     {
       minValue = Mathf.Min(minValue, function.minValue);
       maxValue = Mathf.Max(maxValue, function.maxValue);
-      functions.Add(function);
+      functions.Add(function.name, function);
     }
     public void removeFunction(FuzzyFunction function)
     {
-      functions.Remove(function);
+      functions.Remove(function.name);
     }
     public void clearFunctions()
     {

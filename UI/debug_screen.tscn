@@ -126,6 +126,19 @@ offset_top = 254.0
 offset_right = 241.0
 offset_bottom = 278.0
 
+[node name="Fuzzy" type="Label" parent="."]
+offset_left = 20.0
+offset_top = 278.0
+offset_right = 183.0
+offset_bottom = 301.0
+text = "Fuzzy forces"
+
+[node name="Fuzzy_btn" type="CheckButton" parent="."]
+offset_left = 197.0
+offset_top = 279.0
+offset_right = 241.0
+offset_bottom = 303.0
+
 [node name="DebugInfo" type="Label" parent="."]
 layout_mode = 0
 offset_left = 20.0

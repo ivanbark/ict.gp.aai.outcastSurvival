@@ -1,4 +1,5 @@
 using Godot;
+using OutCastSurvival.Entities.Detection;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -53,6 +54,12 @@ namespace OutCastSurvival.Entities
     [Export]
     public float PathFollowing_radius = 10f;
 
+    private SheepDetectionFuzzyLogic _fuzzyLogic = new();
+    private Vector2 _fuzzyLogic_vector = new();
+
+    [Export]
+    private float FuzzyDistance = 100f;
+
     public override void _Ready()
     {
       base._Ready();
@@ -80,8 +87,9 @@ namespace OutCastSurvival.Entities
       CalculateObstacleAvoidance();
 
       // GD.Print($"Velocity: {Velocity}Seperation: {Separation_force_vector} \nCohesion:{Cohesion_force_vector} \nobstacle avoidance: {ObstacleAvoidance_force_vector}");
-      // adding all the forces together
+      CalculateFuzzy();
 
+      // adding all the forces together
       Velocity += Separation_force_vector + Cohesion_force_vector + ObstacleAvoidance_force_vector + PathFollowing_force_vector;
 
       if (PathFollowing_force_vector.Length() <= 0 && Separation_force_vector.Length() <= 0)
@@ -93,6 +101,31 @@ namespace OutCastSurvival.Entities
 
       QueueRedraw();
     }
+
+    private void CalculateFuzzy()
+    {
+      Player player = World_ref.GetOutcastPlayer();
+      if (Position.DistanceTo(player.Position) > FuzzyDistance)
+        return;
+
+      Vector2 ToTarget = player.Position - Position;
+      ToTarget = ToTarget.Normalized();
+
+      float radians = Mathf.Acos(ToTarget.Dot(Heading));
+
+      // Convert to degrees
+      float angle = Mathf.RadToDeg(radians);
+
+      float noiselevel = player.CurrentState.GetNoiseLevel();
+      float fuzzyDesision = _fuzzyLogic.calculate(angle, noiselevel);
+
+      if (fuzzyDesision < 0)
+      {
+        _fuzzyLogic_vector = SteeringBehaviour.Flee(Position, player.Position, MaxSpeed) * -1 * fuzzyDesision;
+        Velocity += _fuzzyLogic_vector;
+      }
+    }
+
 
     private void CalculatePathFollowing(double delta)
     {
@@ -324,6 +357,13 @@ namespace OutCastSurvival.Entities
         {
           Vector2 rotatedForce = PathFollowing_force_vector.Rotated(-Rotation);
           DrawLine(new(), rotatedForce, Colors.Green, 1);
+        }
+
+        // fuzzy logic
+        if (World_ref.debug_ref.ShowFuzzy)
+        {
+          Vector2 rotatedForce = _fuzzyLogic_vector.Rotated(-Rotation);
+          DrawLine(new(), rotatedForce, Colors.Orange, 1);
         }
       }
     }

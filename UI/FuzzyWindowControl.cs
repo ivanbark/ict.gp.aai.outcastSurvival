@@ -8,7 +8,7 @@ namespace OutCastSurvival
 {
   public partial class FuzzyWindowControl : Node2D
   {
-    Fuzzyset[] Fuzzysets = new Fuzzyset[3];
+    Fuzzyset[] Fuzzysets = new Fuzzyset[4];
     public override void _Ready()
     {
       // var SaveBtn = GetParent().GetNode<Button>("SaveBtn");
@@ -16,14 +16,9 @@ namespace OutCastSurvival
       var parent = GetParent<Window>();
       parent.CloseRequested += () => parent.Visible = false;
 
-      var Distance = new Fuzzyset("Distance");
       var NoiseLevel = new Fuzzyset("Noise Level");
       var Position = new Fuzzyset("Position");
-      if (!Distance.Load())
-      {
-        GD.PrintErr("Failed to load Distance fuzzy set");
-        return;
-      }
+      var Behaviour = new Fuzzyset("Behaviour");
       if (!NoiseLevel.Load())
       {
         GD.PrintErr("Failed to load Noise Level fuzzy set");
@@ -34,9 +29,14 @@ namespace OutCastSurvival
         GD.PrintErr("Failed to load Position fuzzy set");
         return;
       }
-      Fuzzysets[0] = Distance;
-      Fuzzysets[1] = NoiseLevel;
-      Fuzzysets[2] = Position;
+      if (!Behaviour.Load())
+      {
+        GD.PrintErr("Failed to load Behaviour fuzzy set");
+        return;
+      }
+      Fuzzysets[0] = NoiseLevel;
+      Fuzzysets[1] = Position;
+      Fuzzysets[2] = Behaviour;
     }
     public override void _Process(double delta)
     {
@@ -74,7 +74,7 @@ namespace OutCastSurvival
       // draw function names
       for (int i = 0; i < fuzzySet.functions.Count; i++)
       {
-        FuzzyFunction function = fuzzySet.functions[i];
+        FuzzyFunction function = fuzzySet.functions.ElementAt(i).Value;
         //Vector2 textPosition = position + new Vector2(function.minValue / fuzzySet.maxValue * width, -function.MembershipValues.Values.ElementAt<float>(0) * height);
         DrawString(ThemeDB.FallbackFont, position + new Vector2(width * ((float)i / fuzzySet.functions.Count), 32), function.name, HorizontalAlignment.Left, -1, 16, function.color);
       }
@@ -82,7 +82,7 @@ namespace OutCastSurvival
 
     private void DrawFunctions(Fuzzyset fuzzySet, Vector2 position, float width, float height)
     {
-      foreach (FuzzyFunction function in fuzzySet.functions)
+      foreach (FuzzyFunction function in fuzzySet.functions.Values)
       {
         int length = function.MembershipValues.Count;
         if (length <= 1)

@@ -30,6 +30,10 @@ namespace OutCastSurvival
 
     [Export]
     public int NumberOfChests { get; set; } = 12;
+    private List<Vector2> _spawnedChestPositions;
+
+    [Export]
+    public int NumberOfGuards { get; set; } = 6;
 
     private Globals _globals;
 
@@ -39,15 +43,79 @@ namespace OutCastSurvival
     public override void _Ready()
     {
       base._Ready();
+      _spawnedChestPositions = new List<Vector2>();
       SpawnChests();
+      SpawnGuards();
       _globals = GetNode<Globals>("/root/Globals");
+    }
+
+    private void SpawnGuards()
+    {
+      var random = new Random();
+      var guardScene = GD.Load<PackedScene>("res://Entities/guard.tscn");
+      var spawnedGuards = new List<Vector2>();
+      const float MIN_DISTANCE = 300f; // Minimum distance for random spawns
+      const float CHEST_DISTANCE = 30f; // Distance for chest-related spawns
+
+      // Spawn guards near chests (half of total guards)
+      int guardsNearChests = NumberOfGuards / 2;
+      for (int i = 0; i < guardsNearChests; i++)
+      {
+        if (_spawnedChestPositions.Count == 0) break;
+
+        var randomChest = _spawnedChestPositions[random.Next(_spawnedChestPositions.Count)];
+        var vertices = graph_ref.vertices.ToList();
+        if (vertices.Count == 0) continue;
+
+        Vector2 position;
+        int attempts = 0;
+        const int MAX_ATTEMPTS = 50;
+
+        do
+        {
+          var randomVertex = vertices[random.Next(vertices.Count)];
+          position = graph_ref.MapToLocal(randomVertex.position);
+          attempts++;
+        } while (position.DistanceTo(randomChest) > CHEST_DISTANCE && attempts < MAX_ATTEMPTS);
+
+        if (attempts >= MAX_ATTEMPTS) continue;
+
+        var guard = guardScene.Instantiate<Guard>();
+        AddChild(guard);
+        guard.Position = position;
+        spawnedGuards.Add(position);
+      }
+
+      // Spawn remaining guards randomly
+      for (int i = 0; i < NumberOfGuards - guardsNearChests; i++)
+      {
+        var vertices = graph_ref.vertices.ToList();
+        if (vertices.Count == 0) continue;
+
+        Vector2 position;
+        int attempts = 0;
+        const int MAX_ATTEMPTS = 50;
+
+        do
+        {
+          var randomVertex = vertices[random.Next(vertices.Count)];
+          position = graph_ref.MapToLocal(randomVertex.position);
+          attempts++;
+        } while (spawnedGuards.Any(p => p.DistanceTo(position) < MIN_DISTANCE) && attempts < MAX_ATTEMPTS);
+
+        if (attempts >= MAX_ATTEMPTS) continue;
+
+        var guard = guardScene.Instantiate<Guard>();
+        AddChild(guard);
+        guard.Position = position;
+        spawnedGuards.Add(position);
+      }
     }
 
     private void SpawnChests()
     {
       var random = new Random();
       var chestScene = GD.Load<PackedScene>("res://Items/gold_chest.tscn");
-      var spawnedChests = new List<Vector2>();
       const float MIN_DISTANCE = 300f; // Minimum distance between chests
 
       for (int i = 0; i < NumberOfChests; i++)
@@ -65,7 +133,7 @@ namespace OutCastSurvival
           var randomVertex = vertices[random.Next(vertices.Count)];
           position = graph_ref.MapToLocal(randomVertex.position);
           attempts++;
-        } while (spawnedChests.Any(p => p.DistanceTo(position) < MIN_DISTANCE) && attempts < MAX_ATTEMPTS);
+        } while (_spawnedChestPositions.Any(p => p.DistanceTo(position) < MIN_DISTANCE) && attempts < MAX_ATTEMPTS);
 
         if (attempts >= MAX_ATTEMPTS) continue; // Skip if we couldn't find a valid position
 
@@ -73,8 +141,12 @@ namespace OutCastSurvival
         var chest = chestScene.Instantiate<GoldChest>();
         AddChild(chest);
         chest.Position = position;
-        spawnedChests.Add(position);
+        _spawnedChestPositions.Add(position);
       }
+    }
+    public Player GetOutcastPlayer()
+    {
+      return (Player)GetNode<CharacterBody2D>("Player");
     }
 
     public override void _Process(double delta)
