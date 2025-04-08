@@ -30,7 +30,6 @@ namespace StateMachine.States
         {
             if (targetState == null) return false;
 
-            // Allow transitions to PatrolState
             return targetState is PatrolState;
         }
     }

@@ -125,12 +125,9 @@ sources/4 = SubResource("TileSetAtlasSource_h2aik")
 [sub_resource type="LabelSettings" id="LabelSettings_w47uh"]
 font_size = 60
 
-[sub_resource type="LabelSettings" id="LabelSettings_g6jkd"]
-font_size = 20
-
 [node name="World" type="Node2D" node_paths=PackedStringArray("debug_ref", "movingEntity_list", "graph_ref")]
 script = ExtResource("1_go68u")
-debug_ref = NodePath("Debug_screen")
+debug_ref = NodePath("UI/Debug_screen")
 movingEntity_list = []
 graph_ref = NodePath("TileMapLayer")
 metadata/_edit_vertical_guides_ = []
@@ -167,18 +164,12 @@ offset_bottom = 23.0
 grow_horizontal = 2
 label_settings = SubResource("LabelSettings_w47uh")
 
-[node name="DebugInfo" type="Label" parent="UI"]
+[node name="Debug_screen" parent="UI" instance=ExtResource("11_lo5ox")]
 visible = false
-offset_left = 5.0
-offset_top = 5.0
-offset_right = 186.0
-offset_bottom = 126.0
-text = "Debug: 
-Step backward : F1
-Start/stop F2
-Step forward : F3
-"
-label_settings = SubResource("LabelSettings_g6jkd")
+offset_left = 30.0
+offset_top = 30.0
+offset_right = 152.0
+offset_bottom = 30.0
 
 [node name="Player" parent="." node_paths=PackedStringArray("World_ref") instance=ExtResource("7_yf0ba")]
 position = Vector2(1163, 592)
@@ -199,4 +190,5 @@ offset_right = 152.0
 offset_bottom = 30.0
 
 [node name="Guard" parent="." instance=ExtResource("13_0wqet")]
-position = Vector2(1300, 426)
+position = Vector2(1317, 474)
+

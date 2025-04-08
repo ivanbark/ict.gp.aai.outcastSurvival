@@ -46,7 +46,6 @@ namespace OutCastSurvival.Entities
 
     public override void _Ready()
     {
-
       base._Ready();
       MaxForce = 600;
       MaxSpeed = 20;
@@ -137,7 +136,7 @@ namespace OutCastSurvival.Entities
 
       //   float brakeCoefficient = 0.2f;
 
-      //   // avoidance_vec.X = closestObstacle.vertex.position.X * brakeCoefficient; 
+      //   // avoidance_vec.X = closestObstacle.vertex.position.X * brakeCoefficient;
       //   Vector2 braking_vec = Velocity * -brakeCoefficient;
       //   avoidance_vec = braking_vec + lateral_vec;
       // }
@@ -297,6 +296,15 @@ namespace OutCastSurvival.Entities
     public override int GetHashCode()
     {
       return base.GetHashCode();
+    }
+
+    protected override void Die()
+    {
+      var meatScene = GD.Load<PackedScene>("res://Items/Meat.tscn");
+      var meat = meatScene.Instantiate<Meat>();
+      World_ref.AddChild(meat);
+      meat.Position = Position;
+      QueueFree();
     }
 
     protected override void UpdateDebugInfo()

@@ -23,8 +23,6 @@ public partial class GraphDrawer : Node2D
   {
     base._Draw();
 
-    GD.Print(world_ref.debug_ref.ShowDebug);
-
     if (world_ref.debug_ref.ShowDebug)
     {
       if (world_ref.debug_ref.ShowGraph)

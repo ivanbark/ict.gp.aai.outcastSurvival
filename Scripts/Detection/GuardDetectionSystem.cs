@@ -49,19 +49,17 @@ namespace Detection
         public float CalculateDetectionRange(Player player)
         {
             // Get player's current movement state noise level
-            float playerNoiseLevel = 1.0f; // Default to walking noise level
+            float playerNoiseLevel = .7f; // Default to walking noise level
             if (player.CurrentState is PlayerMovementState movementState)
             {
                 playerNoiseLevel = movementState.GetNoiseLevel();
             }
 
-            // Base detection range modified by player's noise level
             return _baseDetectionRange * playerNoiseLevel;
         }
 
         public float CalculateDetectionMultiplier(float angleToPlayer)
         {
-            // Convert vision angle to radians and get half angle
             float halfVisionAngle = _visionAngle * Mathf.Pi / 180f / 2f;
 
             if (angleToPlayer <= halfVisionAngle)

@@ -1,7 +1,7 @@
-[gd_scene load_steps=5 format=3 uid="uid://cuu8rmn4w0o1p"]
+[gd_scene load_steps=5 format=3 uid="uid://b37ygmo5nlikw"]
 
-[ext_resource type="Script" uid="uid://ccbas1bh3bhje" path="res://Items/GoldChest.cs" id="1_3hs1b"]
-[ext_resource type="Texture2D" uid="uid://cyvm661lcuv8u" path="res://art/items/Treasure Chest closed 254x254.png" id="2_3hs1b"]
+[ext_resource type="Script" uid="uid://cgr5y4c8odyk1" path="res://Items/Meat.cs" id="1_5xbfd"]
+[ext_resource type="Texture2D" uid="uid://bhrp3tvm2kfvi" path="res://art/items/pixel-art-hamburger-with-bread-steak-cheese-lettuce-tomato-bit-game-item-white-background_360488-26.PNG" id="2_7ocq1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2gbif"]
 size = Vector2(20, 14)
@@ -9,23 +9,22 @@ size = Vector2(20, 14)
 [sub_resource type="LabelSettings" id="LabelSettings_3hs1b"]
 font_size = 11
 
-[node name="GoldChest" type="Area2D"]
-script = ExtResource("1_3hs1b")
+[node name="Meat" type="Area2D"]
+script = ExtResource("1_5xbfd")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(0, 3)
 shape = SubResource("RectangleShape2D_2gbif")
 
 [node name="TextureRect" type="TextureRect" parent="."]
-offset_left = -10.0
-offset_top = -10.0
-offset_right = 244.0
-offset_bottom = 244.0
-scale = Vector2(0.0800003, 0.0800003)
-texture = ExtResource("2_3hs1b")
+offset_left = -7.0
+offset_top = -2.0
+offset_right = 353.0
+offset_bottom = 298.0
+scale = Vector2(0.0400003, 0.0400003)
+texture = ExtResource("2_7ocq1")
 
 [node name="InfoBox" type="Node2D" parent="."]
-visible = false
 
 [node name="Background" type="ColorRect" parent="InfoBox"]
 offset_left = -30.0
@@ -34,7 +33,7 @@ offset_right = 30.0
 offset_bottom = -11.0
 color = Color(0, 0, 0, 0.392157)
 
-[node name="Health" type="Label" parent="InfoBox"]
+[node name="info" type="Label" parent="InfoBox"]
 offset_left = -35.0
 offset_top = -30.0
 offset_right = 34.0

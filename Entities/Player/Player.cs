@@ -3,7 +3,7 @@ using System;
 using StateMachine.States;
 using StateMachine;
 
-namespace OutCastSurvival.Entities 
+namespace OutCastSurvival.Entities
 {
 public partial class Player : MovingEntity
 {
@@ -13,6 +13,10 @@ public partial class Player : MovingEntity
 
   public int CurrentGold = 0;
   private int _maxGold = 100;
+  private int _attackDamage = 10;
+  private int _attackRange = 23;
+  private float _attackCooldown = 1.2f;
+  private float _attackCooldownTimer = 0f;
 
   [Export]
   public float MaxHunger = 100f;
@@ -23,6 +27,8 @@ public partial class Player : MovingEntity
   public int BaseHungerDepletionRate = 4;
   private float _hungerDepletionTimer = 0f;
   private float _hungerDepletionInterval = 3f;
+  private string _previousAnimation;
+
   public override void _Ready()
   {
     base._Ready();
@@ -32,6 +38,13 @@ public partial class Player : MovingEntity
     _stateMachineNode = GetNode<PlayerStateMachineNode>("StateMachine");
     _hungerDepletionTimer = _hungerDepletionInterval;
     _goldLabel = GetNode<Label>("DebugInfo/Gold");
+
+    _previousAnimation = animatedSprite.Animation;
+    animatedSprite.AnimationFinished += () =>
+    {
+      animatedSprite.Play(_previousAnimation);
+      IsAttacking = false;
+    };
   }
 
   public override void _Process(double delta)
@@ -40,10 +53,49 @@ public partial class Player : MovingEntity
 
     DepleteHunger((float)delta);
 
-    if (World_ref.visualize_debug_info)
+    if (_attackCooldownTimer > 0f)
+    {
+      _attackCooldownTimer -= (float)delta;
+    }
+
+    if (World_ref.debug_ref.ShowDebug && _debugInfo != null)
     {
       UpdateHungerLabel();
       UpdateGoldLabel();
+    }
+  }
+
+  public override void _Input(InputEvent @event)
+  {
+    base._Input(@event);
+
+    if (@event.IsActionPressed("attack"))
+    {
+      if (_attackCooldownTimer <= 0f)
+      {
+        Attack();
+        _attackCooldownTimer = _attackCooldown;
+      }
+    }
+  }
+
+  private void Attack()
+  {
+    if (_stateMachineNode.IsHungry)
+        return;
+
+    DecreaseHunger(8);
+
+    _previousAnimation = animatedSprite.Animation;
+    IsAttacking = true;
+
+    var entitiesInRange = GetTree().GetNodesInGroup("Entities");
+    foreach (MovingEntity mEntity in entitiesInRange)
+    {
+        if (mEntity.Position.DistanceTo(Position) <= _attackRange && mEntity != this)
+        {
+            mEntity.TakeDamage(_attackDamage);
+        }
     }
   }
 

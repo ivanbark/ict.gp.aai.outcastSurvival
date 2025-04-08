@@ -83,10 +83,8 @@ namespace StateMachine
         {
             if (!_isActive || _currentState == null) return;
 
-            // Update current state
             _currentState.Update(delta);
 
-            // Update sub-state machine if it exists and is active
             if (_currentState.SubStateMachine != null && _currentState.SubStateMachine.IsActive)
             {
                 _currentState.SubStateMachine.Update(delta);
