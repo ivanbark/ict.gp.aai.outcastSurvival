@@ -61,9 +61,12 @@ namespace OutCastSurvival.Entities.Detection
           }
           doms_atencedents[index++] = membershipValue;
         }
+        // Use minimum for AND operation
         var doms_atencedents_result = float.Min(doms_atencedents[0], doms_atencedents[1]);
         rule_doms[rule] = doms_atencedents_result;
       }
+
+      // Aggregate results for each behavior
       var outcome_maxes = new Dictionary<string, float>();
       foreach (var dom in rule_doms)
       {
@@ -73,23 +76,25 @@ namespace OutCastSurvival.Entities.Detection
         }
         else
         {
+          // Use maximum for OR operation
           outcome_maxes[dom.Key.Consequent] = float.Max(outcome_maxes[dom.Key.Consequent], dom.Value);
         }
       }
 
-
-      // defuzzification
+      // Defuzzification using weighted average
       float sum = 0f;
       float weightSum = 0f;
       foreach (var outcome in outcome_maxes)
       {
-        sum += fuzzySets["Behaviour"].functions[outcome.Key].GetDefuzzificationValue() * outcome.Value;
-        weightSum += outcome.Value;
+        // Get the defuzzification value based on the behavior
+        float defuzzValue = outcome.Key == "Flee" ? -1f : 1f; // -1 for Flee, 1 for Idle
+        float weight = outcome.Value;
+        sum += defuzzValue * weight;
+        weightSum += weight;
       }
-      var result = weightSum == 0 ? 0 : sum / weightSum;
-    //   GD.Print($"Result: {result}");
 
-      return result;
+      // Return the defuzzified result
+      return weightSum == 0 ? 0 : sum / weightSum;
     }
 
   }

@@ -28,9 +28,6 @@ namespace OutCastSurvival.Entities
     private float Cohesion_force = 10f;
     private Vector2 Cohesion_force_vector = new(0, 0);
 
-    // [Export]
-    // private int NUM_
-
     private Rect2 obstacleAvoidanceBox;
     [Export]
     private int widthObstacleAvoidanceBox;
@@ -73,7 +70,6 @@ namespace OutCastSurvival.Entities
     }
     public override void _Process(double delta)
     {
-      // GD.Print(this, " sheep", Position, Velocity);
       // path following
       CalculatePathFollowing(delta);
 
@@ -86,16 +82,11 @@ namespace OutCastSurvival.Entities
       // getting obstacle avoidance force
       CalculateObstacleAvoidance();
 
-      // GD.Print($"Velocity: {Velocity}Seperation: {Separation_force_vector} \nCohesion:{Cohesion_force_vector} \nobstacle avoidance: {ObstacleAvoidance_force_vector}");
       CalculateFuzzy();
 
       // adding all the forces together
       Velocity += Separation_force_vector + Cohesion_force_vector + ObstacleAvoidance_force_vector + PathFollowing_force_vector;
 
-      // if (PathFollowing_force_vector.Length() <= 0 && Separation_force_vector.Length() <= 0)
-      // {
-      //   Velocity = Vector2.Zero;
-      // }
 
       base._Process(delta);
 
@@ -111,18 +102,25 @@ namespace OutCastSurvival.Entities
       Vector2 ToTarget = player.Position - Position;
       ToTarget = ToTarget.Normalized();
 
-      float radians = Mathf.Acos(ToTarget.Dot(Heading));
+      // Calculate the angle between heading and target vector
+      float dot = ToTarget.Dot(Heading);
+      float det = ToTarget.X * Heading.Y - ToTarget.Y * Heading.X;
+      float angle = Mathf.RadToDeg(Mathf.Atan2(det, dot));
 
-      // Convert to degrees
-      float angle = Mathf.RadToDeg(radians);
+      // Normalize angle to -180 to 180 range
+      if (angle > 180) angle -= 360;
+      if (angle < -180) angle += 360;
 
+      // Normalize noise level to 0-10 range
       float noiselevel = player.CurrentState.GetNoiseLevel();
+      noiselevel = Mathf.Clamp(noiselevel, 0, 10);
+
       float fuzzyDesision = _fuzzyLogic.calculate(angle, noiselevel);
 
-      GD.Print($"Fuzzy desision: {fuzzyDesision}");
+      GD.Print($"Angle: {angle}, Noise: {noiselevel}, Fuzzy decision: {fuzzyDesision}");
       if (fuzzyDesision < 0)
       {
-        _fuzzyLogic_vector = SteeringBehaviour.Flee(Position, player.Position, MaxSpeed) * -100 * fuzzyDesision;
+        _fuzzyLogic_vector = SteeringBehaviour.Flee(Position, player.Position, MaxSpeed) * -20000 * fuzzyDesision;
         Velocity += _fuzzyLogic_vector;
       }
     }
@@ -142,7 +140,6 @@ namespace OutCastSurvival.Entities
       else
       {
         PathFollowing_force_vector = SteeringBehaviour.PathFollowing(this, delta, Position, path, pathIndex) * PathFollowing_force;
-        // GD.Print($"PathFollowing_force_vector: {PathFollowing_force_vector}");
         if (path != null && path.Count > 0)
         {
           if (Position.DistanceTo(path[pathIndex].position) < PathFollowing_radius)

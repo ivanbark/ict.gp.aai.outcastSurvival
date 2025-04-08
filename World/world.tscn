@@ -130,8 +130,7 @@ script = ExtResource("1_go68u")
 debug_ref = NodePath("UI/Debug_screen")
 movingEntity_list = []
 graph_ref = NodePath("TileMapLayer")
-NumberOfGuards = 0
-fuzzyWindow_ref = NodePath("Window")
+fuzzyWindow_ref = NodePath("FuzzyEditor")
 metadata/_edit_vertical_guides_ = []
 
 [node name="Background" type="Sprite2D" parent="."]
@@ -173,13 +172,13 @@ visible = false
 script = ExtResource("10_w47uh")
 World_ref = NodePath("..")
 SheepScene = ExtResource("11_h2aik")
-numberOfChildren = 1
+numberOfChildren = 12
 startPostionOfHerd = Vector2(300, 300)
 
 [node name="Player" parent="." node_paths=PackedStringArray("World_ref") instance=ExtResource("7_yf0ba")]
 position = Vector2(496, 518)
 World_ref = NodePath("..")
 
-[node name="Window" parent="." instance=ExtResource("14_awrha")]
+[node name="FuzzyEditor" parent="." instance=ExtResource("14_awrha")]
 initial_position = 1
 visible = false
