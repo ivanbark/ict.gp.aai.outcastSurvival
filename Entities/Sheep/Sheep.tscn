@@ -54,8 +54,6 @@ Cohesion_force = 2.0
 widthObstacleAvoidanceBox = 40
 heightObstacleAvoidanceBox = 15
 ObstacleAvoidance_force = 5.0
-PathFollowing_force = 2.5
-PathFollowing_radius = 19.0
 MaxHealth = 20
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]

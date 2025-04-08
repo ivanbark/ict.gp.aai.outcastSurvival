@@ -165,17 +165,19 @@ grow_horizontal = 2
 label_settings = SubResource("LabelSettings_w47uh")
 
 [node name="Debug_screen" parent="UI" instance=ExtResource("11_lo5ox")]
+visible = false
 
 [node name="Herd" type="Node" parent="." node_paths=PackedStringArray("World_ref")]
 script = ExtResource("10_w47uh")
 World_ref = NodePath("..")
 SheepScene = ExtResource("11_h2aik")
-numberOfChildren = 3
+numberOfChildren = 26
 startPostionOfHerd = Vector2(300, 300)
 
 [node name="Player" parent="." node_paths=PackedStringArray("World_ref") instance=ExtResource("7_yf0ba")]
 position = Vector2(1163, 592)
 World_ref = NodePath("..")
 
-[node name="Guard" parent="." instance=ExtResource("13_0wqet")]
+[node name="Guard" parent="." node_paths=PackedStringArray("World_ref") instance=ExtResource("13_0wqet")]
 position = Vector2(1317, 474)
+World_ref = NodePath("..")

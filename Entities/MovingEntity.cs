@@ -94,16 +94,16 @@ namespace OutCastSurvival.Entities
       }
 
       // Update heading based on actual movement direction
-      // if (Velocity.Length() > 0.1f)
-      // {
-      //   _heading = Velocity.Normalized();
-      //   Rotation = Velocity.Angle();
-      // }
-      // else
-      // {
-      //   // When not moving, maintain the last heading direction
-      //   Rotation = _heading.Angle();
-      // }
+      if (Velocity.Length() > 0.1f)
+      {
+        _heading = Velocity.Normalized();
+        Rotation = Velocity.Angle();
+      }
+      else
+      {
+        // When not moving, maintain the last heading direction
+        Rotation = _heading.Angle();
+      }
 
       animatedSprite.GlobalRotation = 0;
 
