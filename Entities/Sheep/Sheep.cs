@@ -55,7 +55,6 @@ namespace OutCastSurvival.Entities
 
     public override void _Ready()
     {
-
       base._Ready();
       MaxForce = 600;
       MaxSpeed = 20;
@@ -338,6 +337,15 @@ namespace OutCastSurvival.Entities
     public override int GetHashCode()
     {
       return base.GetHashCode();
+    }
+
+    protected override void Die()
+    {
+      var meatScene = GD.Load<PackedScene>("res://Items/Meat.tscn");
+      var meat = meatScene.Instantiate<Meat>();
+      World_ref.AddChild(meat);
+      meat.Position = Position;
+      QueueFree();
     }
 
     protected override void UpdateDebugInfo()

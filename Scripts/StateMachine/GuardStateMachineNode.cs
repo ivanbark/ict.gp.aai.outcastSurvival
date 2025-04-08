@@ -33,7 +33,7 @@ namespace StateMachine
             }
 
             InitializeStateMachine();
-            IsActive = true;  // Set the state machine to active after initialization
+            IsActive = true;
         }
 
         private void InitializeStateMachine()
@@ -52,7 +52,6 @@ namespace StateMachine
             patrolState.SubStateMachine = patrolStateMachine;
             _rootStateMachine.AddState(patrolState);
 
-            // Add Patrol sub-states
             var idleState = new IdleState(_guard, _parent);
             var patrolPathState = new PatrolPathState(_guard, _parent);
             patrolStateMachine.AddState(idleState);
@@ -77,7 +76,6 @@ namespace StateMachine
             playerLostState.SubStateMachine = playerLostStateMachine;
             alertStateMachine.AddState(playerLostState);
 
-            // Add PlayerLost sub-states
             var seekState = new SeekState(_guard, _parent);
             var searchState = new SearchState(_guard, _parent);
             playerLostStateMachine.AddState(seekState);
@@ -91,7 +89,6 @@ namespace StateMachine
             playerDetectedState.SubStateMachine = playerDetectedStateMachine;
             alertStateMachine.AddState(playerDetectedState);
 
-            // Add PlayerDetected sub-states
             var chaseState = new ChaseState(_guard, _parent);
             var attackState = new AttackState(_guard, _parent);
             playerDetectedStateMachine.AddState(chaseState);
@@ -128,7 +125,6 @@ namespace StateMachine
         {
             if (_rootStateMachine == null) return;
 
-            // Check if we're already in a player detected state
             var currentState = _rootStateMachine.CurrentState;
             if (currentState is AlertState alertState)
             {

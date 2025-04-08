@@ -7,111 +7,169 @@ layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -7.0
-offset_right = -7.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_llkft")
-metadata/_edit_vertical_guides_ = [177.0]
-metadata/_edit_horizontal_guides_ = [209.0]
+metadata/_edit_vertical_guides_ = [197.0, 20.0, 1900.0]
+metadata/_edit_horizontal_guides_ = [1080.0, 20.0]
 
 [node name="Graph" type="Label" parent="."]
 layout_mode = 0
-offset_right = 53.0
-offset_bottom = 23.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = 73.0
+offset_bottom = 43.0
 text = "Graph:"
 
 [node name="Graph_btn" type="CheckButton" parent="."]
 layout_mode = 0
-offset_left = 177.0
-offset_right = 221.0
-offset_bottom = 24.0
+offset_left = 197.0
+offset_top = 20.0
+offset_right = 241.0
+offset_bottom = 44.0
 
 [node name="Obstacle_btn" type="CheckButton" parent="."]
 layout_mode = 0
-offset_left = 177.0
-offset_top = 24.0
-offset_right = 221.0
-offset_bottom = 48.0
+offset_left = 197.0
+offset_top = 44.0
+offset_right = 241.0
+offset_bottom = 68.0
 
 [node name="Obstacle" type="Label" parent="."]
 layout_mode = 0
-offset_top = 24.0
-offset_right = 72.0
-offset_bottom = 47.0
+offset_left = 20.0
+offset_top = 44.0
+offset_right = 92.0
+offset_bottom = 67.0
 text = "Obstacle:"
 
 [node name="Cohesion" type="Label" parent="."]
 layout_mode = 0
-offset_top = 121.0
-offset_right = 89.0
-offset_bottom = 144.0
+offset_left = 20.0
+offset_top = 141.0
+offset_right = 109.0
+offset_bottom = 164.0
 text = "Cohesion:"
 
 [node name="Cohesion_btn" type="CheckButton" parent="."]
 layout_mode = 0
-offset_left = 177.0
-offset_top = 121.0
-offset_right = 221.0
-offset_bottom = 145.0
+offset_left = 197.0
+offset_top = 141.0
+offset_right = 241.0
+offset_bottom = 165.0
 
 [node name="ObstacleAvoidance" type="Label" parent="."]
 layout_mode = 0
-offset_top = 145.0
-offset_right = 89.0
-offset_bottom = 168.0
+offset_left = 20.0
+offset_top = 165.0
+offset_right = 177.0
+offset_bottom = 188.0
 text = "Obstacle Avoidance:"
 
 [node name="ObstacleAvoidance_btn" type="CheckButton" parent="."]
 layout_mode = 0
-offset_left = 177.0
-offset_top = 145.0
-offset_right = 221.0
-offset_bottom = 169.0
+offset_left = 197.0
+offset_top = 165.0
+offset_right = 241.0
+offset_bottom = 189.0
 
 [node name="Flocking" type="Label" parent="."]
 layout_mode = 0
-offset_top = 73.0
-offset_right = 64.0
-offset_bottom = 96.0
+offset_left = 20.0
+offset_top = 93.0
+offset_right = 135.0
+offset_bottom = 116.0
 text = "Sheep Flocking"
 
 [node name="Seperation" type="Label" parent="."]
 layout_mode = 0
-offset_top = 98.0
-offset_right = 89.0
-offset_bottom = 121.0
+offset_left = 20.0
+offset_top = 118.0
+offset_right = 109.0
+offset_bottom = 141.0
 text = "Seperation:"
 
 [node name="Seperation_btn" type="CheckButton" parent="."]
 layout_mode = 0
-offset_left = 177.0
-offset_top = 98.0
-offset_right = 221.0
-offset_bottom = 122.0
+offset_left = 197.0
+offset_top = 118.0
+offset_right = 241.0
+offset_bottom = 142.0
 
 [node name="Paths" type="Label" parent="."]
 layout_mode = 0
-offset_top = 209.0
-offset_right = 115.0
-offset_bottom = 232.0
+offset_left = 20.0
+offset_top = 229.0
+offset_right = 135.0
+offset_bottom = 252.0
 text = "A* paths"
 
 [node name="Paths_btn" type="CheckButton" parent="."]
 layout_mode = 0
-offset_left = 177.0
-offset_top = 209.0
-offset_right = 221.0
-offset_bottom = 233.0
+offset_left = 197.0
+offset_top = 229.0
+offset_right = 241.0
+offset_bottom = 253.0
 
-[node name="PathFloowing" type="Label" parent="."]
+[node name="PathFollowing" type="Label" parent="."]
+offset_left = 20.0
 offset_top = 233.0
 offset_right = 163.0
 offset_bottom = 256.0
 text = "Path following forces"
 
 [node name="PathFollowing_btn" type="CheckButton" parent="."]
-offset_left = 177.0
+offset_left = 197.0
 offset_top = 233.0
 offset_right = 221.0
 offset_bottom = 257.0
+
+[node name="DebugInfo" type="Label" parent="."]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 961.0
+offset_right = 197.0
+offset_bottom = 1088.0
+text = "Keybinds: 
+Step backward: F1
+Start/stop:	 F2
+Step forward: F3
+"
+
+[node name="Entities" type="Label" parent="."]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 332.0
+offset_right = 83.0
+offset_bottom = 355.0
+text = "Entities:"
+
+[node name="InfoBox" type="Label" parent="."]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 358.0
+offset_right = 101.0
+offset_bottom = 381.0
+text = "Info Boxes"
+
+[node name="InfoBox_btn" type="CheckButton" parent="."]
+layout_mode = 0
+offset_left = 197.0
+offset_top = 358.0
+offset_right = 241.0
+offset_bottom = 382.0
+
+[node name="Detection" type="Label" parent="."]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 385.0
+offset_right = 96.0
+offset_bottom = 408.0
+text = "Detection"
+
+[node name="Detection_btn" type="CheckButton" parent="."]
+layout_mode = 0
+offset_left = 197.0
+offset_top = 385.0
+offset_right = 241.0
+offset_bottom = 409.0

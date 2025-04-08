@@ -15,7 +15,6 @@ namespace StateMachine.States
         {
             if (targetState == null) return false;
 
-            // Allow transitions to IdleState or AlertState
             return targetState is IdleState || targetState is AlertState;
         }
     }

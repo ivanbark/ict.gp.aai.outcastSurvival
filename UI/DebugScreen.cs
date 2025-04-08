@@ -22,6 +22,10 @@ public partial class DebugScreen : Control
   public bool ShowPaths { get; private set; }
   private CheckButton PathFollowing_btn;
   public bool ShowPathFollowing { get; private set; }
+  private CheckButton infoBox_btn;
+  public bool ShowInfoBox { get; private set; }
+  private CheckButton detectionInfo_btn;
+  public bool ShowDetectionInfo { get; private set; }
 
   private World world_ref;
 
@@ -30,7 +34,7 @@ public partial class DebugScreen : Control
     base._Ready();
     ShowDebug = false;
 
-    world_ref = GetParent<World>();
+    world_ref = GetTree().Root.GetNodeOrNull<World>("World");
 
     graph_btn = InitializeCheckButton("Graph_btn", value =>
     {
@@ -67,6 +71,17 @@ public partial class DebugScreen : Control
       ShowPathFollowing = value;
       SendGraphicsUpdate();
     });
+    infoBox_btn = InitializeCheckButton("InfoBox_btn", value =>
+    {
+      ShowInfoBox = value;
+      SendGraphicsUpdate();
+    });
+    detectionInfo_btn = InitializeCheckButton("Detection_btn", value =>
+    {
+      ShowDetectionInfo = value;
+      SendGraphicsUpdate();
+    });
+
   }
 
   public void SendGraphicsUpdate()

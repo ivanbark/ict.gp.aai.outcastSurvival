@@ -7,7 +7,7 @@ namespace StateMachine.States
     public class PlayerWalkState : PlayerMovementState
     {
         public PlayerWalkState(Player player, Node2D parent)
-            : base(player, "Walk", 140, 0.5f, 1.0f, parent)
+            : base(player, "Walk", 140, 0.7f, 1.0f, parent)
         {
         }
 

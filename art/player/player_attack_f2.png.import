@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cyvm661lcuv8u"
-path="res://.godot/imported/Treasure Chest closed 254x254.png-d63d7b8f4b1b0bd0facefa2c2a241975.ctex"
+uid="uid://hfrldmvduyop"
+path="res://.godot/imported/player_attack_f2.png-1c1ac14b76f0f0231065e021c19ff1d4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/Treasure Chest closed 254x254.png"
-dest_files=["res://.godot/imported/Treasure Chest closed 254x254.png-d63d7b8f4b1b0bd0facefa2c2a241975.ctex"]
+source_file="res://art/player/player_attack_f2.png"
+dest_files=["res://.godot/imported/player_attack_f2.png-1c1ac14b76f0f0231065e021c19ff1d4.ctex"]
 
 [params]
 

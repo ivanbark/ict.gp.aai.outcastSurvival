@@ -42,23 +42,31 @@ namespace OutCastSurvival.Entities
     {
       base._Ready();
 
+      World_ref.debug_ref.DebugOptionChanged += InitializeDebugInfo;
+
       animatedSprite = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
-      animatedSprite.Animation = "right";
-      animatedSprite.Play();
+      animatedSprite.Play("right");
 
       _acceleration = MaxForce / Mass;
       _heading = Vector2.Right; // Initialize heading to face right
 
       CurrentHealth = MaxHealth;
 
-      // Get debug info references
-      _debugInfo = GetNode<Node2D>("DebugInfo");
-      _stateLabel = GetNode<Label>("DebugInfo/State");
-      _healthLabel = GetNode<Label>("DebugInfo/Health");
+      InitializeDebugInfo();
+    }
 
-      if (_debugInfo != null)
+    public void InitializeDebugInfo()
+    {
+      // Get debug info references with null checks
+      if (HasNode("DebugInfo"))
       {
-        _debugInfo.Visible = World_ref.visualize_debug_info;
+        _debugInfo = GetNode<Node2D>("DebugInfo");
+        if (_debugInfo != null && World_ref.debug_ref.ShowInfoBox)
+        {
+          _stateLabel = GetNodeOrNull<Label>("DebugInfo/State");
+          _healthLabel = GetNodeOrNull<Label>("DebugInfo/Health");
+        }
+        _debugInfo.Visible = World_ref.debug_ref.ShowInfoBox;
       }
     }
 
@@ -72,16 +80,17 @@ namespace OutCastSurvival.Entities
       {
         if (Velocity != Vector2.Zero)
         {
-          animatedSprite.Animation = Mathf.Abs(Velocity.X) > Mathf.Abs(Velocity.Y)
+          var animation = Mathf.Abs(Velocity.X) > Mathf.Abs(Velocity.Y)
             ? Velocity.X > 0 ? "right" : "left"
             : Velocity.Y > 0 ? "down" : "up";
+          animatedSprite.Play(animation);
           animatedSprite.FlipH = false;
         }
       }
       else
       {
-        animatedSprite.Animation = "attack";
-        animatedSprite.FlipH = Velocity.X < 0;
+        animatedSprite.Play("attack");
+        animatedSprite.FlipH = _heading.X < 0;
       }
 
       // Update heading based on actual movement direction
@@ -110,7 +119,7 @@ namespace OutCastSurvival.Entities
       }
 
       // Update debug info
-      if (World_ref.debug_ref.ShowDebug && _debugInfo != null)
+      if (World_ref.debug_ref.ShowDebug && _debugInfo != null && World_ref.debug_ref.ShowInfoBox)
       {
         UpdateDebugInfo();
       }
@@ -157,13 +166,11 @@ namespace OutCastSurvival.Entities
       }
     }
 
-    public void TakeDamage(int damage)
+    public virtual void TakeDamage(int damage)
     {
       CurrentHealth -= damage;
       if (CurrentHealth <= 0)
-      {
         Die();
-      }
     }
 
     protected virtual void Die()
@@ -182,14 +189,6 @@ namespace OutCastSurvival.Entities
       if (Velocity.Length() > 0.1f)
       {
         _heading = Velocity.Normalized();
-      }
-    }
-
-    public override void _UnhandledInput(InputEvent @event)
-    {
-      if (@event.IsActionPressed("visualize_debug_info"))
-      {
-        _debugInfo.Visible = !_debugInfo.Visible;
       }
     }
   }

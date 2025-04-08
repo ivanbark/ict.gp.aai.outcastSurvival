@@ -15,7 +15,6 @@ namespace StateMachine.States
         {
             if (targetState == null) return false;
 
-            // Allow transitions to PatrolPathState or AlertState
             return targetState is PatrolPathState || targetState is AlertState;
         }
     }
