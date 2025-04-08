@@ -57,7 +57,6 @@ public partial class GraphDrawer : Node2D
             List<Vertex> path = sheep.path;
             if (path != null)
             {
-              GD.Print("Path: " + path.Count);
               for (int i = sheep.pathIndex; i < path.Count - 1; i++)
               {
                 Vector2 start = new(path[i].position.X, path[i].position.Y);
