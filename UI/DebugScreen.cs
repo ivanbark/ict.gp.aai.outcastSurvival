@@ -26,6 +26,8 @@ public partial class DebugScreen : Control
   public bool ShowInfoBox { get; private set; }
   private CheckButton detectionInfo_btn;
   public bool ShowDetectionInfo { get; private set; }
+  private CheckButton Fuzzy_btn;
+  public bool ShowFuzzy { get; private set; }
 
   private World world_ref;
 
@@ -79,6 +81,11 @@ public partial class DebugScreen : Control
     detectionInfo_btn = InitializeCheckButton("Detection_btn", value =>
     {
       ShowDetectionInfo = value;
+      SendGraphicsUpdate();
+    });
+    Fuzzy_btn = InitializeCheckButton("Fuzzy_btn", value =>
+    {
+      ShowFuzzy = value;
       SendGraphicsUpdate();
     });
 

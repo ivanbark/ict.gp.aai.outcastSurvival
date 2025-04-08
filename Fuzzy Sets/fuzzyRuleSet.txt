@@ -1,0 +1,7 @@
+Noise Level IS High AND Position IS Front THEN behavior IS Flee
+Noise Level IS High AND Position IS Back THEN behavior IS Idle
+Noise Level IS High AND Position IS Side THEN behavior IS Flee
+Noise Level IS Low AND Position IS Front THEN behavior IS Flee
+Noise Level IS Low AND Position IS Back THEN behavior IS Idle
+Noise Level IS Low AND Position IS Side THEN behavior IS Idle
+End Fuzzy Rule Set

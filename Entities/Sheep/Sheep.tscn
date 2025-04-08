@@ -54,6 +54,7 @@ Cohesion_force = 2.0
 widthObstacleAvoidanceBox = 40
 heightObstacleAvoidanceBox = 15
 ObstacleAvoidance_force = 5.0
+FuzzyDistance = 150.0
 MaxHealth = 20
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
