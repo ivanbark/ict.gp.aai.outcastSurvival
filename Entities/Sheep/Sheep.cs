@@ -89,10 +89,6 @@ namespace OutCastSurvival.Entities
         Velocity = Vector2.Zero;
       }
 
-      if (float.IsNaN(Velocity.X) || float.IsNaN(Velocity.Y))
-      {
-        GD.Print($"Forces:\nSeperation: {Separation_force_vector} \nCohesion:{Cohesion_force_vector} \nobstacle avoidance: {ObstacleAvoidance_force_vector} \nPath Following: {PathFollowing_force_vector} \n ");
-      }
       base._Process(delta);
 
       QueueRedraw();
@@ -326,7 +322,8 @@ namespace OutCastSurvival.Entities
         // path following
         if (World_ref.debug_ref.ShowPathFollowing)
         {
-          DrawLine(new(), PathFollowing_force_vector, Colors.Green, 1);
+          Vector2 rotatedForce = PathFollowing_force_vector.Rotated(-Rotation);
+          DrawLine(new(), rotatedForce, Colors.Green, 1);
         }
       }
     }
