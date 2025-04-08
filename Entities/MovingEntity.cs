@@ -66,7 +66,7 @@ namespace OutCastSurvival.Entities
           _stateLabel = GetNodeOrNull<Label>("DebugInfo/State");
           _healthLabel = GetNodeOrNull<Label>("DebugInfo/Health");
         }
-        _debugInfo.Visible = World_ref.debug_ref.ShowInfoBox;
+        _debugInfo.Visible = World_ref.debug_ref.ShowInfoBox && World_ref.debug_ref.ShowDebug;
       }
     }
 
@@ -109,9 +109,7 @@ namespace OutCastSurvival.Entities
 
       Velocity = Velocity.LimitLength(MaxSpeed);
       Position += Velocity * (float)delta;
-
-      Velocity = Vector2.Zero; // Reset velocity after applying movement
-
+      
       // Counter-rotate the debug info to keep it unrotated
       if (_debugInfo != null)
       {

@@ -81,7 +81,13 @@ namespace OutCastSurvival.Entities
 
       // GD.Print($"Velocity: {Velocity}Seperation: {Separation_force_vector} \nCohesion:{Cohesion_force_vector} \nobstacle avoidance: {ObstacleAvoidance_force_vector}");
       // adding all the forces together
+
       Velocity += Separation_force_vector + Cohesion_force_vector + ObstacleAvoidance_force_vector + PathFollowing_force_vector;
+
+      if (PathFollowing_force_vector.Length() <= 0 && Separation_force_vector.Length() <= 0)
+      {
+        Velocity = Vector2.Zero;
+      }
 
       if (float.IsNaN(Velocity.X) || float.IsNaN(Velocity.Y))
       {
