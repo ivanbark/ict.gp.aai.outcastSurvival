@@ -26,7 +26,6 @@ public partial class Item : Area2D
 
     if (@event.IsActionPressed("collect") && _isInRange)
     {
-      GD.Print("Collecting item");
       Collect();
       QueueFree();
     }
@@ -42,7 +41,6 @@ public partial class Item : Area2D
   {
     if (body is Player player)
     {
-      GD.Print("Player entered range");
       _player = player;
       _isInRange = true;
       _infoBox.Visible = true;
@@ -53,7 +51,6 @@ public partial class Item : Area2D
   {
     if (body is Player player)
     {
-      GD.Print("Player exited range");
       _player = null;
       _isInRange = false;
       _infoBox.Visible = false;

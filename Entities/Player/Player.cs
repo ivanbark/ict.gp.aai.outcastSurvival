@@ -14,7 +14,7 @@ public partial class Player : MovingEntity
   public int CurrentGold = 0;
   private int _maxGold = 100;
   private int _attackDamage = 10;
-  private int _attackRange = 23;
+  private int _attackRange = 25;
   private float _attackCooldown = 1.2f;
   private float _attackCooldownTimer = 0f;
 
@@ -101,6 +101,7 @@ public partial class Player : MovingEntity
 
   private void DepleteHunger(float delta)
   {
+
     if (Velocity.Length() > 0 || CurrentState == _stateMachineNode.GetStateMachine().GetState<PlayerHungryState>())
     {
       _hungerDepletionTimer -= delta;

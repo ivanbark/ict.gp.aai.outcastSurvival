@@ -17,7 +17,7 @@ namespace Detection
             _guard = guard;
             _baseDetectionRange = baseDetectionRange;
             _visionAngle = visionAngle;
-            _backDetectionMultiplier = 0.3f;
+            _backDetectionMultiplier = 0.2f;
             _sideDetectionMultiplier = 0.6f;
         }
 

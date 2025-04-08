@@ -47,7 +47,7 @@ size = Vector2(40, 19)
 [node name="Sheep" type="CharacterBody2D"]
 script = ExtResource("1_c257q")
 Cohesion_radius = 75.0
-Seperation_radius = 25.0
+Seperation_radius = 35.0
 SeekForce = 4.5
 Separation_force = 120.0
 Cohesion_force = 2.0

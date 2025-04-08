@@ -218,7 +218,6 @@ namespace OutCastSurvival
     public void EndGame(bool isWon)
     {
       _globals.EndGame(isWon);
-      GetTree().Paused = true;
       GetTree().ChangeSceneToFile("res://end_game_screen.tscn");
     }
 
