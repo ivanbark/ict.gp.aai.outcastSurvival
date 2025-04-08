@@ -12,7 +12,7 @@ public partial class Guard : MovingEntity
     private GuardStateMachineNode _stateMachineNode;
 
     [Export]
-    public float BaseDetectionRange = 400f;
+    public float BaseDetectionRange = 300f;
     [Export]
     public float VisionAngle = 90f;
 
