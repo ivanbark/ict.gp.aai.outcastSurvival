@@ -33,6 +33,9 @@ namespace OutCastSurvival
 
     private Globals _globals;
 
+    [Export]
+    public Window fuzzyWindow_ref;
+
     public override void _Ready()
     {
       base._Ready();
@@ -140,6 +143,12 @@ namespace OutCastSurvival
 
         debug_ref.SendGraphicsUpdate();
 
+      }
+
+
+      if (Input.IsActionJustPressed("open_fuzzy_window"))
+      {
+        fuzzyWindow_ref.Visible = !fuzzyWindow_ref.Visible;
       }
 
 

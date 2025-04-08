@@ -10,7 +10,7 @@ namespace OutCastSurvival.Classes
     public string name { get; private set; }
     public float minValue { get; private set; }
     public float maxValue { get; private set; }
-    private readonly List<FuzzyFunction> functions = [];
+    public readonly List<FuzzyFunction> functions = [];
 
     public void Save()
     {
@@ -34,7 +34,7 @@ namespace OutCastSurvival.Classes
           }
           file.StoreString("End Fuzzy Function\n");
         }
-        file.StoreString("End Fuzzy Functions\n");
+        file.StoreString("End Fuzzy Functions");
         file.Close();
       }
     }
@@ -55,10 +55,10 @@ namespace OutCastSurvival.Classes
 
           while (line != "End Fuzzy Functions")
           {
-            if (line.StartsWith("Fuzzy Function "))
+            if (line.StartsWith("Fuzzy Function"))
             {
               functionName = line.Split('-')[1];
-              function = new FuzzyFunction(functionName, minValue, maxValue);
+              function = new FuzzyFunction(functionName, minValue, maxValue, Color.FromHsv(GD.Randf(), 1, 1));
             }
             else if (line.StartsWith("End Fuzzy Function"))
             {
@@ -78,6 +78,7 @@ namespace OutCastSurvival.Classes
                 function.AddMembershipValue(value, domValue);
               }
             }
+            line = file.GetLine();
           }
         }
 

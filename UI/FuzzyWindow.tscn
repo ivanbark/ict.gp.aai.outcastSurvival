@@ -5,7 +5,7 @@
 [node name="Window" type="Window"]
 title = "Fuzzy editor"
 position = Vector2i(0, 36)
-size = Vector2i(700, 300)
+size = Vector2i(1000, 500)
 
 [node name="ColorRect" type="ColorRect" parent="."]
 anchors_preset = 15
@@ -16,3 +16,17 @@ grow_vertical = 2
 
 [node name="Fuzzy" type="Node2D" parent="."]
 script = ExtResource("1_telfh")
+
+[node name="SaveBtn" type="Button" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -69.0
+offset_top = -32.0
+offset_right = -10.0
+offset_bottom = -10.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "Save"
