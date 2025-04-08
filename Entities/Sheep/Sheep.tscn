@@ -53,11 +53,13 @@ script = ExtResource("1_c257q")
 Cohesion_radius = 75.0
 Seperation_radius = 25.0
 SeekForce = 4.5
-Separation_force = 100.0
+Separation_force = 120.0
 Cohesion_force = 2.0
 widthObstacleAvoidanceBox = 40
 heightObstacleAvoidanceBox = 15
 ObstacleAvoidance_force = 5.0
+PathFollowing_force = 2.5
+PathFollowing_radius = 19.0
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_omd8u")

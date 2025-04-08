@@ -1,4 +1,5 @@
 using Godot;
+using OutCastSurvival.Entities;
 using System;
 using System.Collections.Generic;
 
@@ -59,34 +60,28 @@ public class SteeringBehaviour
     }
 
     // path folowing
-    public static Vector2 PathFollowing(Vector2 position, List<Vertex> path, int pathIndex)
+    public static Vector2 PathFollowing(Sheep me, double delta, Vector2 position, List<Vertex> path, int pathIndex)
     {
         if (path == null || path.Count == 0)
         {
             return Vector2.Zero;
         }
 
-        // Get the current and next waypoints
-        Vertex currentWaypoint = path[pathIndex];
-        Vertex nextWaypoint = path[(pathIndex + 1) % path.Count];
+        // deternime the future position of the entity
+        Vector2 futurePosition = position + me.Velocity * (float)delta;
 
-        // Calculate the direction to the next waypoint
-        Vector2 direction = (nextWaypoint.position - currentWaypoint.position);
-        direction /= direction.Length();
+        // if within range of the next waypoint dont do anything
+        // else move towards the next waypoint
 
-        // Calculate the distance to the next waypoint
-        float distanceToNextWaypoint = currentWaypoint.position.DistanceTo(nextWaypoint.position);
-
-        // Calculate the distance to the current position
-        float distanceToCurrentPosition = currentWaypoint.position.DistanceTo((Vector2I)position);
-
-        // If we're close to the next waypoint, move to it
-        if (distanceToCurrentPosition < distanceToNextWaypoint)
+        Vector2 nextWaypoint = path[pathIndex].position;
+        float distanceToNextWaypoint = futurePosition.DistanceTo(nextWaypoint);
+        if (distanceToNextWaypoint > me.PathFollowing_radius)
         {
-            return Seek(position, currentWaypoint.position, 1.0f);
+            // Move towards the next waypoint
+            return Seek(position, nextWaypoint, me.MaxSpeed);
         }
+        else
+            return Vector2.Zero;
 
-        // Otherwise, move towards the next waypoint
-        return Seek(position, nextWaypoint.position, 1.0f);
     }
 }

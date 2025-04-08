@@ -51,7 +51,7 @@ namespace OutCastSurvival.Entities
     private Vector2 PathFollowing_force_vector = new(0, 0);
 
     [Export]
-    private float PathFollowing_radius = 10f;
+    public float PathFollowing_radius = 10f;
 
     public override void _Ready()
     {
@@ -67,6 +67,34 @@ namespace OutCastSurvival.Entities
     }
     public override void _Process(double delta)
     {
+      // GD.Print(this, " sheep", Position, Velocity);
+      // path following
+      CalculatePathFollowing(delta);
+
+
+      // wander
+
+      // flocking
+      CalculateFlockingForces();
+
+      // getting obstacle avoidance force
+      CalculateObstacleAvoidance();
+
+      // GD.Print($"Velocity: {Velocity}Seperation: {Separation_force_vector} \nCohesion:{Cohesion_force_vector} \nobstacle avoidance: {ObstacleAvoidance_force_vector}");
+      // adding all the forces together
+      Velocity += Separation_force_vector + Cohesion_force_vector + ObstacleAvoidance_force_vector + PathFollowing_force_vector;
+
+      if (float.IsNaN(Velocity.X) || float.IsNaN(Velocity.Y))
+      {
+        GD.Print($"Forces:\nSeperation: {Separation_force_vector} \nCohesion:{Cohesion_force_vector} \nobstacle avoidance: {ObstacleAvoidance_force_vector} \nPath Following: {PathFollowing_force_vector} \n ");
+      }
+      base._Process(delta);
+
+      QueueRedraw();
+    }
+
+    private void CalculatePathFollowing(double delta)
+    {
       if (path == null && World_ref.TargetVertex != null)
       {
         // get graph coords
@@ -78,9 +106,8 @@ namespace OutCastSurvival.Entities
       }
       else
       {
-        Vector2 PathFollowing_force_vector = SteeringBehaviour.PathFollowing(Position, path, pathIndex) * PathFollowing_force;
+        PathFollowing_force_vector = SteeringBehaviour.PathFollowing(this, delta, Position, path, pathIndex) * PathFollowing_force;
         // GD.Print($"PathFollowing_force_vector: {PathFollowing_force_vector}");
-        Velocity += PathFollowing_force_vector;
         if (path != null && path.Count > 0)
         {
           if (Position.DistanceTo(path[pathIndex].position) < PathFollowing_radius)
@@ -100,14 +127,11 @@ namespace OutCastSurvival.Entities
           World_ref.debug_ref.SendGraphicsUpdate();
         }
       }
+    }
 
 
-      // wander
-
-      // flocking
-      CalculateFlockingForces();
-
-      // getting obstacle avoidance force
+    private void CalculateObstacleAvoidance()
+    {
 
       //get obstacles in box.
       var allObstacles = World_ref.graph_ref.obstacles;
@@ -144,61 +168,51 @@ namespace OutCastSurvival.Entities
           distantTClosestoObstacle = distance;
           closestObstacle = obstacle;
         }
-        sumOfLateral += CalculateLateralVec(obstacle);
+        sumOfLateral += CalculateLateralVec(obstacle); // this make the sum sometimes NaN,NaN
+
       }
-
-      // get steering force
-      // if (closestObstacle != null)
-      // {
-      //   Vector2 lateral_vec = CalculateLateralVec(closestObstacle);
-
-      //   // float multiplier = 1.0f + (distantTClosestoObstacle /widthObstacleAvoidanceBox);
-
-      //   // avoidance_vec.Y = closestObstacle.vertex.position.Y * multiplier;
-
-      //   float brakeCoefficient = 0.2f;
-
-      //   // avoidance_vec.X = closestObstacle.vertex.position.X * brakeCoefficient; 
-      //   Vector2 braking_vec = Velocity * -brakeCoefficient;
-      //   avoidance_vec = braking_vec + lateral_vec;
-      // }
       avoidance_vec = sumOfLateral;
 
 
       ObstacleAvoidance_force_vector = avoidance_vec * ObstacleAvoidance_force;
-
-      // GD.Print($"Velocity: {Velocity}Seperation: {Separation_force_vector} \nCohesion:{Cohesion_force_vector} \nobstacle avoidance: {ObstacleAvoidance_force_vector}");
-      // adding all the forces together
-      Velocity += Separation_force_vector + Cohesion_force_vector + ObstacleAvoidance_force_vector;
-      base._Process(delta);
-
-      QueueRedraw();
     }
+
 
     private Vector2 CalculateLateralVec(Obstacle obstacle)
     {
       // ax+ b
       // a = dx/dy
       // b = 0
-      float a = Velocity.X / Velocity.Y;
+      float a, b;
+      if (Velocity.Y == 0)
+      {
+        a = 0;
+        b = Velocity.X;
+      }
+      else
+      {
+        a = Velocity.X / Velocity.Y;
+        b = 0;
+      }
 
+      // perpendicular line
       // cx+ d = y
       // c = -1/a
       // d = enter obstacle coords
       // d = y - cx
-      float c = -1 / a;
+      float c = a == 0 ? 1 : -1 / a;
       float d = obstacle.vertex.position.Y - c * obstacle.vertex.position.X;
 
       // intersection
 
       // ax + b = cx+ d
-      // ax += cx+ d
-      // x * (a + c) = d
-      // x = d / (a +c)
-      // y = a * x
+      // ax = cx+ d - b
+      // x * (a + c) = d - b
+      // x = (d - b) / (a + c)
+      // y = a * x + b
 
-      float x = d / (a + c);
-      Vector2 intersection = new(x, a * x);
+      float x = (d - b) / (a + c);
+      Vector2 intersection = new(x, a * x + b);
 
       // vector from obstacle to intersection
       Vector2 lateral_vec = intersection - obstacle.vertex.position;

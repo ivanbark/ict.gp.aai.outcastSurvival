@@ -188,6 +188,7 @@ World_ref = NodePath("..")
 script = ExtResource("10_w47uh")
 World_ref = NodePath("..")
 SheepScene = ExtResource("11_h2aik")
+numberOfChildren = 3
 startPostionOfHerd = Vector2(300, 300)
 
 [node name="Debug_screen" parent="." instance=ExtResource("11_lo5ox")]
