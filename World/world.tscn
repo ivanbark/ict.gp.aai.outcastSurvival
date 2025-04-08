@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=4 uid="uid://b8yq3d7rmcpor"]
+[gd_scene load_steps=21 format=4 uid="uid://b8yq3d7rmcpor"]
 
 [ext_resource type="Script" uid="uid://23dbctni36ld" path="res://World/World.cs" id="1_go68u"]
 [ext_resource type="Texture2D" uid="uid://dk7wlwgofhsfn" path="res://art/tilesets/grass.png" id="2_hvxdc"]
@@ -165,15 +165,6 @@ grow_horizontal = 2
 label_settings = SubResource("LabelSettings_w47uh")
 
 [node name="Debug_screen" parent="UI" instance=ExtResource("11_lo5ox")]
-visible = false
-offset_left = 30.0
-offset_top = 30.0
-offset_right = 152.0
-offset_bottom = 30.0
-
-[node name="Player" parent="." node_paths=PackedStringArray("World_ref") instance=ExtResource("7_yf0ba")]
-position = Vector2(1163, 592)
-World_ref = NodePath("..")
 
 [node name="Herd" type="Node" parent="." node_paths=PackedStringArray("World_ref")]
 script = ExtResource("10_w47uh")
@@ -182,13 +173,9 @@ SheepScene = ExtResource("11_h2aik")
 numberOfChildren = 33
 startPostionOfHerd = Vector2(300, 300)
 
-[node name="Debug_screen" parent="." instance=ExtResource("11_lo5ox")]
-visible = false
-offset_left = 30.0
-offset_top = 30.0
-offset_right = 152.0
-offset_bottom = 30.0
+[node name="Player" parent="." node_paths=PackedStringArray("World_ref") instance=ExtResource("7_yf0ba")]
+position = Vector2(1163, 592)
+World_ref = NodePath("..")
 
 [node name="Guard" parent="." instance=ExtResource("13_0wqet")]
 position = Vector2(1317, 474)
-
