@@ -5,7 +5,7 @@ using System.Linq;
 using OutCastSurvival.Entities;
 using System.Collections.Generic;
 
-namespace OutCastSurvival 
+namespace OutCastSurvival
 {
 public partial class World : Node2D
 {
@@ -123,7 +123,7 @@ public partial class World : Node2D
     return (Player)GetNode<CharacterBody2D>("Player");
   }
 
-  public Sheep[] GetOtherSheep(Vector2 coord, float radius) 
+  public Sheep[] GetOtherSheep(Vector2 coord, float radius)
   {
     List<Sheep> otherSheep = [];
 
@@ -172,7 +172,6 @@ public partial class World : Node2D
   public void EndGame(bool isWon)
   {
     _globals.EndGame(isWon);
-    GetTree().Paused = true;
     GetTree().ChangeSceneToFile("res://end_game_screen.tscn");
   }
 }

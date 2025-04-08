@@ -53,7 +53,6 @@ namespace StateMachine.States
         {
             if (targetState == null) return false;
 
-            // Only allow transitions to ChaseState or PlayerLostState
             return targetState is ChaseState || targetState is PlayerLostState;
         }
     }

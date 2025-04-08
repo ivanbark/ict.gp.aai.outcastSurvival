@@ -104,7 +104,8 @@ kill sheep to eat!
 
 Controls:
 WASD or ARROWS - Movement
-F - Attack
+SPACE - Attack
+E - Collect
 SHIFT - Sneak
 CTRL - Sprint
 I - Enter debug mode"
@@ -113,6 +114,7 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="CloseHelp" type="Button" parent="VBoxContainer/HBoxContainer/HelpScreenControl"]
+layout_mode = 0
 offset_left = -250.0
 offset_top = -337.0
 offset_right = 250.0

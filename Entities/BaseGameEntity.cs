@@ -1,6 +1,6 @@
 using Godot;
 using System;
-namespace OutCastSurvival.Entities 
+namespace OutCastSurvival.Entities
 {
 public partial class BaseGameEntity : CharacterBody2D
 {

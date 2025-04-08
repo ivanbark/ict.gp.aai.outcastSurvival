@@ -16,7 +16,6 @@ namespace StateMachine
         void HandleInput(InputEvent @event);
         void OnTransition(IState from, IState to);
 
-        // State validation
         bool CanTransitionTo(IState targetState);
     }
 }

@@ -1,13 +1,16 @@
-[gd_scene load_steps=7 format=3 uid="uid://bptqonjvfnyiu"]
+[gd_scene load_steps=8 format=3 uid="uid://bptqonjvfnyiu"]
 
 [ext_resource type="Script" uid="uid://pciprjoq3dl8" path="res://Entities/Sheep/Sheep.cs" id="1_c257q"]
-[ext_resource type="Texture2D" uid="uid://c7scag6yuxppc" path="res://art/sheep/sheep.png" id="2_u58gf"]
+[ext_resource type="Texture2D" uid="uid://cpuok4ob5hbh1" path="res://art/sheep/sheep_down.png" id="2_qjat6"]
+[ext_resource type="Texture2D" uid="uid://bou30yu8flggc" path="res://art/sheep/sheep_left.png" id="3_b6ay5"]
+[ext_resource type="Texture2D" uid="uid://2b62n57xn4ro" path="res://art/sheep/sheep_right.png" id="4_s72im"]
+[ext_resource type="Texture2D" uid="uid://c7sb6guwu3pw3" path="res://art/sheep/sheep_up.png" id="5_2grf4"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_omd8u"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_u58gf")
+"texture": ExtResource("2_qjat6")
 }],
 "loop": true,
 "name": &"down",
@@ -15,7 +18,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_u58gf")
+"texture": ExtResource("3_b6ay5")
 }],
 "loop": true,
 "name": &"left",
@@ -23,7 +26,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_u58gf")
+"texture": ExtResource("4_s72im")
 }],
 "loop": true,
 "name": &"right",
@@ -31,7 +34,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_u58gf")
+"texture": ExtResource("5_2grf4")
 }],
 "loop": true,
 "name": &"up",
@@ -40,13 +43,6 @@ animations = [{
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_c257q"]
 size = Vector2(40, 19)
-
-[sub_resource type="LabelSettings" id="LabelSettings_c257q"]
-font_size = 12
-shadow_size = 0
-
-[sub_resource type="LabelSettings" id="LabelSettings_u58gf"]
-font_size = 12
 
 [node name="Sheep" type="CharacterBody2D"]
 script = ExtResource("1_c257q")
@@ -58,40 +54,12 @@ Cohesion_force = 2.0
 widthObstacleAvoidanceBox = 50
 heightObstacleAvoidanceBox = 15
 ObstacleAvoidance_force = 4.0
+MaxHealth = 20
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(0.04, 0.04)
 sprite_frames = SubResource("SpriteFrames_omd8u")
 animation = &"down"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_c257q")
-
-[node name="DebugInfo" type="Node2D" parent="."]
-visible = false
-
-[node name="Background" type="ColorRect" parent="DebugInfo"]
-offset_left = -75.0
-offset_top = -60.0
-offset_right = 75.0
-offset_bottom = -30.0
-color = Color(0, 0, 0, 0)
-
-[node name="State" type="Label" parent="DebugInfo"]
-offset_left = -75.0
-offset_top = -61.0
-offset_right = 75.0
-offset_bottom = -44.0
-text = "State:`None"
-label_settings = SubResource("LabelSettings_c257q")
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Health" type="Label" parent="DebugInfo"]
-offset_left = -75.0
-offset_top = -46.0
-offset_right = 75.0
-offset_bottom = -29.0
-text = "HP: 100/100"
-label_settings = SubResource("LabelSettings_u58gf")
-horizontal_alignment = 1
-vertical_alignment = 1

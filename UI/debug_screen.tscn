@@ -88,3 +88,44 @@ offset_left = 177.0
 offset_top = 145.0
 offset_right = 221.0
 offset_bottom = 169.0
+
+[node name="DebugInfo" type="Label" parent="."]
+offset_top = 188.0
+offset_right = 181.0
+offset_bottom = 340.0
+text = "Keybinds: 
+Step backward: F1
+Start/stop:	 F2
+Step forward: F3
+"
+
+[node name="Entities" type="Label" parent="."]
+layout_mode = 0
+offset_top = 312.0
+offset_right = 40.0
+offset_bottom = 335.0
+text = "Entities:"
+
+[node name="InfoBox" type="Label" parent="."]
+offset_top = 338.0
+offset_right = 63.0
+offset_bottom = 361.0
+text = "Info Boxes"
+
+[node name="InfoBox_btn" type="CheckButton" parent="."]
+offset_left = 177.0
+offset_top = 338.0
+offset_right = 221.0
+offset_bottom = 362.0
+
+[node name="Detection" type="Label" parent="."]
+offset_top = 365.0
+offset_right = 63.0
+offset_bottom = 388.0
+text = "Detection"
+
+[node name="Detection_btn" type="CheckButton" parent="."]
+offset_left = 177.0
+offset_top = 365.0
+offset_right = 221.0
+offset_bottom = 389.0

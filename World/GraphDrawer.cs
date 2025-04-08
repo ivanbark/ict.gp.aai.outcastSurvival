@@ -21,13 +21,11 @@ public partial class GraphDrawer : Node2D
   {
     base._Draw();
 
-    GD.Print(world_ref.debug_ref.ShowDebug);
-
-    if (world_ref.debug_ref.ShowDebug) 
+    if (world_ref.debug_ref.ShowDebug)
     {
-      if (world_ref.debug_ref.ShowGraph) 
+      if (world_ref.debug_ref.ShowGraph)
       {
-        foreach(Vertex vertex  in world_ref.graph_ref.vertices) 
+        foreach(Vertex vertex  in world_ref.graph_ref.vertices)
         {
           if (vertex.Visited)
             DrawCircle(world_ref.graph_ref.MapToLocal(vertex.position), 2, Colors.Yellow);

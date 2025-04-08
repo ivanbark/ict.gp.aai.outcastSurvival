@@ -13,6 +13,7 @@ namespace StateMachine
         private bool _isSneaking = false;
         private bool _isSprinting = false;
         private bool _isHungry = false;
+        public bool IsHungry { get { return _isHungry; } }
 
         private PlayerSneakState _sneakState;
         private PlayerWalkState _walkState;
@@ -48,7 +49,6 @@ namespace StateMachine
         {
             _stateMachine = new StateMachine();
 
-            // Add movement states
             _sneakState = new PlayerSneakState(_player, _parent);
             _walkState = new PlayerWalkState(_player, _parent);
             _sprintState = new PlayerSprintState(_player, _parent);
@@ -79,7 +79,6 @@ namespace StateMachine
         {
             if (!IsActive) return;
 
-            // Handle sneak hold
             if (@event.IsActionPressed("sneak"))
             {
                 _isSneaking = true;
@@ -91,7 +90,6 @@ namespace StateMachine
                 UpdateMovementState();
             }
 
-            // Handle sprint hold
             if (@event.IsActionPressed("sprint"))
             {
                 _isSprinting = true;
