@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=4 uid="uid://b8yq3d7rmcpor"]
+[gd_scene load_steps=21 format=4 uid="uid://b8yq3d7rmcpor"]
 
 [ext_resource type="Script" uid="uid://23dbctni36ld" path="res://World/World.cs" id="1_go68u"]
 [ext_resource type="Texture2D" uid="uid://dk7wlwgofhsfn" path="res://art/tilesets/grass.png" id="2_hvxdc"]
@@ -12,7 +12,6 @@
 [ext_resource type="PackedScene" uid="uid://bo0c1x4my70ie" path="res://UI/debug_screen.tscn" id="11_lo5ox"]
 [ext_resource type="Script" uid="uid://ds3cc2n1ihrmj" path="res://World/Graph.cs" id="11_s8rmt"]
 [ext_resource type="Script" uid="uid://bf0o5u36b70tf" path="res://World/GraphDrawer.cs" id="12_h2aik"]
-[ext_resource type="PackedScene" uid="uid://brmbbns17wh7r" path="res://Entities/Guard/guard.tscn" id="13_0wqet"]
 [ext_resource type="PackedScene" uid="uid://5xe5w2hygroc" path="res://UI/FuzzyWindow.tscn" id="14_awrha"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_eidgh"]
@@ -131,6 +130,7 @@ script = ExtResource("1_go68u")
 debug_ref = NodePath("UI/Debug_screen")
 movingEntity_list = []
 graph_ref = NodePath("TileMapLayer")
+NumberOfGuards = 0
 fuzzyWindow_ref = NodePath("Window")
 metadata/_edit_vertical_guides_ = []
 
@@ -178,10 +178,6 @@ startPostionOfHerd = Vector2(300, 300)
 
 [node name="Player" parent="." node_paths=PackedStringArray("World_ref") instance=ExtResource("7_yf0ba")]
 position = Vector2(1163, 592)
-World_ref = NodePath("..")
-
-[node name="Guard" parent="." node_paths=PackedStringArray("World_ref") instance=ExtResource("13_0wqet")]
-position = Vector2(1317, 474)
 World_ref = NodePath("..")
 
 [node name="Window" parent="." instance=ExtResource("14_awrha")]

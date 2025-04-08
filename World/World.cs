@@ -52,7 +52,7 @@ namespace OutCastSurvival
     private void SpawnGuards()
     {
       var random = new Random();
-      var guardScene = GD.Load<PackedScene>("res://Entities/guard.tscn");
+      var guardScene = GD.Load<PackedScene>("res://Entities/Guard/guard.tscn");
       var spawnedGuards = new List<Vector2>();
       const float MIN_DISTANCE = 300f; // Minimum distance for random spawns
       const float CHEST_DISTANCE = 30f; // Distance for chest-related spawns

@@ -85,7 +85,7 @@ namespace OutCastSurvival.Entities.Detection
         weightSum += outcome.Value;
       }
       var result = weightSum == 0 ? 0 : sum / weightSum;
-      GD.Print($"Result: {result}");
+    //   GD.Print($"Result: {result}");
 
       return result;
     }

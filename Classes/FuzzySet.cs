@@ -16,7 +16,7 @@ namespace OutCastSurvival.Classes
 
     public void Save()
     {
-      using var file = FileAccess.Open($"user://fuzzySet{name}.txt", FileAccess.ModeFlags.Write);
+      using var file = FileAccess.Open($"res://Fuzzy Sets/fuzzySet{name}.txt", FileAccess.ModeFlags.Write);
       if (file != null)
       {
         // Write the data to the file
@@ -42,7 +42,7 @@ namespace OutCastSurvival.Classes
     }
     public bool Load()
     {
-      using var file = FileAccess.Open($"user://fuzzySet{name}.txt", FileAccess.ModeFlags.Read);
+      using var file = FileAccess.Open($"res://Fuzzy Sets/fuzzySet{name}.txt", FileAccess.ModeFlags.Read);
       if (file != null)
       {
         name = file.GetLine();
@@ -85,9 +85,6 @@ namespace OutCastSurvival.Classes
         }
 
         file.Close();
-
-        // foreach (var function in functions)
-        //   function.GenerateLUT();
 
         return true;
       }

@@ -15,7 +15,7 @@ namespace OutCastSurvival.Classes
 
     private void Load()
     {
-      using var file = FileAccess.Open($"user://fuzzyRuleSet.txt", FileAccess.ModeFlags.Read);
+      using var file = FileAccess.Open($"res://Fuzzy Sets/fuzzyRuleSet.txt", FileAccess.ModeFlags.Read);
       if (file != null)
       {
         string line = file.GetLine();

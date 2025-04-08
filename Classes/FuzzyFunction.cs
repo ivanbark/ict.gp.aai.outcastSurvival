@@ -40,6 +40,7 @@ namespace OutCastSurvival.Classes
 
     public float GetMembershipValue(float value)
     {
+      GD.Print($"Getting membership value for {value}");
       if (!MembershipValues.ContainsKey(value))
       {
         // sort keys in ascending order

@@ -1,0 +1,15 @@
+Noise Level
+Min value :0
+Max value :10
+Fuzzy Functions
+Fuzzy Function-Low
+0:1
+2.5:0.5
+10:0
+End Fuzzy Function
+Fuzzy Function-High
+0:0
+2.5:0.5
+10:1
+End Fuzzy Function
+End Fuzzy Functions

@@ -1,0 +1,40 @@
+Position
+Min value :-180
+Max value :180
+Fuzzy Functions
+Fuzzy Function-Front
+-180:0
+-135:0
+-90:0
+-45:0.5
+0:1
+45:0.5
+90:0
+135:0
+180:0
+End Fuzzy Function
+Fuzzy Function-Side
+-180:0
+-158:0.1
+-135:0.4
+-90:1
+-45:0.5
+0:0
+45:0.5
+90:1
+135:0.5
+180:0
+End Fuzzy Function
+Fuzzy Function-Back
+-180:1
+-158:0.9
+-135:0.6
+-90:0
+-45:0
+0:0
+45:0
+90:0
+135:0.5
+180:1
+End Fuzzy Function
+End Fuzzy Functions
