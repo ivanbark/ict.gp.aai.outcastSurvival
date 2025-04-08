@@ -75,6 +75,30 @@ namespace OutCastSurvival.Entities
       if (Engine.TimeScale == 0f)
         return;
 
+      // Check if next position would be on an obstacle before moving
+      if (World_ref?.graph_ref != null && !(this is Sheep) && Velocity != Vector2.Zero)
+      {
+        Vector2 nextPosition = Position + Velocity * (float)delta;
+
+        // Convert position to graph coordinates
+        int tileSize = World_ref.graph_ref.TileSize;
+        Vector2I graphCoords = new Vector2I(
+          (int)(nextPosition.X / tileSize),
+          (int)(nextPosition.Y / tileSize)
+        );
+
+        // Check if the tile is an obstacle
+        foreach (Obstacle obstacle in World_ref.graph_ref.obstacles)
+        {
+          if (obstacle.vertex.position == graphCoords)
+          {
+            // If next position is on an obstacle, prevent movement
+            Velocity = Vector2.Zero;
+            return;
+          }
+        }
+      }
+
       // Update animation based on velocity
       if (!_isAttacking)
       {
@@ -109,7 +133,7 @@ namespace OutCastSurvival.Entities
 
       Velocity = Velocity.LimitLength(MaxSpeed);
       Position += Velocity * (float)delta;
-      
+
       // Counter-rotate the debug info to keep it unrotated
       if (_debugInfo != null)
       {
@@ -190,5 +214,4 @@ namespace OutCastSurvival.Entities
       }
     }
   }
-
 }
