@@ -6,10 +6,12 @@ namespace OutCastSurvival.Classes
   public class FuzzyRule
   {
     public string Consequent;
+    public string Line;
     public Dictionary<string, string> Antecedents = [];
 
-    public FuzzyRule(string consequent)
+    public FuzzyRule(string consequent, string line = "")
     {
+      Line = line;
       Consequent = consequent;
     }
 

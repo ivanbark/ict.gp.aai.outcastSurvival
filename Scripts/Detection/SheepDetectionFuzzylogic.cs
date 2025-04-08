@@ -41,23 +41,25 @@ namespace OutCastSurvival.Entities.Detection
         var consequent = rule.Consequent;
 
         float[] doms_atencedents = new float[antecedents.Count];
+        int index = 0;
         foreach (var antecedent in antecedents)
         {
           // Get the fuzzy set for the antecedent
           var fuzzySet = fuzzySets[antecedent.Key];
           // Get the fuzzy function for the antecedent
-          string value = antecedent.Value;
+          string value = antecedent.Value.Trim();
           var fuzzyFunction = fuzzySet.functions[value];
           // Get the membership value for the antecedent
           var membershipValue = 0f;
-          if (value == "Position")
+          if (antecedent.Key == "Position")
           {
             membershipValue = fuzzyFunction.GetMembershipValue(angle);
           }
-          else if (value == "Noise Level")
+          else if (antecedent.Key == "Noise Level")
           {
             membershipValue = fuzzyFunction.GetMembershipValue(noiselevel);
           }
+          doms_atencedents[index++] = membershipValue;
         }
         var doms_atencedents_result = float.Min(doms_atencedents[0], doms_atencedents[1]);
         rule_doms[rule] = doms_atencedents_result;
